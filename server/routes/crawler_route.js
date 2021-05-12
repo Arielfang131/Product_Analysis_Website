@@ -91,8 +91,7 @@ async function main () {
             const push = result.info[j].push;
             const detail = await pttCrawlerContent(`https://www.ptt.cc${link}`);
             // console.log(detail);
-            if (detail.length == 4) {
-                console.log(detail);
+            if (detail.length === 4) {
                 const obj = {
                     author: detail[0],
                     title: detail[1],
@@ -105,7 +104,6 @@ async function main () {
             }
         }
     }
-    console.log("==============");
     console.log(arr);
 }
 main();

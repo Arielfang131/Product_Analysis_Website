@@ -1,11 +1,14 @@
 const router = require("express").Router();
 
 const {
-    main,
-    getDcard
-} = require("../controllers/crawler_controller");
+    getPtt
+} = require("../controllers/pttcrawler_controller");
 
-router.route("/admin/test").get(main);
+const {
+    getDcard
+} = require("../controllers/dcardcrawler_controller");
+
+router.route("/admin/test").get(getPtt);
 router.route("/admin/test2").get(getDcard);
 
 module.exports = router;

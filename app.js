@@ -4,6 +4,8 @@ const app = express();
 
 // public html
 app.use(express.static("public"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // API routes
 app.use("/api/" + "1.0",

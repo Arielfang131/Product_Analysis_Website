@@ -20,7 +20,7 @@ const createCrawlerInfo = async (crawlerInfo) => {
             // const title = crawlerInfo[i].title;
             const time = crawlerInfo[i].comments[j].commentTime;
             const push = null;
-            const likes = crawlerInfo[i].comments[j].likes;
+            const likes = crawlerInfo[i].comments[j].commentLikeCount;
             // const likes = "test";
             // const channel = crawlerInfo[i].channel;
             // const link = crawlerInfo[i].link;

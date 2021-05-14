@@ -1,6 +1,5 @@
 const crawlerModel = require("../models/crawler_model.js");
 const request = require("request");
-const cheerio = require("cheerio");
 const randomUseragent = require("random-useragent");
 const proxys = [
     "http://tihyjcyk-dest:sr9mbjac4xab@185.95.157.117:6138",
@@ -26,53 +25,52 @@ const proxys = [
     "http://tihyjcyk-dest:sr9mbjac4xab@45.92.247.197:6705",
     "http://tihyjcyk-dest:sr9mbjac4xab@2.56.101.219:8751"
 ];
-
-function delay () {
+function delay (i) {
     return new Promise(function (resolve, reject) {
         setTimeout(function () {
+            console.log(i);
             resolve("delay");
-        }, 3000);
+        }, 1500);
     });
 }
-
 function dcardCrawler (url, proxy) {
     return new Promise((resolve, reject) => {
         request({
             url: url,
-            method: "GET",
-            proxy: proxy,
-            headers: {
-                Accept: "application/json",
-                "Accept-Charset": "utf-8",
-                "User-Agent": randomUseragent.getRandom()
-            }
-
+            method: "GET"
+            // proxy: proxy
+            // headers: {
+            //     Accept: "application/json",
+            //     "Accept-Charset": "utf-8",
+            //     "User-Agent": randomUseragent.getRandom()
+            // }
         }, (err, res, body) => {
             if (err || !body) {
                 return;
             }
-            console.log(randomUseragent.getRandom());
-            const data = JSON.parse(body);
-            // console.log("msg: " + data);
-            resolve(data);
+            // console.log(randomUseragent.getRandom());
+            try {
+                const data = JSON.parse(body);
+                resolve(data);
+            } catch (err) {
+                console.log("msg: " + err);
+            }
         });
     });
 };
-
 // 爬取Dcard文章列表，標題、id、作者、讚數、留言數
 async function getDcard (req, res) {
     const result = [];
     let lastUrl = "https://www.dcard.tw/service/api/v2/forums/makeup/posts?limit=100";
     for (let i = 0; i < 1; i++) {
-        await delay();
+        await delay(i);
         const proxy = proxys[(i % 20)];
-        console.log((i % 20));
         const dcardInfo = await dcardCrawler(lastUrl, proxy);
         const pageLimit = dcardInfo.length - 1;
         const beforeId = dcardInfo[pageLimit].id;
         lastUrl = `https://www.dcard.tw/service/api/v2/forums/makeup/posts?limit=100&&before=${beforeId}`;
         for (let j = 0; j < dcardInfo.length; j++) {
-            await delay();
+            await delay(j);
             const id = dcardInfo[j].id;
             const title = dcardInfo[j].title;
             const author = dcardInfo[j].school;
@@ -99,16 +97,14 @@ async function getDcard (req, res) {
                 channel: "Dcard > 美妝",
                 link: `https://www.dcard.tw/f/makeup/p/${id}`,
                 article: content
-
             };
             result.push(data);
             const commentsUrl = `https://www.dcard.tw/service/api/v2/posts/${id}/comments`;
-            await delay();
+            await delay(j);
             const commentsData = await dcardCrawler(commentsUrl);
             data.comments = [];
             for (const k in commentsData) {
                 if ("content" in commentsData[k]) {
-                    console.log(k + "true");
                     const comment = commentsData[k].content;
                     const commentDate = new Date(commentsData[k].createdAt);
                     const commentDateInfo = commentDate.getFullYear() + "-" + (commentDate.getMonth() + 1) + "-" + commentDate.getDate();
@@ -130,10 +126,10 @@ async function getDcard (req, res) {
             }
         }
     }
+    await crawlerModel.createCrawlerInfo(result);
     console.log(result);
     res.send(result);
 }
-
 module.exports = {
     getDcard
 };

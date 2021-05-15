@@ -188,8 +188,8 @@ async function getPtt (req, res) {
                 }
             }
         }
-        await crawlerModel.createCrawlerInfo(crawlerInfo);
-        // console.log(crawlerInfo);
+        // await crawlerModel.createCrawlerInfo(crawlerInfo);
+        console.log(crawlerInfo);
         crawlerInfos.push(crawlerInfo);
     }
     res.send(crawlerInfos);

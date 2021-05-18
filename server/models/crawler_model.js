@@ -33,6 +33,7 @@ const createCrawlerInfo = async (crawlerInfo) => {
     const sql = "INSERT INTO text_table (topic_id, title, content, body_textORcomment, channel, link, time, push_number, likes_number, author, emotion) VALUES ?";
     const result = await query(sql, [dataArr]);
     console.log(result);
+    return result;
 };
 
 module.exports = { createCrawlerInfo };

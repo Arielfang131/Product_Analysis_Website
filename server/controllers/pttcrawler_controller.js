@@ -9,10 +9,9 @@ function getMonthFromString (mon) {
     return new Date(Date.parse(mon + " 1, 2021")).getMonth() + 1;
 }
 
-function delay (i) {
+function delay () {
     return new Promise(function (resolve, reject) {
         setTimeout(function () {
-            console.log(i);
             resolve("delay");
         }, 1500);
     });
@@ -188,10 +187,11 @@ async function getPtt (req, res) {
                 }
             }
         }
-        // await crawlerModel.createCrawlerInfo(crawlerInfo);
-        console.log(crawlerInfo);
+        const sqlResult = await crawlerModel.createCrawlerInfo(crawlerInfo);
+        console.log(sqlResult);
         crawlerInfos.push(crawlerInfo);
     }
+    console.log(crawlerInfos);
     res.send(crawlerInfos);
 }
 

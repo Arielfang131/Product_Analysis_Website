@@ -10,7 +10,8 @@ app.use(express.urlencoded({ extended: true }));
 // API routes
 app.use("/api/" + "1.0",
     [
-        require("./server/routes/crawler_route")
+        require("./server/routes/crawler_route"),
+        require("./server/routes/contentlist_route")
     ]
 );
 

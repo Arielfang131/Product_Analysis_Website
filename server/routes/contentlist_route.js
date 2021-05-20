@@ -2,8 +2,8 @@ const router = require("express").Router();
 
 const {
     getContentList
-} = require("../controllers/keywords_controller");
+} = require("../controllers/contentlist_controller");
 
-router.route("/keywords").post(getContentList);
+router.route("/contentlist").post(getContentList);
 
 module.exports = router;

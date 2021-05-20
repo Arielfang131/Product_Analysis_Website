@@ -1,15 +1,22 @@
-// const contentListModel = require("../models/contentlist_model.js");
+const keywordstModel = require("../models/keywords_model.js");
 
 async function getKeywords (req, res) {
     try {
-        console.log(req.body);
+        const data = [];
         for (let i = 0; i < req.body.length; i++) {
             const topic = req.body[i].topic;
             if (topic !== "") {
-                const keywords = req.body[i].keywords;
-                const symbol = req.body[i].symbol;
+                const obj = {
+                    topicId: req.body[i].topicId,
+                    keywords: req.body[i].keywords,
+                    symbols: req.body[i].symbol
+                };
+                data.push(obj);
             }
         }
+        // console.log(data);
+        const sqlResult = await keywordstModel.createKeywords(data);
+        console.log(sqlResult);
     } catch (err) {
         console.log("error: " + err);
         res.send("wrong");

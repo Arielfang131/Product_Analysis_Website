@@ -4,6 +4,6 @@ const {
     getKeywords
 } = require("../controllers/keywords_controller");
 
-router.route("/contentlist").post(getKeywords);
+router.route("/keywords").post(getKeywords);
 
 module.exports = router;

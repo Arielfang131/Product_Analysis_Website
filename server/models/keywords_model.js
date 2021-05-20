@@ -12,6 +12,20 @@ const { query } = require("./mysqlcon");
 //     console.log(result);
 //     return result;
 // };
+const createKeywords = async function (data) {
+    const resultArr = [];
+    for (const i in data) {
+        const result = [];
+        const topicId = data[i].topicId;
+        const keywords = data[i].keywords;
+        const symbols = data[i].symbols;
+        result.push(topicId, keywords.toString(), symbols.toString());
+        resultArr.push(result);
+    }
+    const sql = "INSERT INTO keywords_table (topic_id, keywords,symbols) VALUES ?";
+    const result = await query(sql, [resultArr]);
+    return result;
+};
 
 const selectKeywords = async function () {
     const sql = "SELECT * FROM keywords_table;";
@@ -20,5 +34,6 @@ const selectKeywords = async function () {
 };
 
 module.exports = {
+    createKeywords,
     selectKeywords
 };

@@ -2,7 +2,7 @@ function ajax (src, data) {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            JSON.parse(xhr.responseText);
+            // JSON.parse(xhr.responseText);
             // console.log(JSON.parse(xhr.responseText));
         }
     };
@@ -37,28 +37,30 @@ button.addEventListener("click", function () {
         const newFirst = [];
         const newSecond = [];
         const newSymbols = [];
-        for (let i = 0; i < firstArr.length; i++) {
-            if (firstArr[i] === "") {
+        for (let a = 0; a < firstArr.length; a++) {
+            if (firstArr[a] === "") {
                 continue;
             }
-            newFirst.push(firstArr[i]);
-            if (i >= 1) {
-                newSymbols.push(symbols[i - 1]); // 有問題 i-1有問題
+            newFirst.push(firstArr[a]);
+            if (a >= 1) {
+                newSymbols.push(symbols[a - 1]);
             }
         }
-        newSymbols.push(symbols[2]);
-        for (let i = 0; i < secondArr.length; i++) {
-            if (secondArr[i] === "") {
+        if (keywords[3] !== "" || keywords[4] !== "" || keywords[5] !== "") {
+            newSymbols.push(symbols[2]);
+        }
+        for (let b = 0; b < secondArr.length; b++) {
+            if (secondArr[b] === "") {
                 continue;
             }
-            newSecond.push(secondArr[i]);
-            if (i < secondArr.length - 1) {
-                newSymbols.push(symbols[i + 3]); // 有問題
+            newSecond.push(secondArr[b]);
+            if (b < secondArr.length - 1) {
+                newSymbols.push(symbols[b + 3]);
             }
         }
         const finalArr = [];
         finalArr.push(newFirst, newSecond);
-        const obj = { topic: topic, keywords: finalArr, symbol: newSymbols };
+        const obj = { topicId: (i + 1), topic: topic, keywords: finalArr, symbol: newSymbols };
         data.push(obj);
     }
     console.log(data);

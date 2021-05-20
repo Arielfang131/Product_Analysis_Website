@@ -117,47 +117,102 @@ for (let i = 0; i < checkboxThree.length; i++) {
 
 const button = document.getElementById("button");
 button.addEventListener("click", function (event) {
+    const content = document.querySelectorAll(".content");
+    for (let i = 0; i < content.length; i++) {
+        content[i].remove();
+    }
+
     let topicId = "";
     let timeValue = "";
     const channel = [];
-    // let noSelectTopic = true;
+    let selectTopic = 0;
+    let selectTime = 0;
+    let selectChannel = 0;
     for (let i = 0; i < checkboxOne.length; i++) {
         if (checkboxOne[i].checked === true) {
             topicId = checkboxOne[i].value;
-        // } else {
-        //     noSelectTopic = false;
-        // }
+            selectTopic += 1;
         }
     }
-    // if (noSelectTopic === false) {
-    //     alert("請選擇主題");
-    //     return;
-    // }
-    // let noSelectTime = true;
+    if (selectTopic === 0) {
+        alert("請選擇主題");
+        return;
+    }
     for (let i = 0; i < checkboxTwo.length; i++) {
         if (checkboxTwo[i].checked === true) {
             timeValue = checkboxTwo[i].value;
-        // } else {
-        //     noSelectTime = false;
-        // }
+            selectTime += 1;
         }
     }
-    // if (noSelectTime === false) {
-    //     alert("請選擇時間");
-    //     return;
-    // }
+    if (selectTime === 0) {
+        alert("請選擇期間");
+        return;
+    }
     for (let i = 0; i < checkboxThree.length; i++) {
         if (checkboxThree[i].checked === true) {
+            selectChannel += 1;
             if (checkboxThree[i].value !== "all") {
                 channel.push(checkboxThree[i].value);
             }
         }
     }
+    if (selectChannel === 0) {
+        alert("請選擇來源");
+        return;
+    }
     alert("查詢中，請稍等");
 
+    const date = new Date();
+    let dateInfo = "";
+    const dateString = date.getDate().toString();
+    if (dateString.length === 1) {
+        const dateZero = ("0" + dateString);
+        dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + dateZero;
+    } else {
+        dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+    }
+    let deadline = "";
+    if (timeValue === "0") {
+        deadline = dateInfo;
+    } else if (timeValue === "7") {
+        const nowDate = new Date();
+        nowDate.setDate(date.getDate() - 7);
+        const nowDateString = nowDate.getDate().toString();
+        if (nowDateString.length === 1) {
+            const deadlineZero = ("0" + nowDateString);
+            deadline = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + deadlineZero;
+        } else {
+            deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+        }
+    } else if (timeValue === "15") {
+        const nowDate = new Date();
+        nowDate.setDate(date.getDate() - 15);
+        const nowDateString = nowDate.getDate().toString();
+        if (nowDateString.length === 1) {
+            const deadlineZero = ("0" + nowDateString);
+            deadline = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + deadlineZero;
+        } else {
+            deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+        }
+    } else if (timeValue === "30") {
+        const nowDate = new Date();
+        nowDate.setDate(date.getDate() - 30);
+        const nowDateString = nowDate.getDate().toString();
+        if (nowDateString.length === 1) {
+            const deadlineZero = ("0" + nowDateString);
+            deadline = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + deadlineZero;
+        } else {
+            deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+        }
+    }
+    // const timeDetail = date.toString().split(" ")[4];
+    // const timeInfo = timeDetail.split(":").slice(0, 2).join(":");
+    // const time = dateInfo + " " + timeInfo;
     const data = {
         topicId: topicId,
         timeValue: timeValue,
+        nowTime: dateInfo,
+        deadline: deadline,
         channel: channel
     };
     ajax("/api/1.0/contentlist", data, render);

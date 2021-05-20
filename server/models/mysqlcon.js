@@ -29,7 +29,8 @@ db.getConnection(function (err, connection) {
 function dbsql (sql, value) {
     const result = new Promise((resolve, reject) => {
         db.query(sql, value, (err, result) => {
-            if (err) throw err;
+            // if (err) throw err;
+            if (err) reject(err);
             resolve(result);
         });
     });

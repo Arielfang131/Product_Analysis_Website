@@ -1,9 +1,9 @@
 const router = require("express").Router();
 
 const {
-    getContentList
+    getKeywords
 } = require("../controllers/keywords_controller");
 
-router.route("/keywords").post(getContentList);
+router.route("/contentlist").post(getKeywords);
 
 module.exports = router;

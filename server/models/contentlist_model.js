@@ -6,12 +6,24 @@ const getKeywords = async function (topicId) {
     return keywords;
 };
 
-const getSQLcontent = async function (keywords, titleQuery, channel) {
+const getSQLcontent = async function (keywords, titleQuery, channel, nowTime, deadline) {
     // const sql = "SELECT * FROM text_table WHERE ? order by time DESC limit 10;;;;;;;";
-    const sql = `SELECT * FROM text_table WHERE ((${keywords}) OR (${titleQuery})) AND (${channel}) order by time DESC limit 10;`;
-    // const result = await query(sql, [keywords]);
-    const result = await query(sql);
-    return result;
+    try {
+        const sql = `SELECT * FROM text_table WHERE ((${keywords}) OR (${titleQuery})) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') order by time DESC;`;
+
+        // if (timeValue === "7"){
+        //     const beforeSeven =
+
+        // }
+
+        // const result = await query(sql, [keywords]);
+        const result = await query(sql);
+        console.log(result);
+        return result;
+    } catch (err) {
+        console.log(err);
+        return {};
+    }
 };
 
 module.exports = {

@@ -134,7 +134,7 @@ function pttCrawlerPush (url) {
     });
 }
 
-const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index.html", page: 2 }, { url: "https://www.ptt.cc/bbs/BeautySalon/index.html", page: 2 }];
+const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index.html", page: 50 }, { url: "https://www.ptt.cc/bbs/BeautySalon/index.html", page: 80 }];
 
 async function getPtt (req, res) {
     const crawlerInfos = [];
@@ -153,17 +153,20 @@ async function getPtt (req, res) {
         // for迴圈爬取多頁的文章列表和上一頁的URL
         let pageURL = arrUrl[k].url;
         for (let i = 0; i < arrUrl[k].page; i++) {
-            await delay();
+            console.log("page: " + i + " in " + arrUrl[k].page);
+            // await delay();
             const result = await pttCrawler(pageURL);
             // const lastPageUrl = result.lastURL;
             pageURL = result.lastURL;
             // for迴圈爬取每頁的作者、標題、時間、內容
             for (const j in result.info) {
-                await delay();
+                // await delay();
                 // for (let j = 0; j < 3; j++) {
                 const link = result.info[j].link;
+                console.log(link);
                 const push = result.info[j].push;
                 const detail = await pttCrawlerContent(`https://www.ptt.cc${link}`);
+                console.log(detail[1]);
                 const commentsInfo = await pttCrawlerPush(`https://www.ptt.cc${link}`);
                 if (detail.length === 4) {
                     const monthEnglish = detail[2].split(" ")[1];

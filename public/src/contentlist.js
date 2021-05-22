@@ -13,6 +13,13 @@ function ajax (src, data, callback) {
 
 function render (info) {
     const contents = document.getElementById("contents");
+
+    if (info.length === 0) {
+        const noContent = document.createElement("div");
+        noContent.id = "noContent";
+        noContent.innerHTML = "<h3>沒有符合的內容</h3>";
+        contents.append(noContent);
+    }
     for (const i in info) {
         const content = document.createElement("div");
         content.className = "content";
@@ -118,6 +125,11 @@ for (let i = 0; i < checkboxThree.length; i++) {
 const button = document.getElementById("button");
 button.addEventListener("click", function (event) {
     const content = document.querySelectorAll(".content");
+    const noContent = document.getElementById("noContent");
+    if (noContent) {
+        noContent.remove();
+    }
+
     for (let i = 0; i < content.length; i++) {
         content[i].remove();
     }

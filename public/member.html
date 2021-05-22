@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+   		<title>會員登入/註冊</title>
+		<link href="./styles/member.css" rel="stylesheet" />
+	</head>
+	<body>
+  		<div class="container1">
+			<div class="box1">
+				<div class="menu_bar" style="background-color:#E8FFF5;"><h2>觀測形式</h2></div>
+				<div id = "menu">
+					<div>文章列表</div><br>
+					<div>關鍵字分析</div><br>
+					<div>正負PN比</div><br>
+				</div>
+			</div>
+			<div class="box2">
+				<div class="menu_bar" style="background-color:#D2E9FF;"><h2>會員登入/註冊</h2></div>
+                <div id="main">
+                    <div id="sign_in">
+                        <div><h3>會員登入</h3></div>
+                        <input type="text" name="sign_in_business_no" id="sign_in_business_no" class="input" placeholder = "公司統編" ><br>
+                        <input type="text" name="sign_in_email" id="sign_in_email" class="input" placeholder = "E-mail" ><br>
+                        <input type="text" name="sign_in_password" id="sign_in_password" class="input" placeholder = "密碼"><br>
+                        <button id="sign_in_button">登入</button>
+                    </div>
+                    <div id="register">
+                        <div><h3>會員註冊</h3></div>
+                        <input type="text" name="register_business_name" id="register_business_name" class="input" placeholder = "公司名稱" ><br>
+                        <input type="text" name="register_business_no" id="register_business_no" class="input" placeholder = "公司統編" ><br>
+                        <input type="text" name="register_user_name" id="register_user_name" class="input" placeholder = "用戶暱稱" ><br>
+                        <input type="text" name="register_email" id="register_email" class="input" placeholder = "E-mail" ><br>
+                        <input type="text" name="register_password" id="register_password" class="input" placeholder = "密碼"><br>
+                        <label>是否為管理者</label>
+                        <select  name='admin' id="admin">
+                            <option value="yes">是</option>
+                            <option value="no">否</option>
+                        </select><br>
+                        <button id="register_button">註冊</button>
+                    </div>
+                </div>
+			</div>
+            <div class = "box3">
+                <div class="menu_bar"><img id="icon_profile" src="./styles/images/profile.jpeg"></div>
+            </div>
+
+		</div>
+		<script src="./src/member.js"></script>
+	</body>
+</html>

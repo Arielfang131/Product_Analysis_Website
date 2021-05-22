@@ -14,7 +14,6 @@ async function getKeywords (req, res) {
                 data.push(obj);
             }
         }
-        // console.log(data);
         const sqlResult = await keywordstModel.createKeywords(data);
         console.log(sqlResult);
     } catch (err) {

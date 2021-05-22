@@ -19,10 +19,10 @@ const createKeywords = async function (data) {
         const topicId = data[i].topicId;
         const keywords = data[i].keywords;
         const symbols = data[i].symbols;
-        result.push(topicId, keywords.toString(), symbols.toString());
+        result.push(topicId, keywords.join("+"), symbols.toString());
         resultArr.push(result);
     }
-    const sql = "INSERT INTO keywords_table (topic_id, keywords,symbols) VALUES ?";
+    const sql = "INSERT INTO keywords_table (topic_id, keywords,symbols) VALUES?";
     const result = await query(sql, [resultArr]);
     return result;
 };

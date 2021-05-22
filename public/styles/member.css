@@ -1,0 +1,56 @@
+.container1{
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    display:flex;
+    width:95%;
+    justify-content:flex-start;
+    text-align: center;
+}
+.box1{
+    width:100px;
+    display: flex;
+    flex-direction: column;
+}
+.menu_bar{
+    height: 60px;
+    line-height:30px;
+}
+#menu{
+    display: flex;
+    flex-direction: column;
+}
+.box2{
+    flex-grow:1;
+    display: flex;
+    flex-direction: column;
+}
+#main{
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    flex-wrap:wrap;
+    background-color: coral;
+}
+#sign_in{
+    width: 380px;
+    margin-left:auto;
+    background-color: blueviolet;
+}
+#register{
+    width: 380px;
+    margin-right:auto;
+    background-color: cadetblue;
+}
+#icon_profile{
+    height: 40px;
+    margin-top: 12px;
+}
+input{
+    margin-bottom: 15px;
+    line-height:2em;
+    width:250px;
+}
+#register_button{
+    margin-top: 15px;
+}

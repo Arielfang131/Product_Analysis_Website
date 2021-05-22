@@ -3,7 +3,6 @@ function ajax (src, data) {
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const obj = JSON.parse(xhr.responseText);
-            console.log(obj);
             if (obj.msg === "此email已經有註冊") {
                 alert("email已經有註冊");
             } else if (obj.msg === "註冊成功") {
@@ -12,8 +11,24 @@ function ajax (src, data) {
                 alert("查無此會員，請先註冊");
             } else if (obj.msg === "登入成功") {
                 alert("登入成功");
+            } else if (obj.msg === "密碼錯誤") {
+                alert("密碼錯誤");
             }
             window.localStorage.setItem("access_token", obj.token);
+            const newXhr = new XMLHttpRequest();
+            if (newXhr.readyState === 4 && newXhr.status === 200) {
+                console.log("123");
+                const res = JSON.parse(newXhr.responseText);
+                console.log(res);
+                if (res.msg === "null") {
+                    window.location.href = "member.html";
+                }
+            }
+            newXhr.open("GET", "api/1.0/profile");
+            newXhr.setRequestHeader("Content-Type", "application/json");
+            const accessToken = localStorage.getItem("access_token");
+            newXhr.setRequestHeader("Authorization", "bearer " + accessToken);
+            newXhr.send();
         }
     };
     xhr.open("POST", src);

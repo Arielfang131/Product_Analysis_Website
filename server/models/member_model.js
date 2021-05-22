@@ -18,11 +18,20 @@ const registerMember = async function (companyName, companyNo, userName, email, 
     } catch (err) {
         console.log(err);
     }
+};
 
-    // return result;
+const selectUserInfo = async function (email) {
+    try {
+        const sql = "SELECT * FROM user_table WHERE email = ?;";
+        const result = await query(sql, email);
+        return result;
+    } catch (err) {
+        console.log(err);
+    }
 };
 
 module.exports = {
     selectEmail,
-    registerMember
+    registerMember,
+    selectUserInfo
 };

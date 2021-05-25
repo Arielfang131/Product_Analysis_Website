@@ -30,17 +30,14 @@
     flex-direction: row;
     text-align: center;
     flex-wrap:wrap;
-    background-color: coral;
 }
 #sign_in{
     width: 380px;
     margin-left:auto;
-    background-color: blueviolet;
 }
 #register{
     width: 380px;
     margin-right:auto;
-    background-color: cadetblue;
 }
 #icon_profile{
     height: 40px;

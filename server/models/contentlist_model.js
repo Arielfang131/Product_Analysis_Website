@@ -1,7 +1,13 @@
 const { query } = require("./mysqlcon");
 
+const selectTopic = async function (companyNo) {
+    const sql = "SELECT company_table.company_id, topic_table.topic_id, topic_table.topic_name FROM company_table INNER JOIN topic_table ON company_table.company_id = topic_table.company_id WHERE company_table.company_number = ?;";
+    const result = await query(sql, companyNo);
+    return result;
+};
+
 const getKeywords = async function (topicId) {
-    const sql = "SELECT keywords, symbols FROM keywords_table WHERE topic_id = ?;";
+    const sql = "SELECT keywords, symbols FROM keywords_table WHERE keywords_id = ?;";
     const keywords = await query(sql, topicId);
     return keywords;
 };
@@ -19,6 +25,7 @@ const getSQLcontent = async function (contentQuery, titleQuery, channel, nowTime
 };
 
 module.exports = {
+    selectTopic,
     getKeywords,
     getSQLcontent
 };

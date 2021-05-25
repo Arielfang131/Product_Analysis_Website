@@ -16,14 +16,17 @@ function ajax (src, data) {
             }
             window.localStorage.setItem("access_token", obj.token);
             const newXhr = new XMLHttpRequest();
-            if (newXhr.readyState === 4 && newXhr.status === 200) {
-                console.log("123");
-                const res = JSON.parse(newXhr.responseText);
-                console.log(res);
-                if (res.msg === "null") {
-                    window.location.href = "member.html";
+            newXhr.onreadystatechange = function () {
+                if (newXhr.readyState === 4 && newXhr.status === 200) {
+                    const res = JSON.parse(newXhr.responseText);
+                    console.log(res);
+                    if (res.msg === "null") {
+                        window.location.href = "member.html";
+                    } else {
+                        window.location.href = "contentlist.html";
+                    }
                 }
-            }
+            };
             newXhr.open("GET", "api/1.0/profile");
             newXhr.setRequestHeader("Content-Type", "application/json");
             const accessToken = localStorage.getItem("access_token");

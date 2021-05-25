@@ -1,4 +1,33 @@
 const contentListModel = require("../models/contentlist_model.js");
+// 載入 jsonwebtoken
+const jwt = require("jsonwebtoken");
+
+// 依據使用者資訊，送出儲存過的主題
+async function getTopicList (req, res) {
+    try {
+        const tokenInfo = req.headers.authorization;
+        const token = tokenInfo.split(" ")[1];
+        const decodeToken = jwt.decode(token, process.env.ACCESS_TOKEN_SECRET);
+        const companyNo = decodeToken.companyNo;
+        const sqlResult = await contentListModel.selectTopic(companyNo);
+        const data = [];
+        for (const i in sqlResult) {
+            const ans = {
+                topicId: sqlResult[i].topic_id,
+                topicName: sqlResult[i].topic_name
+            };
+            data.push(ans);
+        }
+        console.log(data);
+        res.send(JSON.stringify(data));
+    } catch (err) {
+        console.log("error: " + err);
+        const obj = {
+            msg: "wrong"
+        };
+        res.send(obj);
+    }
+}
 
 async function getContentList (req, res) {
     try {
@@ -58,33 +87,6 @@ async function getContentList (req, res) {
                 titleSecond += `${symbols2.shift()} `;
             }
         }
-
-        // contentQuery = strFirst;
-        // titleQuery = titleFirst;
-
-        // for (let i = 0; i < symbols.length; i++) { // first array
-        //     strFirst += `constent LIKE "%${firstKeywordsArr[i]}%" `;
-        //     strFirst += `${symbols[i]} `;
-        //     if (i >= firstKeywordsArr.length) { // second array
-        //         console.log(firstKeywordsArr.length);
-        //         strSecond += `constent LIKE "%${secondKeywordsArr[i - 3]}%" `;
-        //         console.log((i - 3));
-        //         strSecond += `${symbols[i]} `;
-        //     }
-        // }
-        // console.log(strFirst);
-        // console.log(strSecond);
-
-        // for (const i in sqlResult) {
-        //     let keywords = `content LIKE '%${sqlResult[i].keywords}%' OR `;
-        //     let keywordsTitle = `title LIKE '%${sqlResult[i].keywords}%' OR `;
-        //     if (parseInt(i) === (sqlResult.length - 1)) {
-        //         keywords = `content LIKE '%${sqlResult[i].keywords}%'`;
-        //         keywordsTitle = `title LIKE '%${sqlResult[i].keywords}%'`;
-        //     }
-        //     contentQuery += keywords;
-        //     titleQuery += keywordsTitle;
-        // }
         let channelQuery = "";
         for (const i in channels) {
             let channel = `channel = "${channels[i]}" OR `;
@@ -102,5 +104,6 @@ async function getContentList (req, res) {
 }
 
 module.exports = {
+    getTopicList,
     getContentList
 };

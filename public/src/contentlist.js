@@ -1,3 +1,33 @@
+function ajaxTopic (src, callback) {
+    const newXhr = new XMLHttpRequest();
+    newXhr.onreadystatechange = function () {
+        if (newXhr.readyState === 4 && newXhr.status === 200) {
+            const res = JSON.parse(newXhr.responseText);
+            if (res.msg === "null") {
+                window.location.href = "member.html";
+            } else {
+                const xhrSec = new XMLHttpRequest();
+                xhrSec.onreadystatechange = function () {
+                    if (xhrSec.readyState === 4 && xhrSec.status === 200) {
+                        const response = JSON.parse(xhrSec.responseText);
+                        callback(response);
+                    }
+                };
+                xhrSec.open("GET", "api/1.0/contentlist");
+                xhrSec.setRequestHeader("Content-Type", "application/json");
+                const accessToken = localStorage.getItem("access_token");
+                xhrSec.setRequestHeader("Authorization", "bearer " + accessToken);
+                xhrSec.send();
+            }
+        }
+    };
+    newXhr.open("GET", src);
+    newXhr.setRequestHeader("Content-Type", "application/json");
+    const accessToken = localStorage.getItem("access_token");
+    newXhr.setRequestHeader("Authorization", "bearer " + accessToken);
+    newXhr.send();
+}
+
 function ajax (src, data, callback) {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
@@ -9,6 +39,39 @@ function ajax (src, data, callback) {
     xhr.open("POST", src);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(data));
+}
+
+function getTopic (data) {
+    const littleBox = document.querySelectorAll(".littleBox");
+    const parentElement = littleBox[0];
+    if (data.length === 0) {
+        const noResult = document.createElement("div");
+        noResult.innerHTML = "無主題，請先設定主題";
+        parentElement.append(noResult);
+    }
+    for (let i = 0; i < data.length; i++) {
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        input.id = "cbox1";
+        input.name = `cbox1_option_${(i + 1)}`;
+        const label = document.createElement("label");
+        input.value = data[i].topicId;
+        label.innerHTML = `${data[i].topicName}<br>`;
+        parentElement.append(input, label);
+    }
+    const checkboxOne = document.querySelectorAll("#cbox1");
+    // 選項只能單選
+    for (let i = 0; i < checkboxOne.length; i++) {
+        checkboxOne[i].addEventListener("change", function (event) {
+            for (let j = 0; j < checkboxOne.length; j++) {
+                if (checkboxOne[j].name === event.target.name) {
+                    checkboxOne[j].checked = true;
+                } else {
+                    checkboxOne[j].checked = false;
+                }
+            }
+        });
+    }
 }
 
 function render (info) {
@@ -78,22 +141,12 @@ function render (info) {
     }
 }
 
-const checkboxOne = document.querySelectorAll("#cbox1");
+ajaxTopic("/api/1.0/profile", getTopic);
+
 const checkboxTwo = document.querySelectorAll("#cbox2");
 const checkboxThree = document.querySelectorAll("#cbox3");
 
-for (let i = 0; i < checkboxOne.length; i++) {
-    checkboxOne[i].addEventListener("change", function (event) {
-        for (let j = 0; j < checkboxOne.length; j++) {
-            if (checkboxOne[j].name === event.target.name) {
-                checkboxOne[j].checked = true;
-            } else {
-                checkboxOne[j].checked = false;
-            }
-        }
-    });
-}
-
+// 時間只能單選
 for (let i = 0; i < checkboxTwo.length; i++) {
     checkboxTwo[i].addEventListener("change", function (event) {
         for (let j = 0; j < checkboxTwo.length; j++) {
@@ -106,6 +159,7 @@ for (let i = 0; i < checkboxTwo.length; i++) {
     });
 }
 
+// 頻道點選全選，再點取消全選
 for (let i = 0; i < checkboxThree.length; i++) {
     checkboxThree[i].addEventListener("change", function (event) {
         const isNotChecked = event.target.name === "cbox3_option1" && event.target.checked === true;
@@ -133,7 +187,7 @@ button.addEventListener("click", function (event) {
     for (let i = 0; i < content.length; i++) {
         content[i].remove();
     }
-
+    const checkboxOne = document.querySelectorAll("#cbox1");
     let topicId = "";
     let timeValue = "";
     const channel = [];
@@ -229,5 +283,3 @@ button.addEventListener("click", function (event) {
     };
     ajax("/api/1.0/contentlist", data, render);
 });
-
-// ajax("/api/1.0/contentlist",data, render);

@@ -80,7 +80,6 @@ async function getProfile (req, res) {
             admin: decodeToken.admin
         };
     }
-    console.log(obj);
     res.send(obj);
 }
 

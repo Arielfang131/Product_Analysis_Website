@@ -1,0 +1,47 @@
+.container1{
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    display:flex;
+    width:95%;
+    justify-content:flex-start;
+    text-align: center;
+}
+.box1{
+    width:100px;
+    display: flex;
+    flex-direction: column;
+}
+.menu_bar{
+    height: 60px;
+    line-height:30px;
+}
+#menu{
+    display: flex;
+    flex-direction: column;
+}
+.box2{
+    flex-grow:1;
+    display: flex;
+    flex-direction: column;
+}
+#main{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    font-size: 22px;
+}
+.text{
+    margin-top: 15px;
+}
+
+#icon_profile{
+    height: 40px;
+    margin-top: 12px;
+}
+#button{
+    width: 80px;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+}

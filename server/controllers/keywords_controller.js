@@ -43,6 +43,7 @@ async function getKeywords (req, res) {
         let topicObj = {};
         for (let i = 0; i < req.body.length; i++) {
             const topicName = req.body[i].topic;
+            // 若topicName是空的，就不放
             if (topicName !== "") {
                 obj = {
                     topicNumber: req.body[i].topicNumber,

@@ -39,6 +39,22 @@ function ajax (src, data) {
     xhr.send(JSON.stringify(data));
 }
 
+const newXhr = new XMLHttpRequest();
+newXhr.onreadystatechange = function () {
+    if (newXhr.readyState === 4 && newXhr.status === 200) {
+        const response = JSON.parse(newXhr.responseText);
+        const responseLen = Object.keys(response).length;
+        if (responseLen === 4) {
+            window.location.href = "profile.html";
+        }
+    };
+};
+newXhr.open("GET", "api/1.0/profile");
+newXhr.setRequestHeader("Content-Type", "application/json");
+const accessToken = localStorage.getItem("access_token");
+newXhr.setRequestHeader("Authorization", "bearer " + accessToken);
+newXhr.send();
+
 const signInButton = document.getElementById("sign_in_button");
 signInButton.addEventListener("click", function () {
     const signInCompany = document.getElementById("sign_in_business_no");

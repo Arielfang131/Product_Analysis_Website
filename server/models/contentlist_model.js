@@ -12,7 +12,19 @@ const getKeywords = async function (topicId) {
     return keywords;
 };
 
-const getSQLcontent = async function (contentQuery, titleQuery, channel, nowTime, deadline) {
+const getSQLcontent = async function (contentQuery, titleQuery, channel, nowTime, deadline, emotionQuery) {
+    try {
+        const sql = `SELECT * FROM text_table WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND (${emotionQuery}) order by time DESC;`;
+        const result = await query(sql);
+        console.log(result);
+        return result;
+    } catch (err) {
+        console.log(err);
+        return {};
+    }
+};
+
+const getSQLcontentNoEmotion = async function (contentQuery, titleQuery, channel, nowTime, deadline) {
     try {
         const sql = `SELECT * FROM text_table WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') order by time DESC;`;
         const result = await query(sql);
@@ -27,5 +39,6 @@ const getSQLcontent = async function (contentQuery, titleQuery, channel, nowTime
 module.exports = {
     selectTopic,
     getKeywords,
-    getSQLcontent
+    getSQLcontent,
+    getSQLcontentNoEmotion
 };

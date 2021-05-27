@@ -169,9 +169,15 @@ function modifiedKeywords () {
     button.addEventListener("click", function () {
         // 新增關鍵字設定
         const topicEl = document.querySelectorAll(".topic");
+        let topicCount = 0;
+        let totalKeywordsCount = 0;
         const data = [];
         for (let i = 0; i < topicEl.length; i++) {
             const topic = topicEl[i].value;
+            let keywordsCount = 0;
+            if (topic !== "") {
+                topicCount += 1;
+            }
             const keywordsEl = document.querySelectorAll(`.keyword${i + 1}`);
             const keywords = [];
             // 每一個主題的關鍵字
@@ -181,7 +187,7 @@ function modifiedKeywords () {
                 keywords.push(keyword);
                 // }
             }
-            // 每一個主題的符號(換成兩個array)
+            // 每一個主題的符號
             const symbolsEl = document.querySelectorAll(`.symbol${i + 1}`);
             const symbols = [];
             for (let k = 0; k < symbolsEl.length; k++) {
@@ -191,6 +197,11 @@ function modifiedKeywords () {
 
             const firstArr = [keywords[0], keywords[1], keywords[2]];
             const secondArr = [keywords[3], keywords[4], keywords[5]];
+            // 有填主題，但第一個關鍵字是空的
+            if (topic !== "" && keywords[0] === "") {
+                alert("若需設定主題，請於第一個空格內填入一個關鍵字");
+                return;
+            }
             const newFirst = [];
             const newSecond = [];
             const newSymbols = [];
@@ -200,6 +211,8 @@ function modifiedKeywords () {
                 if (firstArr[a] === "") {
                     continue;
                 }
+                keywordsCount += 1;
+                totalKeywordsCount += 1;
                 // 關鍵字放到新的array
                 newFirst.push(firstArr[a]);
                 // 若後面有關鍵字，前面的符號才需要放進去
@@ -217,17 +230,29 @@ function modifiedKeywords () {
                 if (secondArr[b] === "") {
                     continue;
                 }
+                keywordsCount += 1;
+                totalKeywordsCount += 1;
                 // 關鍵字放到新的array(有問題)
                 newSecond.push(secondArr[b]);
                 if (b < secondArr.length - 1) {
                     newSymbols.push(symbols[b + 3]);
                 }
             }
+            if (topic === "" && keywordsCount !== 0) {
+                alert("若需設定主題，請填入主題名稱");
+                return;
+            }
+
             const finalArr = [];
             finalArr.push(newFirst, newSecond);
             const obj = { topicNumber: (i + 1), topic: topic, keywords: finalArr, symbols: newSymbols };
             data.push(obj);
         }
+        if (topicCount === 0 & totalKeywordsCount === 0) {
+            alert("請輸入至少一組主題");
+            return;
+        }
+
         console.log(data);
         alert("已儲存");
         ajaxKeywords("/api/1.0/profile", data);

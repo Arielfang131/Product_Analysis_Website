@@ -9,6 +9,7 @@
   "author": "Ariel",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/language": "^4.2.3",
     "bcrypt": "^5.0.1",
     "cheerio": "^1.0.0-rc.9",
     "dotenv": "^9.0.2",
@@ -19,6 +20,7 @@
     "random-useragent": "^0.5.0",
     "redis": "^3.1.2",
     "request": "^2.88.2",
+    "sentiment-zh_cn": "^2.0.3",
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {

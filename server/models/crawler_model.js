@@ -12,7 +12,8 @@ const createCrawlerInfo = async (crawlerInfo) => {
         const channel = crawlerInfo[i].channel;
         const link = crawlerInfo[i].link;
         const content = crawlerInfo[i].article;
-        data.push("1", title, content, "主文", channel, link, time, push, likes, author, "中立");
+        const emotion = crawlerInfo[i].emotion;
+        data.push(title, content, "主文", channel, link, time, push, likes, author, emotion);
         dataArr.push(data);
         for (const j in crawlerInfo[i].comments) {
             const dataComments = [];
@@ -21,16 +22,17 @@ const createCrawlerInfo = async (crawlerInfo) => {
             const time = crawlerInfo[i].comments[j].commentTime;
             const push = null;
             const likes = crawlerInfo[i].comments[j].commentLikeCount;
+            const commentEmotion = crawlerInfo[i].comments[j].emotion;
             // const likes = "test";
             // const channel = crawlerInfo[i].channel;
             // const link = crawlerInfo[i].link;
             const content = crawlerInfo[i].comments[j].comment;
-            dataComments.push("1", title, content, "留言", channel, link, time, push, likes, author, "中立");
+            dataComments.push(title, content, "留言", channel, link, time, push, likes, author, commentEmotion);
             dataArr.push(dataComments);
         }
     }
     // console.log(dataArr);
-    const sql = "INSERT INTO text_table (topic_id, title, content, body_textORcomment, channel, link, time, push_number, likes_number, author, emotion) VALUES ?";
+    const sql = "INSERT INTO text_table (title, content, body_textORcomment, channel, link, time, push_number, likes_number, author, emotion) VALUES ?";
     const result = await query(sql, [dataArr]);
     console.log(result);
     return result;

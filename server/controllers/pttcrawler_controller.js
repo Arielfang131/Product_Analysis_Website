@@ -1,4 +1,5 @@
 const crawlerModel = require("../models/crawler_model.js");
+const googleEmotion = require("../controllers/emotion_controller.js");
 
 const request = require("request");
 const cheerio = require("cheerio");
@@ -93,13 +94,13 @@ function pttCrawlerContent (url) {
 }
 
 // 進入PTT內頁，爬取留言
-function pttCrawlerPush (url) {
+async function pttCrawlerPush (url) {
     return new Promise((resolve, reject) => {
         const crawler = () => {
             request({
                 url: url,
                 method: "GET"
-            }, (err, res, body) => {
+            }, async (err, res, body) => {
                 if (err || !body) {
                     return;
                 }
@@ -120,13 +121,16 @@ function pttCrawlerPush (url) {
                     const timeSlash = timeComma.replace(",", " ");
                     const timeZero = timeSlash.replace("/", "-");
                     const time = year + "-" + timeZero.replace(/^[0]/g, "");
+                    const commentEmotion = await googleEmotion.emotion(comment);
                     const data = {
                         commentAuthor: commentAuthor,
                         comment: comment,
-                        commentTime: time
+                        commentTime: time,
+                        emotion: commentEmotion
                     };
                     ans.push(data);
                 }
+                console.log(ans);
                 resolve(ans);
             });
         };
@@ -134,7 +138,8 @@ function pttCrawlerPush (url) {
     });
 }
 
-const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index.html", page: 50 }, { url: "https://www.ptt.cc/bbs/BeautySalon/index.html", page: 80 }];
+// const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index.html", page: 10 }, { url: "https://www.ptt.cc/bbs/BeautySalon/index.html", page: 10 }];
+const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index.html", page: 1 }];
 
 async function getPtt (req, res) {
     const crawlerInfos = [];
@@ -176,6 +181,7 @@ async function getPtt (req, res) {
                     const timeDetail = detail[2].split(" ")[3];
                     const timeSeg = timeDetail.split(":");
                     const time = year + "-" + month + "-" + day + " " + (timeSeg.slice(0, 2).join(":"));
+                    const emotion = await googleEmotion.emotion(detail[3].article);
                     const obj = {
                         author: detail[0],
                         title: detail[1],
@@ -184,6 +190,7 @@ async function getPtt (req, res) {
                         channel: channel,
                         link: `https://www.ptt.cc${link}`,
                         article: detail[3].article,
+                        emotion: emotion,
                         comments: commentsInfo
                     };
                     crawlerInfo.push(obj);

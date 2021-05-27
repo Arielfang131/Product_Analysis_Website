@@ -134,7 +134,19 @@ function render (info) {
         time.innerHTML = `時間：${info[i].time}`;
         const emotion = document.createElement("div");
         emotion.className = "emotion";
-        emotion.innerHTML = `情緒：${info[i].emotion}`;
+        const rawEmotion = info[i].emotion;
+        const float = parseFloat(rawEmotion);
+        const emotionFinal = float.toFixed(2);
+        console.log(emotionFinal);
+        if (emotionFinal > 0.25) {
+            emotion.innerHTML = "情緒：正面";
+        } else if (emotionFinal >= -0.25 && emotionFinal <= 0.25) {
+            emotion.innerHTML = "情緒：中立";
+        } else if (emotionFinal < -0.25) {
+            emotion.innerHTML = "情緒：負面";
+        } else {
+            emotion.innerHTML = "情緒：舊資料";
+        }
         information.append(channel, push, likes, author, time, emotion);
         content.append(link, paragraph, information);
         contents.append(content);
@@ -145,6 +157,7 @@ ajaxTopic("/api/1.0/profile", getTopic);
 
 const checkboxTwo = document.querySelectorAll("#cbox2");
 const checkboxThree = document.querySelectorAll("#cbox3");
+const checkboxFour = document.querySelectorAll("#cbox4");
 
 // 時間只能單選
 for (let i = 0; i < checkboxTwo.length; i++) {
@@ -176,6 +189,23 @@ for (let i = 0; i < checkboxThree.length; i++) {
     });
 }
 
+// 情緒點選全選，再點取消全選
+for (let i = 0; i < checkboxFour.length; i++) {
+    checkboxFour[i].addEventListener("change", function (event) {
+        const isNotChecked = event.target.name === "cbox4_option1" && event.target.checked === true;
+        const isChecked = event.target.name === "cbox4_option1" && event.target.checked === false;
+        if (isChecked) {
+            for (let j = 0; j < checkboxFour.length; j++) {
+                checkboxFour[j].checked = false;
+            }
+        } else if (isNotChecked) {
+            for (let j = 0; j < checkboxFour.length; j++) {
+                checkboxFour[j].checked = true;
+            }
+        }
+    });
+}
+
 const button = document.getElementById("button");
 button.addEventListener("click", function (event) {
     const content = document.querySelectorAll(".content");
@@ -191,9 +221,11 @@ button.addEventListener("click", function (event) {
     let topicId = "";
     let timeValue = "";
     const channel = [];
+    const emotion = [];
     let selectTopic = 0;
     let selectTime = 0;
     let selectChannel = 0;
+    let selectEmotion = 0;
     for (let i = 0; i < checkboxOne.length; i++) {
         if (checkboxOne[i].checked === true) {
             topicId = checkboxOne[i].value;
@@ -224,6 +256,18 @@ button.addEventListener("click", function (event) {
     }
     if (selectChannel === 0) {
         alert("請選擇來源");
+        return;
+    }
+    for (let i = 0; i < checkboxFour.length; i++) {
+        if (checkboxFour[i].checked === true) {
+            selectEmotion += 1;
+            if (checkboxFour[i].value !== "all") {
+                emotion.push(checkboxFour[i].value);
+            }
+        }
+    }
+    if (selectEmotion === 0) {
+        alert("請選擇頻緒");
         return;
     }
     alert("查詢中，請稍等");
@@ -279,7 +323,8 @@ button.addEventListener("click", function (event) {
         timeValue: timeValue,
         nowTime: dateInfo,
         deadline: deadline,
-        channel: channel
+        channel: channel,
+        emotion: emotion
     };
     ajax("/api/1.0/contentlist", data, render);
 });

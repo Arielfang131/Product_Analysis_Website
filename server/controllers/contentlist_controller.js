@@ -1,6 +1,7 @@
 const contentListModel = require("../models/contentlist_model.js");
 // 載入 jsonwebtoken
 const jwt = require("jsonwebtoken");
+const { emotion } = require("./emotion_controller.js");
 
 // 依據使用者資訊，送出儲存過的主題
 async function getTopicList (req, res) {
@@ -33,6 +34,7 @@ async function getContentList (req, res) {
     try {
         const topicId = req.body.topicId;
         const channels = req.body.channel;
+        const emotions = req.body.emotion;
         const nowTime = req.body.nowTime;
         // const timeValue = req.body.timeValue;
         const deadline = req.body.deadline;
@@ -95,7 +97,37 @@ async function getContentList (req, res) {
             }
             channelQuery += channel;
         }
-        const sqlContentResult = await contentListModel.getSQLcontent(contentQuery, titleQuery, channelQuery, nowTime, deadline);
+        let emotionQuery = "";
+        let emotion = "";
+        if (emotions.length === 3) {
+            const sqlContentResult = await contentListModel.getSQLcontentNoEmotion(contentQuery, titleQuery, channelQuery, nowTime, deadline);
+            res.send(sqlContentResult);
+        }
+        for (const i in emotions) {
+            if (emotions[i] === "negative") {
+                if (parseInt(i) === emotions.length - 1) {
+                    emotion = "emotion < -0.25";
+                } else {
+                    emotion = "emotion < -0.25 OR ";
+                }
+                emotionQuery += emotion;
+            } else if (emotions[i] === "neutral") {
+                if (parseInt(i) === emotions.length - 1) {
+                    emotion = "emotion BETWEEN '-0.25' AND '0.25'";
+                } else {
+                    emotion = "emotion BETWEEN '-0.25' AND '0.25' OR ";
+                }
+                emotionQuery += emotion;
+            } else {
+                if (parseInt(i) === emotions.length - 1) {
+                    emotion = "emotion > 0.25";
+                } else {
+                    emotion = "emotion > 0.25 OR ";
+                }
+                emotionQuery += emotion;
+            }
+        }
+        const sqlContentResult = await contentListModel.getSQLcontent(contentQuery, titleQuery, channelQuery, nowTime, deadline, emotionQuery);
         res.send(sqlContentResult);
     } catch (err) {
         console.log("error: " + err);

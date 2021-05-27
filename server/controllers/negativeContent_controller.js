@@ -19,6 +19,7 @@ async function getNegativeContent (req, res) {
         deadline = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
     }
     const negativeContent = await negativeModel.selectNegative(topicId, deadline);
+    res.send(negativeContent);
 }
 
 module.exports = {

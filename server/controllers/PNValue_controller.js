@@ -1,39 +1,18 @@
+const contentlistController = require("../controllers/contentlist_controller.js");
 const contentListModel = require("../models/contentlist_model.js");
-// 載入 jsonwebtoken
-const jwt = require("jsonwebtoken");
+const PNValueModel = require("../models/PNValue_model.js");
 
 // 依據使用者資訊，送出儲存過的主題
-async function getTopicList (req, res) {
-    try {
-        const tokenInfo = req.headers.authorization;
-        const token = tokenInfo.split(" ")[1];
-        const decodeToken = jwt.decode(token, process.env.ACCESS_TOKEN_SECRET);
-        const companyNo = decodeToken.companyNo;
-        const sqlResult = await contentListModel.selectTopic(companyNo);
-        const data = [];
-        for (const i in sqlResult) {
-            const ans = {
-                topicId: sqlResult[i].topic_id,
-                topicName: sqlResult[i].topic_name
-            };
-            data.push(ans);
-        }
-        console.log(data);
-        res.send(JSON.stringify(data));
-    } catch (err) {
-        console.log("error: " + err);
-        const obj = {
-            msg: "wrong"
-        };
-        res.send(obj);
-    }
+async function getTopicInfo (req, res) {
+    const topicInfo = await contentlistController.getTopicList();
+    res.send(topicInfo);
 }
 
-async function getContentList (req, res) {
+// 依據送出的篩選，去SQL撈正面和負面比重
+async function getPNValue (req, res) {
     try {
         const topicId = req.body.topicId;
         const channels = req.body.channel;
-        const emotions = req.body.emotion;
         const nowTime = req.body.nowTime;
         // const timeValue = req.body.timeValue;
         const deadline = req.body.deadline;
@@ -52,6 +31,8 @@ async function getContentList (req, res) {
         let titleSecond = "(";
         let contentQuery = "";
         let titleQuery = "";
+        console.log(firstKeywordsArr);
+
         for (let i = 0; i < firstKeywordsArr.length; i++) {
             if (i === (firstKeywordsArr.length - 1)) {
                 strFirst += `content LIKE "%${firstKeywordsArr[i]}%" `;
@@ -70,6 +51,7 @@ async function getContentList (req, res) {
             titleFirst += `${symbols2.shift()} `;
         }
 
+        console.log(sqlResult[0].keywords.split("+")[1]);
         if (sqlResult[0].keywords.split("+")[1].length !== 0) {
             const secondKeywordsArr = sqlResult[0].keywords.split("+")[1].split(",");
             for (let j = 0; j < secondKeywordsArr.length; j++) {
@@ -96,38 +78,10 @@ async function getContentList (req, res) {
             }
             channelQuery += channel;
         }
-        let emotionQuery = "";
-        let emotion = "";
-        if (emotions.length === 3) {
-            const sqlContentResult = await contentListModel.getSQLcontentNoEmotion(contentQuery, titleQuery, channelQuery, nowTime, deadline);
-            res.send(sqlContentResult);
-        }
-        for (const i in emotions) {
-            if (emotions[i] === "negative") {
-                if (parseInt(i) === emotions.length - 1) {
-                    emotion = "emotion < -0.25";
-                } else {
-                    emotion = "emotion < -0.25 OR ";
-                }
-                emotionQuery += emotion;
-            } else if (emotions[i] === "neutral") {
-                if (parseInt(i) === emotions.length - 1) {
-                    emotion = "emotion BETWEEN '-0.25' AND '0.25'";
-                } else {
-                    emotion = "emotion BETWEEN '-0.25' AND '0.25' OR ";
-                }
-                emotionQuery += emotion;
-            } else {
-                if (parseInt(i) === emotions.length - 1) {
-                    emotion = "emotion > 0.25";
-                } else {
-                    emotion = "emotion > 0.25 OR ";
-                }
-                emotionQuery += emotion;
-            }
-        }
-        const sqlContentResult = await contentListModel.getSQLcontent(contentQuery, titleQuery, channelQuery, nowTime, deadline, emotionQuery);
-        res.send(sqlContentResult);
+        const sqlPositive = await PNValueModel.getPositive(contentQuery, titleQuery, channelQuery, nowTime, deadline);
+        const sqlNeutral = await PNValueModel.getNeutral(contentQuery, titleQuery, channelQuery, nowTime, deadline);
+        const sqleNegative = await PNValueModel.getNegative(contentQuery, titleQuery, channelQuery, nowTime, deadline);
+        // res.send(sqlContentResult);
     } catch (err) {
         console.log("error: " + err);
         res.send("wrong");
@@ -135,6 +89,6 @@ async function getContentList (req, res) {
 }
 
 module.exports = {
-    getTopicList,
-    getContentList
+    getTopicInfo,
+    getPNValue
 };

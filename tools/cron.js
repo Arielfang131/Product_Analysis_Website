@@ -275,11 +275,13 @@ async function getPtt () {
     // console.log(crawlerInfos);
 }
 
-cron.schedule("* * * * *", async () => {
-    console.log("testEveryOneHour");
-    console.log("========================================");
-    // await getPtt();
-});
+// cron.schedule("* * * * *", async () => {
+//     console.log("testEveryOneHour");
+//     console.log("========================================");
+//     // await getPtt();
+// });
+getPtt();
+
 // const CronJob = require("cron").CronJob;
 
 // new CronJob({

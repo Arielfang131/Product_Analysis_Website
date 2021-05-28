@@ -25,7 +25,7 @@ db.getConnection(function (err, connection) {
     if (err) {
         throw err;
     } else {
-        console.log("MySqlpool Connected....");
+        console.log("MySqlpool Connected...in cron");
         // 釋放連線
         connection.release();
         // 不要再使用釋放過後的連線了，這個連線會被放到連線池中，供下一個使用者使用
@@ -275,10 +275,10 @@ async function getPtt () {
     // console.log(crawlerInfos);
 }
 
-cron.schedule("20 19 * * *", async () => {
+cron.schedule("* * * * *", async () => {
     console.log("testEveryOneHour");
     console.log("========================================");
-    await getPtt();
+    // await getPtt();
 });
 // const CronJob = require("cron").CronJob;
 

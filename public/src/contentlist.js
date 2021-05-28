@@ -315,6 +315,8 @@ button.addEventListener("click", function (event) {
             deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
         }
     }
+    console.log(date);
+    console.log(deadline);
     // const timeDetail = date.toString().split(" ")[4];
     // const timeInfo = timeDetail.split(":").slice(0, 2).join(":");
     // const time = dateInfo + " " + timeInfo;

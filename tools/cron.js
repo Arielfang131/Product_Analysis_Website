@@ -276,10 +276,10 @@ async function getPtt () {
 }
 
 console.log("123");
-cron.schedule("* * * * *", async () => {
+cron.schedule("43 20 * * *", async () => {
     console.log("testEveryOneHour");
     console.log("========================================");
-    await getPtt();
+    // await getPtt();
 });
 
 // const CronJob = require("cron").CronJob;

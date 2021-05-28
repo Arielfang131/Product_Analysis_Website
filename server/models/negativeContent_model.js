@@ -65,6 +65,7 @@ const selectNegative = async function (keywordsId, deadline) {
         console.log(sqlResult);
         return sqlResult;
     } catch (err) {
+        console.log("test13");
         console.log(err);
         return {};
     }

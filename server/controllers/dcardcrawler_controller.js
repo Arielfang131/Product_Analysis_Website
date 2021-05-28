@@ -56,6 +56,7 @@ function dcardCrawler (url, proxy) {
                 const data = JSON.parse(body);
                 resolve(data);
             } catch (err) {
+                console.log("test3");
                 console.log("msg: " + err);
                 // console.log(body);
                 // console.log(typeof (body));
@@ -140,6 +141,7 @@ async function getDcard (req, res) {
             }
             continue;
         } catch (err) {
+            console.log("test4");
             console.log("alert: " + err);
             if (i > 0) {
                 i = i - 1;

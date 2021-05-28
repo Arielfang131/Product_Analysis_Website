@@ -1,11 +1,34 @@
-const contentlistController = require("../controllers/contentlist_controller.js");
 const contentListModel = require("../models/contentlist_model.js");
 const PNValueModel = require("../models/PNValue_model.js");
+// 載入 jsonwebtoken
+const jwt = require("jsonwebtoken");
 
 // 依據使用者資訊，送出儲存過的主題
 async function getTopicInfo (req, res) {
-    const topicInfo = await contentlistController.getTopicList();
-    res.send(topicInfo);
+    try {
+        const tokenInfo = req.headers.authorization;
+        const token = tokenInfo.split(" ")[1];
+        const decodeToken = jwt.decode(token, process.env.ACCESS_TOKEN_SECRET);
+        const companyNo = decodeToken.companyNo;
+        const sqlResult = await contentListModel.selectTopic(companyNo);
+        const data = [];
+        for (const i in sqlResult) {
+            const ans = {
+                topicId: sqlResult[i].topic_id,
+                topicName: sqlResult[i].topic_name
+            };
+            data.push(ans);
+        }
+        console.log(data);
+        res.send(JSON.stringify(data));
+    } catch (err) {
+        console.log("test17");
+        console.log("error: " + err);
+        const obj = {
+            msg: "wrong"
+        };
+        res.send(obj);
+    }
 }
 
 // 依據送出的篩選，去SQL撈正面和負面比重
@@ -31,7 +54,6 @@ async function getPNValue (req, res) {
         let titleSecond = "(";
         let contentQuery = "";
         let titleQuery = "";
-        console.log(firstKeywordsArr);
 
         for (let i = 0; i < firstKeywordsArr.length; i++) {
             if (i === (firstKeywordsArr.length - 1)) {
@@ -51,7 +73,6 @@ async function getPNValue (req, res) {
             titleFirst += `${symbols2.shift()} `;
         }
 
-        console.log(sqlResult[0].keywords.split("+")[1]);
         if (sqlResult[0].keywords.split("+")[1].length !== 0) {
             const secondKeywordsArr = sqlResult[0].keywords.split("+")[1].split(",");
             for (let j = 0; j < secondKeywordsArr.length; j++) {
@@ -78,11 +99,18 @@ async function getPNValue (req, res) {
             }
             channelQuery += channel;
         }
-        const sqlPositive = await PNValueModel.getPositive(contentQuery, titleQuery, channelQuery, nowTime, deadline);
-        const sqlNeutral = await PNValueModel.getNeutral(contentQuery, titleQuery, channelQuery, nowTime, deadline);
-        const sqleNegative = await PNValueModel.getNegative(contentQuery, titleQuery, channelQuery, nowTime, deadline);
-        // res.send(sqlContentResult);
+        const sqlPositive = await PNValueModel.sqlPositive(contentQuery, titleQuery, channelQuery, nowTime, deadline);
+        const sqlNeutral = await PNValueModel.sqlNeutral(contentQuery, titleQuery, channelQuery, nowTime, deadline);
+        const sqleNegative = await PNValueModel.sqlNegative(contentQuery, titleQuery, channelQuery, nowTime, deadline);
+        const ans = {
+            positive: sqlPositive[0]["COUNT(*)"],
+            negative: sqleNegative[0]["COUNT(*)"],
+            neutral: sqlNeutral[0]["COUNT(*)"]
+        };
+        console.log(ans);
+        res.send(ans);
     } catch (err) {
+        console.log("test7");
         console.log("error: " + err);
         res.send("wrong");
     }

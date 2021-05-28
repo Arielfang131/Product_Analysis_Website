@@ -21,6 +21,7 @@ async function getTopicList (req, res) {
         console.log(data);
         res.send(JSON.stringify(data));
     } catch (err) {
+        console.log("test1");
         console.log("error: " + err);
         const obj = {
             msg: "wrong"
@@ -129,6 +130,7 @@ async function getContentList (req, res) {
         const sqlContentResult = await contentListModel.getSQLcontent(contentQuery, titleQuery, channelQuery, nowTime, deadline, emotionQuery);
         res.send(sqlContentResult);
     } catch (err) {
+        console.log("test2");
         console.log("error: " + err);
         res.send("wrong");
     }

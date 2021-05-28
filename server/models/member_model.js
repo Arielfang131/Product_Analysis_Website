@@ -5,6 +5,7 @@ const selectEmail = async function (email) {
         const result = await query(sql, email);
         return result;
     } catch (err) {
+        console.log("test12");
         console.log(err);
     }
 };
@@ -24,6 +25,7 @@ const registerMember = async function (companyName, companyNo, userName, email, 
         }
         return result;
     } catch (err) {
+        console.log("test11");
         console.log(err);
     }
 };
@@ -34,6 +36,7 @@ const selectUserInfo = async function (email) {
         const result = await query(sql, email);
         return result;
     } catch (err) {
+        console.log("test10");
         console.log(err);
     }
 };

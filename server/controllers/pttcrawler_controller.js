@@ -139,9 +139,10 @@ async function pttCrawlerPush (url) {
 }
 
 // const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index.html", page: 10 }, { url: "https://www.ptt.cc/bbs/BeautySalon/index.html", page: 10 }];
-const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index.html", page: 1 }];
+// const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index.html", page: 1 }];
 
-async function getPtt (req, res) {
+async function getPtt () {
+    const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index.html", page: 1 }];
     const crawlerInfos = [];
     for (const k in arrUrl) {
         const mainUrl = arrUrl[k].url;
@@ -202,7 +203,7 @@ async function getPtt (req, res) {
         crawlerInfos.push(crawlerInfo);
     }
     console.log(crawlerInfos);
-    res.send(crawlerInfos);
+    // res.send(crawlerInfos);
 }
 
 module.exports = {

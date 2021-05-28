@@ -21,6 +21,7 @@ async function viewKeywords (req, res) {
         console.log(result);
         res.send(result);
     } catch (err) {
+        console.log("test5");
         console.log("error: " + err);
         res.send("wrong");
     }
@@ -64,6 +65,7 @@ async function getKeywords (req, res) {
         // console.log(sqlResult);
         // console.log(sqlTopic);
     } catch (err) {
+        console.log("test6");
         console.log("error: " + err);
         res.send("wrong");
     }

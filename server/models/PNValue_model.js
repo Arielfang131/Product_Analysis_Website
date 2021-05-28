@@ -6,6 +6,7 @@ const sqlPositive = async function (contentQuery, titleQuery, channel, nowTime, 
         const result = await query(sql);
         return result;
     } catch (err) {
+        console.log("test14");
         console.log(err);
         return {};
     }
@@ -17,6 +18,7 @@ const sqlNeutral = async function (contentQuery, titleQuery, channel, nowTime, d
         const result = await query(sql);
         return result;
     } catch (err) {
+        console.log("test15");
         console.log(err);
         return {};
     }
@@ -28,6 +30,7 @@ const sqlNegative = async function (contentQuery, titleQuery, channel, nowTime, 
         const result = await query(sql);
         return result;
     } catch (err) {
+        console.log("test16");
         console.log(err);
         return {};
     }

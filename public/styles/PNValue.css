@@ -49,3 +49,11 @@
 #icon_profile{
     height: 60px;
 }
+.emotion{
+    margin-top: 15px;
+    font-size: 20px;
+}
+.value{
+    margin-top: 15px;
+    font-size: 20px; 
+}

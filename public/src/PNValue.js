@@ -13,7 +13,7 @@ function ajaxTopic (src, callback) {
                         callback(response);
                     }
                 };
-                xhrSec.open("GET", "api/1.0/contentlist");
+                xhrSec.open("GET", "api/1.0/PNValue");
                 xhrSec.setRequestHeader("Content-Type", "application/json");
                 const accessToken = localStorage.getItem("access_token");
                 xhrSec.setRequestHeader("Authorization", "bearer " + accessToken);
@@ -74,8 +74,28 @@ function getTopic (data) {
     }
 }
 
-function render (info) {
+function getPNValue (info) {
     const contents = document.getElementById("contents");
+    const positive = document.createElement("div");
+    positive.className = "emotion";
+    const neutral = document.createElement("div");
+    neutral.className = "emotion";
+    const negative = document.createElement("div");
+    negative.className = "emotion";
+    positive.innerHTML = `正評：${info.positive}`;
+    neutral.innerHTML = `中立：${info.neutral}`;
+    negative.innerHTML = `負評：${info.negative}`;
+    const valueElement = document.createElement("div");
+    valueElement.className = "value";
+    const PNValue = parseInt(info.positive) / parseInt(info.negative);
+    if (isNaN(PNValue)) {
+        valueElement.innerHTML = "正負PN值：0";
+    } else if (parseInt(info.positive) >= 1 && parseInt(info.negative) === 0) {
+        valueElement.innerHTML = "沒有負評";
+    } else {
+        valueElement.innerHTML = `正負PN值：${PNValue}`;
+    }
+    contents.append(positive, neutral, negative, valueElement);
 }
 
 ajaxTopic("/api/1.0/profile", getTopic);
@@ -115,15 +135,15 @@ for (let i = 0; i < checkboxThree.length; i++) {
 
 const button = document.getElementById("button");
 button.addEventListener("click", function (event) {
-    const content = document.querySelectorAll(".content");
-    const noContent = document.getElementById("noContent");
-    if (noContent) {
-        noContent.remove();
+    const emotion = document.querySelectorAll(".emotion");
+    const value = document.querySelector(".value");
+    for (let i = 0; i < emotion.length; i++) {
+        emotion[i].remove();
+    }
+    if (value) {
+        value.remove();
     }
 
-    for (let i = 0; i < content.length; i++) {
-        content[i].remove();
-    }
     const checkboxOne = document.querySelectorAll("#cbox1");
     let topicId = "";
     let timeValue = "";
@@ -219,5 +239,5 @@ button.addEventListener("click", function (event) {
         deadline: deadline,
         channel: channel
     };
-    ajax("/api/1.0/contentlist", data, render);
+    ajax("/api/1.0/PNValue", data, getPNValue);
 });

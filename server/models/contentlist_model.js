@@ -19,6 +19,7 @@ const getSQLcontent = async function (contentQuery, titleQuery, channel, nowTime
         console.log(result);
         return result;
     } catch (err) {
+        console.log("test2");
         console.log(err);
         return {};
     }
@@ -31,6 +32,7 @@ const getSQLcontentNoEmotion = async function (contentQuery, titleQuery, channel
         console.log(result);
         return result;
     } catch (err) {
+        console.log("test9");
         console.log(err);
         return {};
     }

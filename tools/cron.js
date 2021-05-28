@@ -275,7 +275,7 @@ async function getPtt () {
     // console.log(crawlerInfos);
 }
 
-cron.schedule("* * * * *", async () => {
+cron.schedule("7 9 * * *", async () => {
     console.log("testEveryOneHour");
     console.log("========================================");
     await getPtt();

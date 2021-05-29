@@ -78,6 +78,7 @@ function modifiedKeywords () {
         number.className = "number";
         number.innerHTML = `${i + 1}`;
         const topic = document.createElement("input");
+        topic.value = "群組一";
         topic.type = "text";
         topic.className = "topic";
         topic.placeholder = "必填：主題";
@@ -313,4 +314,15 @@ function view (response) { // DOM
     }
 }
 
+// 規則預設為隱藏，點選才開啟
+const ruleDetails = document.getElementById("rule_details");
+ruleDetails.style.display = "none";
+const button = document.querySelector(".box2");
+button.addEventListener("click", () => {
+    if (ruleDetails.style.display == "none") {
+        ruleDetails.style.display = "block";
+    } else {
+        ruleDetails.style.display = "none";
+    }
+});
 ajax("api/1.0/profile", modifiedKeywords, view);

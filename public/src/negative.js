@@ -90,7 +90,6 @@ async function getNegativeContent (info) {
         const rawEmotion = info[i].emotion;
         const float = parseFloat(rawEmotion);
         const emotionFinal = float.toFixed(2);
-        console.log(emotionFinal);
         if (emotionFinal > 0.25) {
             emotion.innerHTML = "情緒：正面";
         } else if (emotionFinal >= -0.25 && emotionFinal <= 0.25) {

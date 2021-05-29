@@ -1,12 +1,13 @@
 // Express Initialization
-const express = require("express");
-const app = express();
+// const express = require("express");
+// const app = express();
 
 const cron = require("node-cron");
 require("dotenv").config();
 const mysql = require("mysql");
 
 const crawlerModel = require("../server/models/crawler_model");
+const negativeModel = require("../server/models/negativeContent_model");
 const googleEmotion = require("../server/controllers/emotion_controller");
 
 const request = require("request");
@@ -33,17 +34,6 @@ db.getConnection(function (err, connection) {
     }
 });
 
-// // SQL function
-// function dbsql (sql, value) {
-//     const result = new Promise((resolve, reject) => {
-//         db.query(sql, value, (err, result) => {
-//         // if (err) throw err;
-//             if (err) reject(err);
-//             resolve(result);
-//         });
-//     });
-//     return result;
-// }
 function getMonthFromString (mon) {
     return new Date(Date.parse(mon + " 1, 2021")).getMonth() + 1;
 }
@@ -274,21 +264,16 @@ async function getPtt () {
     // console.log(crawlerInfos);
 }
 
+async function getNegativeInfo () {
+    const negativeInfo = await negativeModel.insertAllNegative();
+    console.log(negativeInfo);
+}
+
+getNegativeInfo();
+
 cron.schedule("22 13 * * *", async () => {
     console.log("testEveryOneHour");
     console.log("========================================");
     await getPtt();
+    await getNegativeInfo();
 });
-
-// const CronJob = require("cron").CronJob;
-
-// new CronJob({
-//     cronTime: process.env.CRONJOB_TIME, // 請編輯.env檔填上自己的爬蟲時段喔
-//     onTick: async function () {
-//         console.log("開始執行爬蟲排程作業");
-//         await pttCrawler.getPtt();
-//         console.log("排程作業執行完畢！");
-//     },
-//     start: true,
-//     timeZone: "Asia/Taipei"
-// });

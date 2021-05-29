@@ -31,6 +31,10 @@
 }
 #rule{
     margin: 10px;
+    text-align:left;
+}
+#rule_details{
+    margin: 10px;
     padding :10px;
     text-align:left;
     height:120px;

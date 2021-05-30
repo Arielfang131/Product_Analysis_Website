@@ -12,6 +12,7 @@ async function viewKeywords (req, res) {
         const result = [];
         for (const i in sqlResult) {
             const obj = {
+                topicId: sqlResult[i].topic_id,
                 topicName: sqlResult[i].topic_name,
                 keywords: sqlResult[i].keywords,
                 symbols: sqlResult[i].symbols
@@ -35,9 +36,6 @@ async function getKeywords (req, res) {
         const companyNo = decodeToken.companyNo;
         const companyResult = await keywordstModel.selectCompanyId(companyNo);
         const companyId = companyResult[0].company_id;
-        // 先將舊的主題和關鍵字刪除
-        const deleteResult = await keywordstModel.deleteTopicAndKeywords(companyId);
-        console.log(deleteResult);
         const data = [];
         const topicData = [];
         let obj = {};
@@ -62,6 +60,7 @@ async function getKeywords (req, res) {
         }
         const sqlResult = await keywordstModel.createKeywords(data);
         const sqlTopic = await keywordstModel.createTopic(topicData);
+        res.send(JSON.stringify(data));
         // console.log(sqlResult);
         // console.log(sqlTopic);
     } catch (err) {
@@ -71,7 +70,13 @@ async function getKeywords (req, res) {
     }
 }
 
+async function deleteKeywords (req, res) {
+    const topicId = req.body.topicId;
+    await keywordstModel.deleteTopicAndKeywords(topicId);
+}
+
 module.exports = {
     viewKeywords,
-    getKeywords
+    getKeywords,
+    deleteKeywords
 };

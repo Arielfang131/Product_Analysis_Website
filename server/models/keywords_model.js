@@ -64,13 +64,12 @@ const selectKeywords = async function () {
     return result;
 };
 
-const deleteTopicAndKeywords = async function (companyId) {
-    const sql = `DELETE topic_table,keywords_table FROM company_table
-    INNER JOIN topic_table ON company_table.company_id = topic_table.company_id
+const deleteTopicAndKeywords = async function (topicId) {
+    const sql = `DELETE topic_table,keywords_table FROM topic_table
     INNER JOIN keywords_table ON keywords_table.keywords_id = topic_table.topic_id 
     WHERE
-    company_table.company_id  = ?;`;
-    const result = await query(sql, companyId);
+    topic_table.topic_id  = ?;`;
+    const result = await query(sql, topicId);
     return result;
 };
 

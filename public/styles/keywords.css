@@ -29,9 +29,29 @@
     height: 40px;
     margin-top: 12px;
 }
+#icon_question{
+    height: 25px;
+    margin-left: 10px;
+}
+.icon_trash{
+    height: 25px;
+    margin-left: 5px;
+}
+.delete{
+    height: 25px;
+    margin-left: 5px;
+    margin-top: 2px;
+}
+.icon_add{
+    height: 25px;
+    margin-left: 5px;
+    margin-top: 5px;
+}
 #rule{
     margin: 10px;
     text-align:left;
+    display: inline-block;
+    vertical-align: middle;
 }
 #rule_details{
     margin: 10px;
@@ -55,10 +75,8 @@
     margin-left: 10px;
 }
 #button{
-    width:50px;
-    margin-top:50px;
+    width:60px;
     margin-left: auto;
-    margin-right: auto;
 }
 input{
     line-height:2em;
@@ -136,4 +154,27 @@ input{
 #searchOne{
     margin-left: 170px;
     font-size:18px;
+}
+#example_topic{
+    font-size:16px;
+    color:#9D9D9D;
+    width:200px;
+    height:30px;
+    border-color:#D9D9D9;
+    border-width:2px;
+    border-style:solid;
+    margin-left: 10px;
+    margin-right: 20px;
+    line-height: 30px;
+}
+#example_keywords{
+    font-size:16px;
+    color:#9D9D9D;
+    margin-right: 10px;
+    flex-grow: 1;
+    height:30px;
+    border-color:#D9D9D9;
+    border-width:2px;
+    border-style:solid;
+    line-height: 30px;
 }

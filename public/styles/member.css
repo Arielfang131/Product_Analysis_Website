@@ -1,4 +1,4 @@
-.container1{
+/* .container1{
     margin-top: 10px;
     margin-left: auto;
     margin-right: auto;
@@ -19,7 +19,7 @@
 #menu{
     display: flex;
     flex-direction: column;
-}
+} */
 .box2{
     flex-grow:1;
     display: flex;

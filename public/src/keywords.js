@@ -13,6 +13,7 @@ function ajax (src, callback, callbackTwo) {
                 newXhr.onreadystatechange = function () {
                     if (newXhr.readyState === 4 && newXhr.status === 200) {
                         const data = JSON.parse(newXhr.responseText);
+                        console.log(data);
                         callbackTwo(data);
                     }
                 };
@@ -39,9 +40,17 @@ function ajaxKeywords (src, data, callback) {
             if (res.admin === "yes") {
                 const newXhr = new XMLHttpRequest();
                 newXhr.onreadystatechange = function () {
-                    console.log(newXhr.responseText);
                     const res = JSON.parse(newXhr.responseText);
-                    console.log(res);
+                    const boxes = document.querySelectorAll(".view_keyword");
+                    if (boxes) {
+                        for (let i = 0; i < boxes.length; i++) {
+                            boxes[i].remove();
+                        }
+                    }
+                    const noResult = document.querySelector(".no_result");
+                    if (noResult) {
+                        noResult.remove();
+                    }
                     callback(res);
                 };
                 newXhr.open("POST", "api/1.0/keywords");
@@ -73,41 +82,41 @@ function inputKeywords () {
     topic.value = `群組${boxesLength + 1}`;
     topic.type = "text";
     topic.className = "topic";
-    topic.placeholder = "必填：主題";
-    const brackets = document.createElement("div");
-    brackets.className = "brackets";
-    brackets.innerHTML = "(";
+    // topic.placeholder = "必填：主題";
+    // const brackets = document.createElement("div");
+    // brackets.className = "brackets";
+    // brackets.innerHTML = "(";
     const keyword1 = document.createElement("input");
     keyword1.type = "text";
     keyword1.className = `keyword${boxesLength + 1}`;
-    keyword1.placeholder = "必填：關鍵字";
-    const select = document.createElement("select");
-    select.className = `symbol${boxesLength + 1}`;
-    const option = document.createElement("option");
-    option.value = "and";
-    option.text = "and";
-    const option2 = document.createElement("option");
-    option2.value = "or";
-    option2.text = "or";
-    select.append(option, option2);
-    const keyword2 = document.createElement("input");
-    keyword2.type = "text";
-    keyword2.className = `keyword${boxesLength + 1}`;
-    const select2 = document.createElement("select");
-    select2.className = `symbol${boxesLength + 1}`;
-    const option3 = document.createElement("option");
-    option3.value = "and";
-    option3.text = "and";
-    const option4 = document.createElement("option");
-    option4.value = "or";
-    option4.text = "or";
-    select2.append(option3, option4);
-    const keyword3 = document.createElement("input");
-    keyword3.type = "text";
-    keyword3.className = `keyword${boxesLength + 1}`;
-    const brackets2 = document.createElement("div");
-    brackets2.className = "brackets";
-    brackets2.innerHTML = ")";
+    keyword1.placeholder = "必填：品牌";
+    // const select = document.createElement("select");
+    // select.className = `symbol${boxesLength + 1}`;
+    // const option = document.createElement("option");
+    // option.value = "and";
+    // option.text = "and";
+    // const option2 = document.createElement("option");
+    // option2.value = "or";
+    // option2.text = "or";
+    // select.append(option, option2);
+    // const keyword2 = document.createElement("input");
+    // keyword2.type = "text";
+    // keyword2.className = `keyword${boxesLength + 1}`;
+    // const select2 = document.createElement("select");
+    // select2.className = `symbol${boxesLength + 1}`;
+    // const option3 = document.createElement("option");
+    // option3.value = "and";
+    // option3.text = "and";
+    // const option4 = document.createElement("option");
+    // option4.value = "or";
+    // option4.text = "or";
+    // select2.append(option3, option4);
+    // const keyword3 = document.createElement("input");
+    // keyword3.type = "text";
+    // keyword3.className = `keyword${boxesLength + 1}`;
+    // const brackets2 = document.createElement("div");
+    // brackets2.className = "brackets";
+    // brackets2.innerHTML = ")";
     const select3 = document.createElement("select");
     select3.className = `symbol${boxesLength + 1}`;
     select3.id = "symbol";
@@ -124,15 +133,15 @@ function inputKeywords () {
     const keyword4 = document.createElement("input");
     keyword4.type = "text";
     keyword4.className = `keyword${boxesLength + 1}`;
-    keyword4.placeholder = "請從此填";
+    keyword4.placeholder = "選填，建議可填產品";
     const select4 = document.createElement("select");
     select4.className = `symbol${boxesLength + 1}`;
     const option7 = document.createElement("option");
-    option7.value = "and";
-    option7.text = "and";
+    option7.value = "or";
+    option7.text = "or";
     const option8 = document.createElement("option");
-    option8.value = "or";
-    option8.text = "or";
+    option8.value = "and";
+    option8.text = "and";
     select4.append(option7, option8);
     const keyword5 = document.createElement("input");
     keyword5.type = "text";
@@ -140,11 +149,11 @@ function inputKeywords () {
     const select5 = document.createElement("select");
     select5.className = `symbol${boxesLength + 1}`;
     const option9 = document.createElement("option");
-    option9.value = "and";
-    option9.text = "and";
+    option9.value = "or";
+    option9.text = "or";
     const option10 = document.createElement("option");
-    option10.value = "or";
-    option10.text = "or";
+    option10.value = "and";
+    option10.text = "and";
     select5.append(option9, option10);
     const keyword6 = document.createElement("input");
     keyword6.type = "text";
@@ -157,7 +166,7 @@ function inputKeywords () {
     addItem.innerHTML = "<img class=\"icon_add\" src=\"./styles/images/add.png\" title=\"新增\">";
     const deleteItem = document.createElement("div");
     deleteItem.innerHTML = "<img class=\"delete\" src=\"./styles/images/trash.png\" title=\"刪除\">";
-    keywordsBox.append(topic, brackets, keyword1, select, keyword2, select2, keyword3, brackets2, select3, brackets3, keyword4, select4, keyword5, select5, keyword6, brackets4, addItem, deleteItem);
+    keywordsBox.append(topic, keyword1, select3, brackets3, keyword4, select4, keyword5, select5, keyword6, brackets4, addItem, deleteItem);
     addItem.addEventListener("click", function () {
         inputKeywords();
     });
@@ -174,7 +183,6 @@ function inputKeywords () {
 
 function view (response) { // DOM
     const keywordsBox = document.getElementById("view_keywords");
-
     if (response.length === 0) {
         const noResult = document.createElement("div");
         noResult.className = "no_result";
@@ -192,14 +200,7 @@ function view (response) { // DOM
         keywordList.className = "keyword_list";
         const keywords = response[i].keywords;
         const symbols = response[i].symbols;
-        console.log(symbols);
-        console.log(symbols.length);
-        let symbolsArr = [];
-        if (symbols.length === 0) {
-            symbolsArr = symbols;
-        } else {
-            symbolsArr = symbols.split(",");
-        }
+        const symbolsArr = symbols.split(",");
         const firstArr = (keywords.split("+")[0]).split(",");
         const secondArr = (keywords.split("+")[1]).split(",");
 
@@ -273,7 +274,8 @@ function view (response) { // DOM
                     xhr.open("POST", "api/1.0/deleteKeywords");
                     xhr.setRequestHeader("Content-Type", "application/json");
                     xhr.send(JSON.stringify(data));
-                    if (parentElement.length === 0) {
+                    const newParentElement = document.querySelectorAll(".view_keyword");
+                    if (newParentElement.length === 0) {
                         const noResult = document.createElement("div");
                         noResult.className = "no_result";
                         noResult.innerHTML = "目前無設定";
@@ -283,30 +285,33 @@ function view (response) { // DOM
             });
         });
     }
-
-    // keywordBox.removeChild(remove);
 }
 
 ajax("api/1.0/profile", modifiedKeywords, view);
 
 function modifiedKeywords () {
     const ajaxBox = document.getElementById("ajax");
+    // const modifiedBox = document.createElement("div");
+    // modifiedBox.id = "modified_box";
     const text = document.createElement("div");
-    text.id = "text2";
-    text.innerHTML = "修改關鍵字：儲存後，會一次修改五組";
-    const keywordsTitle = document.createElement("div");
-    keywordsTitle.id = "keywords_title";
-    const topicText = document.createElement("div");
-    topicText.id = "topic_text";
-    topicText.innerHTML = "主題：";
-    const search = document.createElement("div");
-    search.id = "search";
-    search.innerHTML = "搜尋關鍵字：";
+    text.className = "text";
+    text.innerHTML = "新增/修改關鍵字：最多六組";
+    // const keywordsTitle = document.createElement("div");
+    // keywordsTitle.id = "keywords_title";
+    // const topicText = document.createElement("div");
+    // topicText.id = "topic_text";
+    // topicText.innerHTML = "主題：";
+    // const search = document.createElement("div");
+    // search.id = "search";
+    // search.innerHTML = "搜尋關鍵字：";
     const button = document.createElement("button");
+    button.type = "button";
     button.id = "button";
+    button.className = "btn btn-secondary";
     button.innerHTML = "儲存";
-    keywordsTitle.append(topicText, search, button);
-    ajaxBox.append(text, keywordsTitle);
+    // keywordsTitle.append(button);
+    // modifiedBox.append(text, button);
+    ajaxBox.append(text, button);
     inputKeywords();
     // const addItem = document.querySelector(".icon_add");
     // addItem.addEventListener("click", function () {
@@ -321,6 +326,7 @@ function modifiedKeywords () {
         const data = [];
         for (let i = 0; i < topicEl.length; i++) {
             const topic = topicEl[i].value;
+            console.log(topic);
             let keywordsCount = 0;
             if (topic !== "") {
                 topicCount += 1;
@@ -334,6 +340,7 @@ function modifiedKeywords () {
                 keywords.push(keyword);
                 // }
             }
+            console.log(keywords);
             // 每一個主題的符號
             const symbolsEl = document.querySelectorAll(`.symbol${i + 1}`);
             const symbols = [];
@@ -346,7 +353,10 @@ function modifiedKeywords () {
             const secondArr = [keywords[3], keywords[4], keywords[5]];
             // 有填主題，但第一個關鍵字是空的
             if (topic !== "" && keywords[0] === "") {
-                alert("若需設定主題，請於第一個空格內填入一個關鍵字");
+                console.log(topic);
+                console.log(keywords[0]);
+                Swal.fire("若需設定群組，請於第一個空格內填入一個關鍵字");
+                // alert("若需設定主題，請於第一個空格內填入一個關鍵字");
                 return;
             }
             const newFirst = [];
@@ -386,7 +396,8 @@ function modifiedKeywords () {
                 }
             }
             if (topic === "" && keywordsCount !== 0) {
-                alert("若需設定主題，請填入主題名稱");
+                Swal.fire("若需設定群組，請填入群組名稱");
+                // alert("若需設定主題，請填入主題名稱");
                 return;
             }
 
@@ -396,18 +407,31 @@ function modifiedKeywords () {
             data.push(obj);
         }
         if (topicCount === 0 & totalKeywordsCount === 0) {
-            alert("請輸入至少一組主題");
+            Swal.fire("請輸入至少一組群組");
+            // alert("請輸入至少一組主題");
             return;
         }
         const oldKeywords = document.querySelectorAll(".view_keyword");
         const newKeywords = document.querySelectorAll(".keywords_box");
-        console.log((oldKeywords.length + newKeywords.length));
+        // console.log((oldKeywords.length + newKeywords.length));
         if ((oldKeywords.length + newKeywords.length) > 6) {
-            alert("最多只能有六個群組，請刪減");
+            Swal.fire("最多只能有六個群組，請刪減");
+            // alert("最多只能有六個群組，請刪減");
             return;
         }
-        alert("已儲存");
+        Swal.fire("已儲存，請至文章列表搜尋內容");
         ajaxKeywords("/api/1.0/profile", data, view);
+        const items = document.querySelectorAll(".keywords_box");
+        if (items) {
+            const keyword1 = document.querySelectorAll(".keyword1");
+            console.log(keyword1);
+            for (let i = 0; i < keyword1.length; i++) {
+                keyword1[i].value = "";
+            }
+            for (let i = 1; i < items.length; i++) {
+                items[i].remove();
+            }
+        }
     });
 }
 

@@ -58,9 +58,21 @@ async function getKeywords (req, res) {
                 topicData.push(topicObj);
             }
         }
-        const sqlResult = await keywordstModel.createKeywords(data);
-        const sqlTopic = await keywordstModel.createTopic(topicData);
-        res.send(JSON.stringify(data));
+        await keywordstModel.createKeywords(data);
+        await keywordstModel.createTopic(topicData);
+        const sqlResult = await keywordstModel.selectAllTopics(companyNo);
+        const result = [];
+        for (const i in sqlResult) {
+            const obj = {
+                topicId: sqlResult[i].topic_id,
+                topicName: sqlResult[i].topic_name,
+                keywords: sqlResult[i].keywords,
+                symbols: sqlResult[i].symbols
+            };
+            result.push(obj);
+        }
+        // res.send(result);
+        res.send(result);
         // console.log(sqlResult);
         // console.log(sqlTopic);
     } catch (err) {

@@ -28,6 +28,7 @@ function ajaxTopic (src, callback) {
     newXhr.send();
 }
 
+// 點選篩選條件，取得正負評、中立數量
 function ajax (src, data, callback) {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
@@ -40,6 +41,20 @@ function ajax (src, data, callback) {
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(data));
 }
+
+// // 取得正負評、中立文章列表
+// function ajaxContent (src) {
+//     const xhr = new XMLHttpRequest();
+//     xhr.onreadystatechange = function () {
+//         if (xhr.readyState === 4 && xhr.status === 200) {
+//             // callback(JSON.parse(xhr.responseText));
+//             console.log(JSON.parse(xhr.responseText));
+//         }
+//     };
+//     xhr.open("GET", src);
+//     xhr.setRequestHeader("Content-Type", "application/json");
+//     xhr.send();
+// }
 
 function getTopic (data) {
     const littleBox = document.querySelectorAll(".littleBox");
@@ -74,6 +89,86 @@ function getTopic (data) {
     }
 }
 
+// 正、負、中立文章列表DOM
+function contentInfo (info) {
+    const details = document.getElementById("details");
+
+    if (info.length === 0) {
+        const noContent = document.createElement("div");
+        noContent.id = "noContent";
+        noContent.innerHTML = "<h3>沒有符合的內容</h3>";
+        details.append(noContent);
+    }
+    for (const i in info) {
+        const detail = document.createElement("div");
+        detail.className = "detail";
+        // const contentTitle = document.createElement("div");
+        const link = document.createElement("a");
+        link.className = "content_title";
+        link.innerHTML = `${info[i].title}`;
+        link.href = `${info[i].link}`;
+        link.target = "_blank";
+        // contentTitle.innerHTML = `${info[i].title} <a href = ${info[i].link}>`;
+        const paragraph = document.createElement("div");
+        paragraph.className = "paragraph";
+        const tag = document.createElement("div");
+        tag.className = "tag";
+        tag.innerHTML = `${info[i].body_textORcomment}`;
+        const article = document.createElement("div");
+        article.className = "article";
+        const str = `${info[i].content}`;
+        if (str.length > 200) {
+            article.innerHTML = `${info[i].content}`.substring(0, 200) + "...(更多)"; ;
+        } else {
+            article.innerHTML = `${info[i].content}`;
+        }
+        paragraph.append(tag, article);
+        const information = document.createElement("div");
+        information.className = "information";
+        const channel = document.createElement("div");
+        channel.className = "channel";
+        channel.innerHTML = `${info[i].channel}`;
+        const push = document.createElement("div");
+        push.className = "push";
+        if (info[i].push_number === null) {
+            push.innerHTML = "共0則推文";
+        } else {
+            push.innerHTML = `共${info[i].push_number}則推文`;
+        }
+        const likes = document.createElement("div");
+        likes.className = "likes";
+        if (info[i].likes_number === null) {
+            likes.innerHTML = "共0個讚";
+        } else {
+            likes.innerHTML = `共${info[i].likes_number}個讚`;
+        }
+        const author = document.createElement("div");
+        author.className = "author";
+        author.innerHTML = `作者：${info[i].author}`;
+        const time = document.createElement("div");
+        time.className = "time";
+        time.innerHTML = `時間：${info[i].time}`;
+        const emotionInfo = document.createElement("div");
+        emotionInfo.className = "emotion_info";
+        const rawEmotion = info[i].emotion;
+        const float = parseFloat(rawEmotion);
+        const emotionFinal = float.toFixed(2); ;
+        if (emotionFinal > 0.25) {
+            emotionInfo.innerHTML = "情緒：正面";
+        } else if (emotionFinal >= -0.25 && emotionFinal <= 0.25) {
+            emotionInfo.innerHTML = "情緒：中立";
+        } else if (emotionFinal < -0.25) {
+            emotionInfo.innerHTML = "情緒：負面";
+        } else {
+            emotionInfo.innerHTML = "情緒：舊資料";
+        }
+        information.append(channel, push, likes, author, time, emotionInfo);
+        detail.append(link, paragraph, information);
+        details.append(detail);
+    }
+}
+
+// 取得正負評數字
 function getPNValue (info) {
     const contents = document.getElementById("contents");
     const positive = document.createElement("div");
@@ -87,7 +182,7 @@ function getPNValue (info) {
     negative.innerHTML = `負評：${info.negative}`;
     const valueElement = document.createElement("div");
     valueElement.className = "value";
-    const PNValue = parseInt(info.positive) / parseInt(info.negative);
+    const PNValue = (parseInt(info.positive) / parseInt(info.negative)).toFixed(2);
     if (isNaN(PNValue)) {
         valueElement.innerHTML = "正負PN值：0";
     } else if (parseInt(info.positive) >= 1 && parseInt(info.negative) === 0) {
@@ -96,6 +191,46 @@ function getPNValue (info) {
         valueElement.innerHTML = `正負PN值：${PNValue}`;
     }
     contents.append(positive, neutral, negative, valueElement);
+
+    // 點選正評、中立、負評出現文章列表
+    const emotionButton = document.querySelectorAll(".emotion");
+
+    // 正評Button
+    emotionButton[0].addEventListener("click", function () {
+        const removeDetails = document.querySelectorAll(".detail");
+        const noContent = document.getElementById("noContent");
+        if (noContent) {
+            noContent.remove();
+        }
+        for (let i = 0; i < removeDetails.length; i++) {
+            removeDetails[i].remove();
+        }
+        contentInfo(info.positiveInfo);
+    });
+    // 中立Button
+    emotionButton[1].addEventListener("click", function () {
+        const noContent = document.getElementById("noContent");
+        if (noContent) {
+            noContent.remove();
+        }
+        const removeDetails = document.querySelectorAll(".detail");
+        for (let i = 0; i < removeDetails.length; i++) {
+            removeDetails[i].remove();
+        }
+        contentInfo(info.neutralInfo);
+    });
+    // 負面Button
+    emotionButton[2].addEventListener("click", function () {
+        const noContent = document.getElementById("noContent");
+        if (noContent) {
+            noContent.remove();
+        }
+        const removeDetails = document.querySelectorAll(".detail");
+        for (let i = 0; i < removeDetails.length; i++) {
+            removeDetails[i].remove();
+        }
+        contentInfo(info.negativeInfo);
+    });
 }
 
 ajaxTopic("/api/1.0/profile", getTopic);
@@ -143,7 +278,14 @@ button.addEventListener("click", function (event) {
     if (value) {
         value.remove();
     }
-
+    const removeDetails = document.querySelectorAll(".detail");
+    const noContent = document.getElementById("noContent");
+    if (noContent) {
+        noContent.remove();
+    }
+    for (let i = 0; i < removeDetails.length; i++) {
+        removeDetails[i].remove();
+    }
     const checkboxOne = document.querySelectorAll("#cbox1");
     let topicId = "";
     let timeValue = "";

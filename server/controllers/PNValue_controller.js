@@ -45,6 +45,7 @@ async function getPNValue (req, res) {
             return element;
         });
         const firstKeywordsArr = sqlResult[0].keywords.split("+")[0].split(",");
+        console.log(firstKeywordsArr);
         // if (sqlResult[0].keywords.split("+")[1].length !== 0) {
         //     const secondKeywordsArr = sqlResult[0].keywords.split("+")[1].split(",");
         // }
@@ -99,13 +100,21 @@ async function getPNValue (req, res) {
             }
             channelQuery += channel;
         }
+        console.log(contentQuery);
+        console.log(titleQuery);
+        const sqlPositiveCount = await PNValueModel.sqlPositiveCount(contentQuery, titleQuery, channelQuery, nowTime, deadline);
+        const sqlNeutralCount = await PNValueModel.sqlNeutralCount(contentQuery, titleQuery, channelQuery, nowTime, deadline);
+        const sqleNegativeCount = await PNValueModel.sqlNegativeCount(contentQuery, titleQuery, channelQuery, nowTime, deadline);
         const sqlPositive = await PNValueModel.sqlPositive(contentQuery, titleQuery, channelQuery, nowTime, deadline);
         const sqlNeutral = await PNValueModel.sqlNeutral(contentQuery, titleQuery, channelQuery, nowTime, deadline);
         const sqleNegative = await PNValueModel.sqlNegative(contentQuery, titleQuery, channelQuery, nowTime, deadline);
         const ans = {
-            positive: sqlPositive[0]["COUNT(*)"],
-            negative: sqleNegative[0]["COUNT(*)"],
-            neutral: sqlNeutral[0]["COUNT(*)"]
+            positive: sqlPositiveCount[0]["COUNT(*)"],
+            negative: sqleNegativeCount[0]["COUNT(*)"],
+            neutral: sqlNeutralCount[0]["COUNT(*)"],
+            positiveInfo: sqlPositive,
+            neutralInfo: sqlNeutral,
+            negativeInfo: sqleNegative
         };
         console.log(ans);
         res.send(ans);

@@ -74,6 +74,7 @@ function getTopic (data) {
     }
 }
 
+// DOM
 function render (info) {
     const contents = document.getElementById("contents");
 
@@ -132,22 +133,21 @@ function render (info) {
         const time = document.createElement("div");
         time.className = "time";
         time.innerHTML = `時間：${info[i].time}`;
-        const emotion = document.createElement("div");
-        emotion.className = "emotion";
+        const emotionInfo = document.createElement("div");
+        emotionInfo.className = "emotion_info";
         const rawEmotion = info[i].emotion;
         const float = parseFloat(rawEmotion);
         const emotionFinal = float.toFixed(2);
-        console.log(emotionFinal);
         if (emotionFinal > 0.25) {
-            emotion.innerHTML = "情緒：正面";
+            emotionInfo.innerHTML = "情緒：正面";
         } else if (emotionFinal >= -0.25 && emotionFinal <= 0.25) {
-            emotion.innerHTML = "情緒：中立";
+            emotionInfo.innerHTML = "情緒：中立";
         } else if (emotionFinal < -0.25) {
-            emotion.innerHTML = "情緒：負面";
+            emotionInfo.innerHTML = "情緒：負面";
         } else {
-            emotion.innerHTML = "情緒：舊資料";
+            emotionInfo.innerHTML = "情緒：舊資料";
         }
-        information.append(channel, push, likes, author, time, emotion);
+        information.append(channel, push, likes, author, time, emotionInfo);
         content.append(link, paragraph, information);
         contents.append(content);
     }

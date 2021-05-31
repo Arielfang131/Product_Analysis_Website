@@ -1,3 +1,4 @@
+
 function ajax (src, callback, callbackTwo) {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
@@ -40,18 +41,20 @@ function ajaxKeywords (src, data, callback) {
             if (res.admin === "yes") {
                 const newXhr = new XMLHttpRequest();
                 newXhr.onreadystatechange = function () {
-                    const res = JSON.parse(newXhr.responseText);
-                    const boxes = document.querySelectorAll(".view_keyword");
-                    if (boxes) {
-                        for (let i = 0; i < boxes.length; i++) {
-                            boxes[i].remove();
+                    if (newXhr.readyState === 4 && newXhr.status === 200) {
+                        const res = JSON.parse(newXhr.responseText);
+                        const boxes = document.querySelectorAll(".view_keyword");
+                        if (boxes) {
+                            for (let i = 0; i < boxes.length; i++) {
+                                boxes[i].remove();
+                            }
                         }
+                        const noResult = document.querySelector(".no_result");
+                        if (noResult) {
+                            noResult.remove();
+                        }
+                        callback(res);
                     }
-                    const noResult = document.querySelector(".no_result");
-                    if (noResult) {
-                        noResult.remove();
-                    }
-                    callback(res);
                 };
                 newXhr.open("POST", "api/1.0/keywords");
                 newXhr.setRequestHeader("Content-Type", "application/json");
@@ -204,28 +207,34 @@ function view (response) { // DOM
         const firstArr = (keywords.split("+")[0]).split(",");
         const secondArr = (keywords.split("+")[1]).split(",");
 
-        let firstString = "( ";
-        for (const j in firstArr) {
-            if (parseInt(j) === (firstArr.length - 1)) {
-                firstString += `${firstArr[j]} `;
-                firstString += ") ";
-                firstString += `${symbolsArr.shift()} `;
-                continue;
-            }
-            firstString += `${firstArr[j]} `;
-            firstString += `${symbolsArr.shift()} `;
-        }
+        // let firstString = "( ";
+        // for (const j in firstArr) {
+        //     if (parseInt(j) === (firstArr.length - 1)) {
+        //         firstString += `${firstArr[j]} `;
+        //         firstString += ") ";
+        //         firstString += `${symbolsArr.shift()} `;
+        //         continue;
+        //     }
+        let firstString = `${firstArr[0]} `;
+        firstString += `${symbolsArr.shift()} `;
+        // }
         // 若secondArr是空的，就不需要顯示在前端
         if (secondArr[0] !== "") {
-            let secondString = "( ";
-            for (const k in secondArr) {
-                if (parseInt(k) === (secondArr.length - 1)) {
+            let secondString = "";
+            console.log(secondArr.length);
+            if (secondArr.length === 1) {
+                secondString = secondArr[0];
+            } else {
+                secondString = "( ";
+                for (const k in secondArr) {
+                    if (parseInt(k) === (secondArr.length - 1)) {
+                        secondString += `${secondArr[k]} `;
+                        secondString += ") ";
+                        continue;
+                    }
                     secondString += `${secondArr[k]} `;
-                    secondString += ") ";
-                    continue;
+                    secondString += `${symbolsArr.shift()} `;
                 }
-                secondString += `${secondArr[k]} `;
-                secondString += `${symbolsArr.shift()} `;
             }
             keywordList.innerHTML = firstString + secondString;
         } else {
@@ -237,6 +246,7 @@ function view (response) { // DOM
         keywordBox.append(topicBox, keywordList, remove);
         keywordsBox.append(keywordBox);
     }
+    /// /////////////////////
     // 刪除按鈕
     const trash = document.querySelectorAll(".icon_trash");
     for (let i = 0; i < trash.length; i++) {
@@ -321,12 +331,13 @@ function modifiedKeywords () {
     // 點選按鈕，新增關鍵字
     button.addEventListener("click", function () {
         const topicEl = document.querySelectorAll(".topic");
+        // 確認群組數量和全部關鍵字的數量
         let topicCount = 0;
         let totalKeywordsCount = 0;
         const data = [];
         for (let i = 0; i < topicEl.length; i++) {
             const topic = topicEl[i].value;
-            console.log(topic);
+            // console.log(topic);
             let keywordsCount = 0;
             if (topic !== "") {
                 topicCount += 1;
@@ -348,13 +359,13 @@ function modifiedKeywords () {
                 const symbol = symbolsEl[k].value;
                 symbols.push(symbol);
             }
-
-            const firstArr = [keywords[0], keywords[1], keywords[2]];
-            const secondArr = [keywords[3], keywords[4], keywords[5]];
+            console.log(symbols);
+            const firstArr = [keywords[0]];
+            const secondArr = [keywords[1], keywords[2], keywords[3]];
             // 有填主題，但第一個關鍵字是空的
             if (topic !== "" && keywords[0] === "") {
-                console.log(topic);
-                console.log(keywords[0]);
+                // console.log(topic);
+                // console.log(keywords[0]);
                 Swal.fire("若需設定群組，請於第一個空格內填入一個關鍵字");
                 // alert("若需設定主題，請於第一個空格內填入一個關鍵字");
                 return;
@@ -363,23 +374,23 @@ function modifiedKeywords () {
             const newSecond = [];
             const newSymbols = [];
             // 檢查第一個Array有沒有空的
-            for (let a = 0; a < firstArr.length; a++) {
-                // 若關鍵字是空的，跳過
-                if (firstArr[a] === "") {
-                    continue;
-                }
-                keywordsCount += 1;
-                totalKeywordsCount += 1;
-                // 關鍵字放到新的array
-                newFirst.push(firstArr[a]);
-                // 若後面有關鍵字，前面的符號才需要放進去
-                if (a >= 1) {
-                    newSymbols.push(symbols[a - 1]);
-                }
-            }
+            // for (let a = 0; a < firstArr.length; a++) {
+            // 若關鍵字是空的，跳過
+            // if (firstArr[0] === "") {
+            //     continue;
+            // }
+            keywordsCount += 1;
+            totalKeywordsCount += 1;
+            // 關鍵字放到新的array
+            newFirst.push(firstArr[0]);
+            // 若後面有關鍵字，前面的符號才需要放進去
+            // if (a >= 1) {
+            //     newSymbols.push(symbols[a - 1]);
+            // }
+            // }
             // 若第二個Array全部是空的，中間的符號不要放
-            if (keywords[3] !== "" || keywords[4] !== "" || keywords[5] !== "") {
-                newSymbols.push(symbols[2]);
+            if (keywords[1] !== "" || keywords[2] !== "" || keywords[3] !== "") {
+                newSymbols.push(symbols[0]);
             }
             // 檢查第二個array
             for (let b = 0; b < secondArr.length; b++) {
@@ -389,10 +400,11 @@ function modifiedKeywords () {
                 }
                 keywordsCount += 1;
                 totalKeywordsCount += 1;
-                // 關鍵字放到新的array(有問題)
+                // 判斷符號要不要放進去
                 newSecond.push(secondArr[b]);
-                if (b < secondArr.length - 1) {
-                    newSymbols.push(symbols[b + 3]);
+                // if (b < secondArr.length - 1) {
+                if (b !== 0) {
+                    newSymbols.push(symbols[b]);
                 }
             }
             if (topic === "" && keywordsCount !== 0) {
@@ -424,8 +436,12 @@ function modifiedKeywords () {
         const items = document.querySelectorAll(".keywords_box");
         if (items) {
             const keyword1 = document.querySelectorAll(".keyword1");
-            console.log(keyword1);
+            const topic = document.querySelectorAll(".topic");
+            // console.log(keyword1);
             for (let i = 0; i < keyword1.length; i++) {
+                if (topic[i]) {
+                    topic[i].value = "";
+                }
                 keyword1[i].value = "";
             }
             for (let i = 1; i < items.length; i++) {

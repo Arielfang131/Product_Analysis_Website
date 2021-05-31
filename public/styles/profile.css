@@ -1,4 +1,4 @@
-.container1{
+/* .container1{
     margin-top: 10px;
     margin-left: auto;
     margin-right: auto;
@@ -19,29 +19,48 @@
 #menu{
     display: flex;
     flex-direction: column;
-}
+} */
 .box2{
     flex-grow:1;
     display: flex;
     flex-direction: column;
 }
 #main{
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
     display: flex;
     flex-direction: column;
     text-align: center;
     font-size: 22px;
+    background-color: white;
+    border-color:#D9D9D9;
+    border-width:2px;
+    border-style:solid;
+    line-height: 30px;
+    border-radius: 5px;
+    width: 800px;
 }
 .text{
     margin-top: 15px;
 }
 
-#icon_profile{
+/* #icon_profile{
     height: 40px;
     margin-top: 12px;
-}
+} */
 #button{
     width: 80px;
     margin-top: 30px;
     margin-left: auto;
     margin-right: auto;
+    border-radius: 5px;
+    height:30px;
+    background-color: #555555;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
 }

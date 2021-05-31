@@ -47,7 +47,40 @@ input{
     margin-bottom: 15px;
     line-height:2em;
     width:250px;
+    border: none;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+}
+select{
+    border: none;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
 }
 #register_button{
     margin-top: 15px;
+    width:80px;
+    border-radius: 5px;
+    height:30px;
+    background-color: #555555;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+}
+#sign_in_button{
+    margin-top: 15px;
+    width:80px;
+    border-radius: 5px;
+    height:30px;
+    background-color: #555555;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
 }

@@ -1,4 +1,4 @@
-.container1{
+/* .container1{
     margin-top: 10px;
     margin-left: auto;
     margin-right: auto;
@@ -19,7 +19,7 @@
 #menu{
     display: flex;
     flex-direction: column;
-}
+} */
 .box2{
     flex-grow:1;
     display: flex;
@@ -38,6 +38,8 @@
     display: flex;
     flex-direction: column;
     text-align:left;
+    border-radius: 5px;
+    background-color: white;
     border-color:#D9D9D9;
     border-width:2px;
     border-style:solid;
@@ -60,7 +62,7 @@
     text-align: center;
     margin-right: 10px;
     margin-left: 40px;
-    border-radius: 50px;
+    border-radius: 5px;
     border-color:#D9D9D9;
     border-width:2px;
     border-style:solid;
@@ -75,8 +77,4 @@
     display: flex;
     flex-direction: row;
     justify-content:space-between;
-}
-#icon_profile{
-    height: 40px;
-    margin-top: 12px;
 }

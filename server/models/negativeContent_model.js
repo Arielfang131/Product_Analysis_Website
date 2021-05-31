@@ -72,7 +72,6 @@ const { query } = require("./mysqlcon");
 // };
 
 const insertAllNegative = async function () {
-    console.log("try");
     try {
         // 選取當天時間
         const date = new Date();
@@ -136,7 +135,8 @@ const insertAllNegative = async function () {
                     titleSecond += `${symbols2.shift()} `;
                 }
             }
-            const sqlText = `SELECT id FROM text_table WHERE (${contentQuery} OR ${titleQuery}) AND (time >'${dateInfo} 00:00') AND emotion < -0.25 order by time DESC;`;
+            // const sqlText = `SELECT id FROM text_table WHERE (${contentQuery} OR ${titleQuery}) AND (time >'${dateInfo} 00:00') AND emotion < -0.25 order by time DESC;`;
+            const sqlText = `SELECT id FROM text_table WHERE (${contentQuery} OR ${titleQuery}) AND emotion < -0.25 order by time DESC;`;
             const sqlResult = await query(sqlText);
             if (sqlResult.length === 0) {
                 continue;

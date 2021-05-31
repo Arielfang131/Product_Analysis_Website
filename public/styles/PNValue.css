@@ -1,25 +1,3 @@
-.container1{
-    margin-top: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    display:flex;
-    width:95%;
-    justify-content:flex-start;
-    text-align: center;
-}
-.box1{
-    width:100px;
-    display: flex;
-    flex-direction: column;
-}
-.menu_bar{
-    height: 60px;
-    line-height:30px;
-}
-#menu{
-    display: flex;
-    flex-direction: column;
-}
 .box2{
     flex-grow:1;
     display: flex;
@@ -34,20 +12,32 @@
     text-align:left;
 }
 #button{
-    width:50px;
+    width:80px;
     margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
+    border-radius: 5px;
+    height:30px;
+    background-color: #555555;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
 }
 #contents{
+    /* background-color: white;
+    border-color:#D9D9D9;
+    border-width:2px;
+    border-style:solid;
+    border-radius: 5px; */
     display: flex;
     flex-direction: column;
     margin-top: 10px;
     margin-left: auto;
     margin-right: auto;
-}
-#icon_profile{
-    height: 60px;
+    /* padding:10px; */
 }
 .emotion{
     margin-top: 15px;
@@ -56,4 +46,57 @@
 .value{
     margin-top: 15px;
     font-size: 20px; 
+}
+#details{
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.detail{
+    width: 950px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    text-align:left;
+    border-color:#D9D9D9;
+    border-width:2px;
+    border-style:solid;
+    border-radius: 5px;
+    background-color: white;
+}
+/* .content_title{
+    text-align:left;
+} */
+.content_title{
+    margin-left: 40px;
+}
+.paragraph{
+    margin-top: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content:flex-start;
+}
+.tag{
+    width:50px;
+    max-height: 22px;
+    text-align: center;
+    margin-right: 10px;
+    margin-left: 40px;
+    border-radius: 50px;
+    border-color:#D9D9D9;
+    border-width:2px;
+    border-style:solid;
+}
+.article{
+    max-width: 850px;
+}
+.information{
+    margin-top: 8px;
+    margin-left: 40px;
+    margin-right: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
 }

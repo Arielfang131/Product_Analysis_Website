@@ -14,7 +14,6 @@ function ajax (src, callback, callbackTwo) {
                 newXhr.onreadystatechange = function () {
                     if (newXhr.readyState === 4 && newXhr.status === 200) {
                         const data = JSON.parse(newXhr.responseText);
-                        console.log(data);
                         callbackTwo(data);
                     }
                 };
@@ -71,10 +70,134 @@ function ajaxKeywords (src, data, callback) {
     xhr.send(JSON.stringify(data));
 }
 
+// DOM
+let oldKeywordsCounts = 0;
+function view (response) {
+    const keywordsBox = document.getElementById("view_keywords");
+    if (response.length === 0) {
+        const noResult = document.createElement("div");
+        noResult.className = "no_result";
+        noResult.innerHTML = "目前無設定";
+        keywordsBox.append(noResult);
+    }
+    for (const i in response) {
+        const keywordBox = document.createElement("div");
+        keywordBox.className = "view_keyword";
+        keywordBox.id = `${response[i].topicId}`;
+        const topicBox = document.createElement("div");
+        topicBox.className = "view_topic";
+        topicBox.innerText = response[i].topicName;
+        const keywordList = document.createElement("div");
+        keywordList.className = "keyword_list";
+        const keywords = response[i].keywords;
+        const symbols = response[i].symbols;
+        const symbolsArr = symbols.split(",");
+        const firstArr = (keywords.split("+")[0]).split(",");
+        const secondArr = (keywords.split("+")[1]).split(",");
+
+        // let firstString = "( ";
+        // for (const j in firstArr) {
+        //     if (parseInt(j) === (firstArr.length - 1)) {
+        //         firstString += `${firstArr[j]} `;
+        //         firstString += ") ";
+        //         firstString += `${symbolsArr.shift()} `;
+        //         continue;
+        //     }
+        let firstString = `${firstArr[0]} `;
+        firstString += `${symbolsArr.shift()} `;
+        // }
+        // 若secondArr是空的，就不需要顯示在前端
+        if (secondArr[0] !== "") {
+            let secondString = "";
+            if (secondArr.length === 1) {
+                secondString = secondArr[0];
+            } else {
+                secondString = "( ";
+                for (const k in secondArr) {
+                    if (parseInt(k) === (secondArr.length - 1)) {
+                        secondString += `${secondArr[k]} `;
+                        secondString += ") ";
+                        continue;
+                    }
+                    secondString += `${secondArr[k]} `;
+                    secondString += `${symbolsArr.shift()} `;
+                }
+            }
+            keywordList.innerHTML = firstString + secondString;
+        } else {
+            keywordList.innerHTML = firstString;
+        }
+        const remove = document.createElement("div");
+        remove.className = "remove";
+        remove.innerHTML = `<img id=${response[i].topicId} class="icon_trash" src="./styles/images/trash.png" title="刪除">`;
+        keywordBox.append(topicBox, keywordList, remove);
+        keywordsBox.append(keywordBox);
+        // const totalBoxes = document.querySelectorAll(".keywords_box");
+        const oldKeywordsBox = document.querySelectorAll(".view_keyword");
+        // console.log(totalBoxes.length);
+        oldKeywordsCounts = oldKeywordsBox.length;
+        console.log(oldKeywordsCounts);
+    }
+    // 刪除按鈕
+    const trash = document.querySelectorAll(".icon_trash");
+    for (let i = 0; i < trash.length; i++) {
+        trash[i].addEventListener("click", function (event) {
+            console.log(event.target.id);
+            Swal.fire({
+                title: "確定刪除?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "刪除",
+                cancelButtonText: "取消"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire(
+                        "刪除成功!"
+                    );
+                    const parentElement = document.querySelectorAll(".view_keyword");
+                    let data = {};
+                    for (let j = 0; j < parentElement.length; j++) {
+                        if (event.target.id === parentElement[j].id) {
+                            data = {
+                                topicId: event.target.id
+                            };
+
+                            parentElement[j].remove();
+                        }
+                    }
+                    const xhr = new XMLHttpRequest();
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === 4 && xhr.status === 200) {
+                        }
+                    };
+                    xhr.open("POST", "api/1.0/deleteKeywords");
+                    xhr.setRequestHeader("Content-Type", "application/json");
+                    xhr.send(JSON.stringify(data));
+                    const newParentElement = document.querySelectorAll(".view_keyword");
+                    if (newParentElement.length === 0) {
+                        const noResult = document.createElement("div");
+                        noResult.className = "no_result";
+                        noResult.innerHTML = "目前無設定";
+                        keywordsBox.append(noResult);
+                    }
+                }
+            });
+        });
+    }
+}
+
+ajax("api/1.0/profile", modifiedKeywords, view);
+
 // 新增輸入keywords欄位
 function inputKeywords () {
     const ajaxBox = document.getElementById("ajax");
     const totalBoxes = document.querySelectorAll(".keywords_box");
+    // const oldKeywordsBox = document.querySelectorAll(".view_keyword");
+    // console.log(totalBoxes.length);
+    // console.log(oldKeywordsBox.length);
+    // const totalLength = totalBoxes.length + oldKeywordsBox.length;
     const boxesLength = totalBoxes.length;
     const keywordsBox = document.createElement("div");
     keywordsBox.className = "keywords_box";
@@ -82,7 +205,8 @@ function inputKeywords () {
     // number.className = "number";
     // number.innerHTML = `${i + 1}`;
     const topic = document.createElement("input");
-    topic.value = `群組${boxesLength + 1}`;
+    // topic.value = `群組${(boxesLength + oldKeywordsCounts + 1)}`;
+    topic.value = `群組${(boxesLength + 1)}`;
     topic.type = "text";
     topic.className = "topic";
     // topic.placeholder = "必填：主題";
@@ -184,121 +308,6 @@ function inputKeywords () {
     ajaxBox.append(keywordsBox);
 }
 
-function view (response) { // DOM
-    const keywordsBox = document.getElementById("view_keywords");
-    if (response.length === 0) {
-        const noResult = document.createElement("div");
-        noResult.className = "no_result";
-        noResult.innerHTML = "目前無設定";
-        keywordsBox.append(noResult);
-    }
-    for (const i in response) {
-        const keywordBox = document.createElement("div");
-        keywordBox.className = "view_keyword";
-        keywordBox.id = `${response[i].topicId}`;
-        const topicBox = document.createElement("div");
-        topicBox.className = "view_topic";
-        topicBox.innerText = response[i].topicName;
-        const keywordList = document.createElement("div");
-        keywordList.className = "keyword_list";
-        const keywords = response[i].keywords;
-        const symbols = response[i].symbols;
-        const symbolsArr = symbols.split(",");
-        const firstArr = (keywords.split("+")[0]).split(",");
-        const secondArr = (keywords.split("+")[1]).split(",");
-
-        // let firstString = "( ";
-        // for (const j in firstArr) {
-        //     if (parseInt(j) === (firstArr.length - 1)) {
-        //         firstString += `${firstArr[j]} `;
-        //         firstString += ") ";
-        //         firstString += `${symbolsArr.shift()} `;
-        //         continue;
-        //     }
-        let firstString = `${firstArr[0]} `;
-        firstString += `${symbolsArr.shift()} `;
-        // }
-        // 若secondArr是空的，就不需要顯示在前端
-        if (secondArr[0] !== "") {
-            let secondString = "";
-            console.log(secondArr.length);
-            if (secondArr.length === 1) {
-                secondString = secondArr[0];
-            } else {
-                secondString = "( ";
-                for (const k in secondArr) {
-                    if (parseInt(k) === (secondArr.length - 1)) {
-                        secondString += `${secondArr[k]} `;
-                        secondString += ") ";
-                        continue;
-                    }
-                    secondString += `${secondArr[k]} `;
-                    secondString += `${symbolsArr.shift()} `;
-                }
-            }
-            keywordList.innerHTML = firstString + secondString;
-        } else {
-            keywordList.innerHTML = firstString;
-        }
-        const remove = document.createElement("div");
-        remove.className = "remove";
-        remove.innerHTML = `<img id=${response[i].topicId} class="icon_trash" src="./styles/images/trash.png" title="刪除">`;
-        keywordBox.append(topicBox, keywordList, remove);
-        keywordsBox.append(keywordBox);
-    }
-    /// /////////////////////
-    // 刪除按鈕
-    const trash = document.querySelectorAll(".icon_trash");
-    for (let i = 0; i < trash.length; i++) {
-        trash[i].addEventListener("click", function (event) {
-            console.log(event.target.id);
-            Swal.fire({
-                title: "確定刪除?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "刪除",
-                cancelButtonText: "取消"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire(
-                        "刪除成功!"
-                    );
-                    const parentElement = document.querySelectorAll(".view_keyword");
-                    let data = {};
-                    for (let j = 0; j < parentElement.length; j++) {
-                        if (event.target.id === parentElement[j].id) {
-                            data = {
-                                topicId: event.target.id
-                            };
-
-                            parentElement[j].remove();
-                        }
-                    }
-                    const xhr = new XMLHttpRequest();
-                    xhr.onreadystatechange = function () {
-                        if (xhr.readyState === 4 && xhr.status === 200) {
-                        }
-                    };
-                    xhr.open("POST", "api/1.0/deleteKeywords");
-                    xhr.setRequestHeader("Content-Type", "application/json");
-                    xhr.send(JSON.stringify(data));
-                    const newParentElement = document.querySelectorAll(".view_keyword");
-                    if (newParentElement.length === 0) {
-                        const noResult = document.createElement("div");
-                        noResult.className = "no_result";
-                        noResult.innerHTML = "目前無設定";
-                        keywordsBox.append(noResult);
-                    }
-                }
-            });
-        });
-    }
-}
-
-ajax("api/1.0/profile", modifiedKeywords, view);
-
 function modifiedKeywords () {
     const ajaxBox = document.getElementById("ajax");
     // const modifiedBox = document.createElement("div");
@@ -351,7 +360,7 @@ function modifiedKeywords () {
                 keywords.push(keyword);
                 // }
             }
-            console.log(keywords);
+            // console.log(keywords);
             // 每一個主題的符號
             const symbolsEl = document.querySelectorAll(`.symbol${i + 1}`);
             const symbols = [];
@@ -359,7 +368,7 @@ function modifiedKeywords () {
                 const symbol = symbolsEl[k].value;
                 symbols.push(symbol);
             }
-            console.log(symbols);
+            // console.log(symbols);
             const firstArr = [keywords[0]];
             const secondArr = [keywords[1], keywords[2], keywords[3]];
             // 有填主題，但第一個關鍵字是空的
@@ -462,3 +471,13 @@ question.addEventListener("click", () => {
         ruleDetails.style.display = "none";
     }
 });
+
+// 取得負評數量
+const negativeCounts = localStorage.getItem("negativeCounts");
+if (parseInt(negativeCounts) > 0) {
+    const alertElement = document.createElement("div");
+    alertElement.id = "alert";
+    alertElement.innerHTML = negativeCounts;
+    const parentElement = document.getElementById("little_menu");
+    parentElement.append(alertElement);
+}

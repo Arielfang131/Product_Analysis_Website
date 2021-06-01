@@ -174,9 +174,12 @@ const insertAllNegative = async function () {
     }
 };
 
-const selectNegative = async function (companyNo) {
+const selectNegative = async function (companyNo, deadline) {
     const sql = "SELECT negative_table.text_id FROM company_table INNER JOIN topic_table ON topic_table.company_id = company_table.company_id INNER JOIN negative_table ON negative_table.topic_id = topic_table.topic_id WHERE company_table.company_number = ?;";
     const result = await query(sql, companyNo);
+    if (result.length === 0) {
+        return result;
+    }
     let idString = "(";
     for (const i in result) {
         if (parseInt(i) === (result.length - 1)) {
@@ -185,7 +188,7 @@ const selectNegative = async function (companyNo) {
         }
         idString += `${result[i].text_id},`;
     }
-    const sqlContent = `SELECT * FROM text_table WHERE id IN ${idString};`;
+    const sqlContent = `SELECT * FROM text_table WHERE id IN ${idString} AND (time > '${deadline} 00:00');`;
     const sqlResult = await query(sqlContent);
     // const ans = [];
     // for (const i in result) {

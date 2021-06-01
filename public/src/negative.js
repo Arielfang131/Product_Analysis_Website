@@ -37,6 +37,8 @@ async function getNegativeContent (info) {
         parentElement.append(noContent);
     }
     for (const i in info) {
+        const bigBox = document.createElement("div");
+        bigBox.className = "big_box";
         const content = document.createElement("div");
         content.className = "content";
         // const contentTitle = document.createElement("div");
@@ -99,10 +101,32 @@ async function getNegativeContent (info) {
         } else {
             emotion.innerHTML = "情緒：舊資料";
         }
+        // const flexBox = document.createElement("div");
+        // flexBox.className = "flex_box";
+        // const checkBox1 = document.createElement("input");
+        // checkBox1.type = "checkbox";
+        // const label1 = document.createElement("label");
+        // label1.innerHTML = "已處理";
+        // const checkBox2 = document.createElement("input");
+        // checkBox2.type = "checkbox";
+        // const label2 = document.createElement("label");
+        // label2.innerHTML = "移除負評";
         information.append(channel, push, likes, author, time, emotion);
+        // flexBox.append(checkBox1, label1, checkBox2, label2);
         content.append(link, paragraph, information);
+        // bigBox.append(content);
         parentElement.append(content);
     }
 }
 
 ajax("api/1.0/profile", getNegativeContent);
+
+// 取得負評數量
+const negativeCounts = localStorage.getItem("negativeCounts");
+if (parseInt(negativeCounts) > 0) {
+    const alertElement = document.createElement("div");
+    alertElement.id = "alert";
+    alertElement.innerHTML = negativeCounts;
+    const parentElement = document.getElementById("little_menu");
+    parentElement.append(alertElement);
+}

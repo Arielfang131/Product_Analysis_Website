@@ -23,7 +23,21 @@ function ajax (src, data) {
                     if (res.msg === "null") {
                         window.location.href = "member.html";
                     } else {
-                        window.location.href = "contentlist.html";
+                        const getNeg = new XMLHttpRequest();
+                        getNeg.onreadystatechange = function () {
+                            if (getNeg.readyState === 4 && getNeg.status === 200) {
+                                const response = JSON.parse(getNeg.responseText);
+                                console.log(response);
+                                const counts = response.length;
+                                localStorage.setItem("negativeCounts", counts);
+                                window.location.href = "contentlist.html";
+                            }
+                        };
+                        getNeg.open("GET", "api/1.0/negativeContent");
+                        getNeg.setRequestHeader("Content-Type", "application/json");
+                        const accessToken = localStorage.getItem("access_token");
+                        getNeg.setRequestHeader("Authorization", "bearer " + accessToken);
+                        getNeg.send();
                     }
                 }
             };
@@ -54,6 +68,16 @@ newXhr.setRequestHeader("Content-Type", "application/json");
 const accessToken = localStorage.getItem("access_token");
 newXhr.setRequestHeader("Authorization", "bearer " + accessToken);
 newXhr.send();
+
+// 取得負評數量
+const negativeCounts = localStorage.getItem("negativeCounts");
+if (parseInt(negativeCounts) > 0) {
+    const alertElement = document.createElement("div");
+    alertElement.id = "alert";
+    alertElement.innerHTML = negativeCounts;
+    const parentElement = document.getElementById("little_menu");
+    parentElement.append(alertElement);
+}
 
 const signInButton = document.getElementById("sign_in_button");
 signInButton.addEventListener("click", function () {

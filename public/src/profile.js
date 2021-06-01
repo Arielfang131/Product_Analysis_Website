@@ -35,5 +35,16 @@ xhr.send();
 const button = document.getElementById("button");
 button.addEventListener("click", function () {
     localStorage.removeItem("access_token");
+    localStorage.removeItem("negativeCounts");
     window.location.href = "member.html";
 });
+
+// 取得負評數量
+const negativeCounts = localStorage.getItem("negativeCounts");
+if (parseInt(negativeCounts) > 0) {
+    const alertElement = document.createElement("div");
+    alertElement.id = "alert";
+    alertElement.innerHTML = negativeCounts;
+    const parentElement = document.getElementById("little_menu");
+    parentElement.append(alertElement);
+}

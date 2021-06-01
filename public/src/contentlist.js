@@ -330,3 +330,13 @@ button.addEventListener("click", function (event) {
     };
     ajax("/api/1.0/contentlist", data, render);
 });
+
+// 取得負評數量
+const negativeCounts = localStorage.getItem("negativeCounts");
+if (parseInt(negativeCounts) > 0) {
+    const alertElement = document.createElement("div");
+    alertElement.id = "alert";
+    alertElement.innerHTML = negativeCounts;
+    const parentElement = document.getElementById("little_menu");
+    parentElement.append(alertElement);
+}

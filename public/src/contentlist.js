@@ -233,7 +233,7 @@ button.addEventListener("click", function (event) {
         }
     }
     if (selectTopic === 0) {
-        alert("請選擇主題");
+        alert("請選擇群組");
         return;
     }
     for (let i = 0; i < checkboxTwo.length; i++) {

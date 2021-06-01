@@ -346,7 +346,7 @@ button.addEventListener("click", function (event) {
         const nowDateString = nowDate.getDate().toString();
         if (nowDateString.length === 1) {
             const deadlineZero = ("0" + nowDateString);
-            deadline = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + deadlineZero;
+            deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
         } else {
             deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
         }
@@ -356,7 +356,7 @@ button.addEventListener("click", function (event) {
         const nowDateString = nowDate.getDate().toString();
         if (nowDateString.length === 1) {
             const deadlineZero = ("0" + nowDateString);
-            deadline = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + deadlineZero;
+            deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
         } else {
             deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
         }
@@ -366,7 +366,7 @@ button.addEventListener("click", function (event) {
         const nowDateString = nowDate.getDate().toString();
         if (nowDateString.length === 1) {
             const deadlineZero = ("0" + nowDateString);
-            deadline = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + deadlineZero;
+            deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
         } else {
             deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
         }

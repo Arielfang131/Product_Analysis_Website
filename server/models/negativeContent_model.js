@@ -188,7 +188,7 @@ const selectNegative = async function (companyNo, deadline) {
         }
         idString += `${result[i].text_id},`;
     }
-    const sqlContent = `SELECT * FROM text_table WHERE id IN ${idString} AND (time > '${deadline} 00:00');`;
+    const sqlContent = `SELECT * FROM text_table WHERE id IN ${idString} AND (time > '${deadline} 00:00') order by time DESC;`;
     const sqlResult = await query(sqlContent);
     // const ans = [];
     // for (const i in result) {

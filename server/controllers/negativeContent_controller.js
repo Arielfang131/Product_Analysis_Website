@@ -37,6 +37,7 @@ async function getNegativeContent (req, res) {
     } else {
         deadline = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
     }
+    console.log(deadline);
     const result = await negativeModel.selectNegative(companyNo, deadline);
     // const topicId = result[0].topic_id;
     // let deadline;
@@ -50,8 +51,8 @@ async function getNegativeContent (req, res) {
     //     deadline = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
     // }
     // const negativeContent = await negativeModel.selectNegative(topicId, deadline);
-    console.log("++=======");
-    console.log(result);
+    // console.log("++=======");
+    // console.log(result);
     res.send(JSON.stringify(result));
 }
 

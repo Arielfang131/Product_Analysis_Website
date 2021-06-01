@@ -34,7 +34,7 @@
     margin-right: auto;
 }
 .content{
-    max-width: 950px;
+    width: 950px;
     margin-top: 10px;
     display: flex;
     flex-direction: column;

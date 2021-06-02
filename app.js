@@ -16,7 +16,8 @@ app.use("/api/" + "1.0",
         require("./server/routes/member_route"),
         require("./server/routes/emotion_route"),
         require("./server/routes/negativeContent_route"),
-        require("./server/routes/PNValue_route")
+        require("./server/routes/PNValue_route"),
+        require("./server/routes/wordcloud_route")
     ]
 );
 

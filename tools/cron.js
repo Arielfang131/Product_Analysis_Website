@@ -1,7 +1,3 @@
-// Express Initialization
-// const express = require("express");
-// const app = express();
-
 const cron = require("node-cron");
 require("dotenv").config();
 const mysql = require("mysql");
@@ -42,10 +38,11 @@ function delay () {
     return new Promise(function (resolve, reject) {
         setTimeout(function () {
             resolve("delay");
-        }, 1500);
+        }, 3000);
     });
 }
 
+let googleCounts = 0;
 // 爬取PTT文章列表，取得文章連結和上頁連結
 function pttCrawler (url) {
     return new Promise((resolve, reject) => {
@@ -155,6 +152,10 @@ async function pttCrawlerPush (url) {
                     const timeZero = timeSlash.replace("/", "-");
                     const time = year + "-" + timeZero.replace(/^[0]/g, "");
                     const commentEmotion = await googleEmotion.emotion(comment);
+                    googleCounts = googleCounts + 1;
+                    console.log(`Count: ${googleCounts}`);
+                    const googleTime = new Date();
+                    console.log(`Time: ${googleTime}`);
                     const data = {
                         commentAuthor: commentAuthor,
                         comment: comment,
@@ -172,7 +173,8 @@ async function pttCrawlerPush (url) {
 
 async function getPtt () {
     try {
-        const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index.html", page: 10 }, { url: "https://www.ptt.cc/bbs/BeautySalon/index.html", page: 10 }];
+        // const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index.html", page: 10 }, { url: "https://www.ptt.cc/bbs/BeautySalon/index.html", page: 10 }];
+        const arrUrl = [{ url: "https://www.ptt.cc/bbs/BeautySalon/index.html", page: 10 }];
         // const crawlerInfos = [];
         for (const k in arrUrl) {
             const mainUrl = arrUrl[k].url;
@@ -189,7 +191,7 @@ async function getPtt () {
             // for迴圈爬取多頁的文章列表和上一頁的URL
             let pageURL = arrUrl[k].url;
             for (let i = 0; i < arrUrl[k].page; i++) {
-                console.log("page: " + i + " in " + arrUrl[k].page);
+                // console.log("page: " + i + " in " + arrUrl[k].page);
                 await delay();
                 const result = await pttCrawler(pageURL);
                 // const lastPageUrl = result.lastURL;
@@ -200,7 +202,7 @@ async function getPtt () {
                     // for (let j = 0; j < 3; j++) {
                     const crawlerInfo = [];
                     const link = result.info[j].link;
-                    console.log(link);
+                    // console.log(link);
                     const push = result.info[j].push;
                     const detail = await pttCrawlerContent(`https://www.ptt.cc${link}`);
                     const commentsInfo = await pttCrawlerPush(`https://www.ptt.cc${link}`);
@@ -225,6 +227,10 @@ async function getPtt () {
                         const timeSeg = timeDetail.split(":");
                         const time = year + "-" + month + "-" + day + " " + (timeSeg.slice(0, 2).join(":"));
                         const emotion = await googleEmotion.emotion(detail[3].article);
+                        googleCounts = googleCounts + 1;
+                        console.log(`Count: ${googleCounts}`);
+                        const googleTime = new Date();
+                        console.log(`Time: ${googleTime}`);
                         const obj = {
                             author: detail[0],
                             title: detail[1],
@@ -239,16 +245,16 @@ async function getPtt () {
                         crawlerInfo.push(obj);
                     }
                     const checkResult = await crawlerModel.checkCrawlerInfo(`https://www.ptt.cc${link}`);
-                    console.log(checkResult.length);
+                    // console.log(checkResult.length);
                     if (checkResult.length === 0) {
-                        console.log("add");
+                        // console.log("add");
                         const sqlResult = await crawlerModel.createCrawlerInfo(crawlerInfo);
-                        console.log(sqlResult);
+                        // console.log(sqlResult);
                     } else {
-                        console.log("delete");
+                        // console.log("delete");
                         // const sqldelete = await crawlerModel.deleteCrawlerInfo(`https://www.ptt.cc${link}`);
                         const sqlResult = await crawlerModel.updateCrawlerInfo(crawlerInfo, `https://www.ptt.cc${link}`);
-                        console.log(sqlResult);
+                        // console.log(sqlResult);
                     }
                 }
             }
@@ -266,7 +272,7 @@ async function getPtt () {
 
 async function getNegativeInfo () {
     const negativeInfo = await negativeModel.insertAllNegative();
-    console.log(negativeInfo);
+    // console.log(negativeInfo);
 }
 
 // getNegativeInfo();

@@ -74,85 +74,6 @@ function getTopic (data) {
     }
 }
 
-// DOM
-function render (info) {
-    const contents = document.getElementById("contents");
-
-    if (info.length === 0) {
-        const noContent = document.createElement("div");
-        noContent.id = "noContent";
-        noContent.innerHTML = "<h3>沒有符合的內容</h3>";
-        contents.append(noContent);
-    }
-    for (const i in info) {
-        const content = document.createElement("div");
-        content.className = "content";
-        // const contentTitle = document.createElement("div");
-        const link = document.createElement("a");
-        link.className = "content_title";
-        link.innerHTML = `${info[i].title}`;
-        link.href = `${info[i].link}`;
-        link.target = "_blank";
-        // contentTitle.innerHTML = `${info[i].title} <a href = ${info[i].link}>`;
-        const paragraph = document.createElement("div");
-        paragraph.className = "paragraph";
-        const tag = document.createElement("div");
-        tag.className = "tag";
-        tag.innerHTML = `${info[i].body_textORcomment}`;
-        const article = document.createElement("div");
-        article.className = "article";
-        const str = `${info[i].content}`;
-        if (str.length > 200) {
-            article.innerHTML = `${info[i].content}`.substring(0, 200) + "...(更多)"; ;
-        } else {
-            article.innerHTML = `${info[i].content}`;
-        }
-        paragraph.append(tag, article);
-        const information = document.createElement("div");
-        information.className = "information";
-        const channel = document.createElement("div");
-        channel.className = "channel";
-        channel.innerHTML = `${info[i].channel}`;
-        const push = document.createElement("div");
-        push.className = "push";
-        if (info[i].push_number === null) {
-            push.innerHTML = "共0則推文";
-        } else {
-            push.innerHTML = `共${info[i].push_number}則推文`;
-        }
-        const likes = document.createElement("div");
-        likes.className = "likes";
-        if (info[i].likes_number === null) {
-            likes.innerHTML = "共0個讚";
-        } else {
-            likes.innerHTML = `共${info[i].likes_number}個讚`;
-        }
-        const author = document.createElement("div");
-        author.className = "author";
-        author.innerHTML = `作者：${info[i].author}`;
-        const time = document.createElement("div");
-        time.className = "time";
-        time.innerHTML = `時間：${info[i].time}`;
-        const emotionInfo = document.createElement("div");
-        emotionInfo.className = "emotion_info";
-        const rawEmotion = info[i].emotion;
-        const float = parseFloat(rawEmotion);
-        const emotionFinal = float.toFixed(2);
-        if (emotionFinal > 0.25) {
-            emotionInfo.innerHTML = "情緒：正面";
-        } else if (emotionFinal >= -0.25 && emotionFinal <= 0.25) {
-            emotionInfo.innerHTML = "情緒：中立";
-        } else if (emotionFinal < -0.25) {
-            emotionInfo.innerHTML = "情緒：負面";
-        } else {
-            emotionInfo.innerHTML = "情緒：舊資料";
-        }
-        information.append(channel, push, likes, author, time, emotionInfo);
-        content.append(link, paragraph, information);
-        contents.append(content);
-    }
-}
-
 ajaxTopic("/api/1.0/profile", getTopic);
 
 const checkboxTwo = document.querySelectorAll("#cbox2");
@@ -331,7 +252,7 @@ button.addEventListener("click", function (event) {
         channel: channel,
         emotion: emotion
     };
-    ajax("/api/1.0/contentlist", data, render);
+    ajax("/api/1.0/wordcloud", data, view);
 });
 
 // 取得負評數量
@@ -343,3 +264,43 @@ if (parseInt(negativeCounts) > 0) {
     const parentElement = document.getElementById("little_menu");
     parentElement.append(alertElement);
 }
+
+function view (response) {
+    const test = document.getElementById("contents");
+    // test.innerHTML = "test";
+    const options = eval({
+        list: response, // 或者[['各位觀衆',45],['詞雲', 21],['來啦!!!',13]],只要格式滿足這樣都可以
+        gridSize: 6, // 密集程度 數字越小越密集
+        weightFactor: 1, // 字體大小=原始大小*weightFactor
+        maxFontSize: 18, // 最大字號
+        minFontSize: 3, // 最小字號
+        fontWeight: "normal", // 字體粗細
+        fontFamily: "Times, serif", // 字體
+        color: "random-light" // 字體顏色 'random-dark' 或者 'random-light'
+    // backgroundColor: "#333", // 背景顏色
+    // rotateRatio: 1 // 字體傾斜(旋轉)概率，1代表總是傾斜(旋轉)
+    });
+    // WordCloud(test, { list: list });
+    WordCloud(test, options);
+}
+
+// // const list = [["各位觀衆", 45], ["詞雲", 21], ["來啦!!!", 13]];
+// // const wordcloud = require("wordcloud");
+// const test = document.getElementById("contents");
+// // test.innerHTML = "test";
+// const options = eval({
+//     list: list, // 或者[['各位觀衆',45],['詞雲', 21],['來啦!!!',13]],只要格式滿足這樣都可以
+//     gridSize: 8, // 密集程度 數字越小越密集
+//     weightFactor: 1.5, // 字體大小=原始大小*weightFactor
+//     maxFontSize: 60, // 最大字號
+//     minFontSize: 14, // 最小字號
+//     fontWeight: "normal", // 字體粗細
+//     fontFamily: "Times, serif", // 字體
+//     color: "random-light" // 字體顏色 'random-dark' 或者 'random-light'
+//     // backgroundColor: "#333", // 背景顏色
+//     // rotateRatio: 1 // 字體傾斜(旋轉)概率，1代表總是傾斜(旋轉)
+// });
+// // WordCloud(test, { list: list });
+// WordCloud(test, options);
+
+ajax("api/1.0/wordcloud", view);

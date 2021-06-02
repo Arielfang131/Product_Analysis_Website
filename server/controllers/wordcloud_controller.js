@@ -1,37 +1,7 @@
+const nodejieba = require("nodejieba");
 const contentListModel = require("../models/contentlist_model.js");
-// 載入 jsonwebtoken
-const jwt = require("jsonwebtoken");
 
-// 依據使用者資訊，送出儲存過的主題
-async function getTopicList (req, res) {
-    try {
-        const tokenInfo = req.headers.authorization;
-        const token = tokenInfo.split(" ")[1];
-        const decodeToken = jwt.decode(token, process.env.ACCESS_TOKEN_SECRET);
-        const companyNo = decodeToken.companyNo;
-        const sqlResult = await contentListModel.selectTopic(companyNo);
-        const data = [];
-        for (const i in sqlResult) {
-            const ans = {
-                topicId: sqlResult[i].topic_id,
-                topicName: sqlResult[i].topic_name
-            };
-            data.push(ans);
-        }
-        console.log(data);
-        res.send(JSON.stringify(data));
-        return;
-    } catch (err) {
-        console.log("test1");
-        console.log("error: " + err);
-        const obj = {
-            msg: "wrong"
-        };
-        res.send(obj);
-    }
-}
-
-async function getContentList (req, res) {
+async function getWordcloud (req, res) {
     try {
         const topicId = req.body.topicId;
         const channels = req.body.channel;
@@ -98,49 +68,40 @@ async function getContentList (req, res) {
             }
             channelQuery += channel;
         }
-        let emotionQuery = "";
-        let emotion = "";
-        if (emotions.length === 3) {
-            const sqlContentResult = await contentListModel.getSQLcontentNoEmotion(contentQuery, titleQuery, channelQuery, nowTime, deadline);
-            // console.log(res);
-            res.send(sqlContentResult);
-            return;
+        const sqlContentResult = await contentListModel.getSQLcontentNoEmotion(contentQuery, titleQuery, channelQuery, nowTime, deadline);
+        let sentence = "";
+        for (let i = 0; i < sqlContentResult.length; i++) {
+            sentence += sqlContentResult[i].content;
+            // const result = nodejieba.cut(sentence);
+            // segmentation.push(result);
         }
-        for (const i in emotions) {
-            if (emotions[i] === "negative") {
-                if (parseInt(i) === emotions.length - 1) {
-                    emotion = "emotion < -0.25";
-                } else {
-                    emotion = "emotion < -0.25 OR ";
-                }
-                emotionQuery += emotion;
-            } else if (emotions[i] === "neutral") {
-                if (parseInt(i) === emotions.length - 1) {
-                    emotion = "emotion BETWEEN '-0.25' AND '0.25'";
-                } else {
-                    emotion = "emotion BETWEEN '-0.25' AND '0.25' OR ";
-                }
-                emotionQuery += emotion;
-            } else {
-                if (parseInt(i) === emotions.length - 1) {
-                    emotion = "emotion > 0.25";
-                } else {
-                    emotion = "emotion > 0.25 OR ";
-                }
-                emotionQuery += emotion;
-            }
+        // const sentence = "先從外觀說起，外觀白色紙盒裡面再加上愛馬仕標準橘盒，打開後就直接是腮紅本人，這次有點可惜沒有加上跟唇膏一樣的小袋子，白色陶瓷外殼拿起來很有份量感，磁吸式設計讓整體質感又更加分，打開腮紅有Hermes PARIS 字體壓紋及斜紋壓紋，當然都會儘量不會刷到字體。";
+        // const result = nodejieba.cut(sentence);
+        // const topN = 5; /* 找出前五個關鍵詞 */
+        nodejieba.load({
+            stopWordDict: nodejieba.DEFAULT_STOP_WORD_DICT
+        });
+        const popularData = nodejieba.extract(sentence, 20);
+        console.log(popularData);
+        const popularKeywords = [];
+        for (const i in popularData) {
+            const popularKeyword = [];
+            popularKeyword.push(popularData[i].word);
+            const weight = Math.round(popularData[i].weight);
+            popularKeyword.push(weight);
+            popularKeywords.push(popularKeyword);
         }
-        const sqlContentResult = await contentListModel.getSQLcontent(contentQuery, titleQuery, channelQuery, nowTime, deadline, emotionQuery);
-        res.send(sqlContentResult);
+        // console.log(result);
+        console.log(popularKeywords);
+        res.send(popularKeywords);
         return;
     } catch (err) {
-        console.log("test2");
+        console.log("test22");
         console.log("error: " + err);
         res.send("wrong");
     }
 }
 
 module.exports = {
-    getTopicList,
-    getContentList
+    getWordcloud
 };

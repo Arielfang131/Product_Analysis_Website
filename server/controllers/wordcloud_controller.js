@@ -1,11 +1,44 @@
 const nodejieba = require("nodejieba");
+nodejieba.load({
+    stopWordDict: "server\\controllers\\stopwords.txt"
+});
+const fs = require("fs");
+
+const path = "server\\controllers\\stopwords.txt";
+
+try {
+    if (fs.existsSync(path)) {
+        console.log("file exists");
+    }
+} catch (err) {
+    console.error(err);
+}
 const contentListModel = require("../models/contentlist_model.js");
+
+function linkify (inputText) {
+    let replacedText = "";
+
+    // URLs starting with http://, https://, or ftp://
+    const replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+    replacedText = inputText.replace(replacePattern1, "");
+
+    // URLs starting with "www." (without // before it, or it'd re-link the ones done above).
+    const replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+    replacedText = replacedText.replace(replacePattern2, "");
+
+    // Change email addresses to mailto:: links.
+    const replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+    replacedText = replacedText.replace(replacePattern3, "");
+    // replace jpg.
+    const replacePattern4 = /jpg|jpeg|png|gif|imgur/;
+    replacedText = replacedText.replace(replacePattern4, "");
+    return replacedText;
+}
 
 async function getWordcloud (req, res) {
     try {
         const topicId = req.body.topicId;
         const channels = req.body.channel;
-        const emotions = req.body.emotion;
         const nowTime = req.body.nowTime;
         // const timeValue = req.body.timeValue;
         const deadline = req.body.deadline;
@@ -71,16 +104,11 @@ async function getWordcloud (req, res) {
         const sqlContentResult = await contentListModel.getSQLcontentNoEmotion(contentQuery, titleQuery, channelQuery, nowTime, deadline);
         let sentence = "";
         for (let i = 0; i < sqlContentResult.length; i++) {
-            sentence += sqlContentResult[i].content;
+            sentence += linkify(sqlContentResult[i].content);
             // const result = nodejieba.cut(sentence);
             // segmentation.push(result);
         }
-        // const sentence = "先從外觀說起，外觀白色紙盒裡面再加上愛馬仕標準橘盒，打開後就直接是腮紅本人，這次有點可惜沒有加上跟唇膏一樣的小袋子，白色陶瓷外殼拿起來很有份量感，磁吸式設計讓整體質感又更加分，打開腮紅有Hermes PARIS 字體壓紋及斜紋壓紋，當然都會儘量不會刷到字體。";
-        // const result = nodejieba.cut(sentence);
-        // const topN = 5; /* 找出前五個關鍵詞 */
-        nodejieba.load({
-            stopWordDict: nodejieba.DEFAULT_STOP_WORD_DICT
-        });
+
         const popularData = nodejieba.extract(sentence, 20);
         console.log(popularData);
         const popularKeywords = [];
@@ -91,10 +119,8 @@ async function getWordcloud (req, res) {
             popularKeyword.push(weight);
             popularKeywords.push(popularKeyword);
         }
-        // console.log(result);
         console.log(popularKeywords);
         res.send(popularKeywords);
-        return;
     } catch (err) {
         console.log("test22");
         console.log("error: " + err);

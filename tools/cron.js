@@ -38,7 +38,7 @@ function delay () {
     return new Promise(function (resolve, reject) {
         setTimeout(function () {
             resolve("delay");
-        }, 3000);
+        }, 6000);
     });
 }
 
@@ -151,6 +151,7 @@ async function pttCrawlerPush (url) {
                     const timeSlash = timeComma.replace(",", " ");
                     const timeZero = timeSlash.replace("/", "-");
                     const time = year + "-" + timeZero.replace(/^[0]/g, "");
+                    await delay();
                     const commentEmotion = await googleEmotion.emotion(comment);
                     googleCounts = googleCounts + 1;
                     console.log(`Count: ${googleCounts}`);
@@ -173,8 +174,7 @@ async function pttCrawlerPush (url) {
 
 async function getPtt () {
     try {
-        // const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index.html", page: 10 }, { url: "https://www.ptt.cc/bbs/BeautySalon/index.html", page: 10 }];
-        const arrUrl = [{ url: "https://www.ptt.cc/bbs/BeautySalon/index.html", page: 10 }];
+        const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index.html", page: 10 }, { url: "https://www.ptt.cc/bbs/BeautySalon/index.html", page: 10 }];
         // const crawlerInfos = [];
         for (const k in arrUrl) {
             const mainUrl = arrUrl[k].url;
@@ -192,13 +192,13 @@ async function getPtt () {
             let pageURL = arrUrl[k].url;
             for (let i = 0; i < arrUrl[k].page; i++) {
                 // console.log("page: " + i + " in " + arrUrl[k].page);
-                await delay();
+                // await delay();
                 const result = await pttCrawler(pageURL);
                 // const lastPageUrl = result.lastURL;
                 pageURL = result.lastURL;
                 // for迴圈爬取每頁的作者、標題、時間、內容
                 for (const j in result.info) {
-                    await delay();
+                    // await delay();
                     // for (let j = 0; j < 3; j++) {
                     const crawlerInfo = [];
                     const link = result.info[j].link;
@@ -226,6 +226,7 @@ async function getPtt () {
                         const month = getMonthFromString(monthEnglish);
                         const timeSeg = timeDetail.split(":");
                         const time = year + "-" + month + "-" + day + " " + (timeSeg.slice(0, 2).join(":"));
+                        await delay();
                         const emotion = await googleEmotion.emotion(detail[3].article);
                         googleCounts = googleCounts + 1;
                         console.log(`Count: ${googleCounts}`);

@@ -78,7 +78,7 @@ ajaxTopic("/api/1.0/profile", getTopic);
 
 const checkboxTwo = document.querySelectorAll("#cbox2");
 const checkboxThree = document.querySelectorAll("#cbox3");
-const checkboxFour = document.querySelectorAll("#cbox4");
+// const checkboxFour = document.querySelectorAll("#cbox4");
 
 // 時間只能單選
 for (let i = 0; i < checkboxTwo.length; i++) {
@@ -110,22 +110,22 @@ for (let i = 0; i < checkboxThree.length; i++) {
     });
 }
 
-// 情緒點選全選，再點取消全選
-for (let i = 0; i < checkboxFour.length; i++) {
-    checkboxFour[i].addEventListener("change", function (event) {
-        const isNotChecked = event.target.name === "cbox4_option1" && event.target.checked === true;
-        const isChecked = event.target.name === "cbox4_option1" && event.target.checked === false;
-        if (isChecked) {
-            for (let j = 0; j < checkboxFour.length; j++) {
-                checkboxFour[j].checked = false;
-            }
-        } else if (isNotChecked) {
-            for (let j = 0; j < checkboxFour.length; j++) {
-                checkboxFour[j].checked = true;
-            }
-        }
-    });
-}
+// // 情緒點選全選，再點取消全選
+// for (let i = 0; i < checkboxFour.length; i++) {
+//     checkboxFour[i].addEventListener("change", function (event) {
+//         const isNotChecked = event.target.name === "cbox4_option1" && event.target.checked === true;
+//         const isChecked = event.target.name === "cbox4_option1" && event.target.checked === false;
+//         if (isChecked) {
+//             for (let j = 0; j < checkboxFour.length; j++) {
+//                 checkboxFour[j].checked = false;
+//             }
+//         } else if (isNotChecked) {
+//             for (let j = 0; j < checkboxFour.length; j++) {
+//                 checkboxFour[j].checked = true;
+//             }
+//         }
+//     });
+// }
 
 const button = document.getElementById("button");
 button.addEventListener("click", function (event) {
@@ -139,14 +139,18 @@ button.addEventListener("click", function (event) {
         content[i].remove();
     }
     const checkboxOne = document.querySelectorAll("#cbox1");
+    const startDate = document.getElementById("cbox2_start");
+    console.log(startDate.value);
+    const endDate = document.getElementById("cbox2_end");
+    console.log(endDate.value);
     let topicId = "";
     let timeValue = "";
     const channel = [];
-    const emotion = [];
+    // const emotion = [];
     let selectTopic = 0;
     let selectTime = 0;
     let selectChannel = 0;
-    let selectEmotion = 0;
+    // let selectEmotion = 0;
     for (let i = 0; i < checkboxOne.length; i++) {
         if (checkboxOne[i].checked === true) {
             topicId = checkboxOne[i].value;
@@ -157,14 +161,29 @@ button.addEventListener("click", function (event) {
         alert("請選擇群組");
         return;
     }
+    if (startDate.vlaue !== "" && endDate.value === "") {
+        alert("請選擇結束日期");
+        return;
+    }
+    if (startDate.value === "" && endDate.value !== "") {
+        alert("請選擇開始日期");
+        return;
+    }
     for (let i = 0; i < checkboxTwo.length; i++) {
         if (checkboxTwo[i].checked === true) {
             timeValue = checkboxTwo[i].value;
             selectTime += 1;
         }
     }
-    if (selectTime === 0) {
+    console.log(selectTime);
+    if (selectTime === 0 && startDate.value === "" && endDate.value === "") {
         alert("請選擇期間");
+        return;
+    }
+    const month = document.querySelector(".month");
+    const nowMonth = (new Date().getMonth() + 1);
+    if (parseInt(month.value) > nowMonth) {
+        alert("月份不可大於當月");
         return;
     }
     for (let i = 0; i < checkboxThree.length; i++) {
@@ -179,21 +198,22 @@ button.addEventListener("click", function (event) {
         alert("請選擇來源");
         return;
     }
-    for (let i = 0; i < checkboxFour.length; i++) {
-        if (checkboxFour[i].checked === true) {
-            selectEmotion += 1;
-            if (checkboxFour[i].value !== "all") {
-                emotion.push(checkboxFour[i].value);
-            }
-        }
-    }
-    if (selectEmotion === 0) {
-        alert("請選擇情緒");
-        return;
-    }
+    // for (let i = 0; i < checkboxFour.length; i++) {
+    //     if (checkboxFour[i].checked === true) {
+    //         selectEmotion += 1;
+    //         if (checkboxFour[i].value !== "all") {
+    //             emotion.push(checkboxFour[i].value);
+    //         }
+    //     }
+    // }
+    // if (selectEmotion === 0) {
+    //     alert("請選擇情緒");
+    //     return;
+    // }
     alert("查詢中，請稍等");
 
     const date = new Date();
+    // 若挑選單月大於現在月份，不可送出
     let dateInfo = "";
     const dateString = date.getDate().toString();
     if (dateString.length === 1) {
@@ -249,8 +269,7 @@ button.addEventListener("click", function (event) {
         timeValue: timeValue,
         nowTime: dateInfo,
         deadline: deadline,
-        channel: channel,
-        emotion: emotion
+        channel: channel
     };
     ajax("/api/1.0/wordcloud", data, view);
 });

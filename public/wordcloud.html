@@ -34,14 +34,33 @@
 					</div>
 					<div class="littleBox">
 						<div style="font-size:20px;">期間</div>
-						<input type="checkbox" id="cbox2" name="cbox2_option1" value="0">
-						<label for="cbox2">當天</label><br>
+						<input type="checkbox" id="cbox2" name="cbox2_option1" value="3">
+						<label for="cbox2">最近三天</label><br>
 						<input type="checkbox" id="cbox2" name="cbox2_option2" value="7">
 						<label for="cbox2">最近7天</label><br>
 						<input type="checkbox" id="cbox2" name="cbox2_option3" value="15">
 						<label for="cbox2">最近15天</label><br>
 						<input type="checkbox" id="cbox2" name="cbox2_option4" value="30">
 						<label for="cbox2">最近30天</label><br>
+						<select  class = "month"  id = "cbox2"> 
+							<option  value = "0">請選擇月份</option>
+							<option  value = "1">2021/1月</option>
+							<option  value = "2">2021/2月</option>
+							<option  value = "3">2021/3月</option>
+							<option  value = "4">2021/4月</option>
+							<option  value = "5">2021/5月</option>
+							<option  value = "6">2021/6月</option>
+							<option  value = "7">2021/7月</option>
+							<option  value = "8">2021/8月</option>
+							<option  value = "9">2021/9月</option>
+							<option  value = "10">2021/10月</option>
+							<option  value = "11">2021/11月</option>
+							<option  value = "12">2021/12月</option>
+						</select><br>
+						<label for="cbox2">請選擇起始日期</label>
+						<input type="date" id="cbox2_start" name="cbox2_option5" value="star_date" min="2021-01-01" max="2021-12-31"><br>
+						<label for="cbox2">請選擇結束日期</label>
+						<input type="date" id="cbox2_end" name="cbox2_option6" value="end_date" min="2021-01-01" max="2021-12-31">
 					</div>
 					<div class="littleBox">
 						<div style="font-size:20px;">來源</div> 
@@ -54,7 +73,7 @@
 						<input type="checkbox" id="cbox3" name="cbox3_option4" value="Dcard > 美妝">
 						<label for="cbox3">Dcard > 美妝</label><br>
 					</div>
-					<div class="littleBox">
+					<!-- <div class="littleBox">
 						<div style="font-size:20px;">情緒</div> 
 						<input type="checkbox" id="cbox4" name="cbox4_option1" value="all">
 						<label for="cbox4">全選</label><br>
@@ -64,7 +83,7 @@
 						<label for="cbox3">中立</label><br>
 						<input type="checkbox" id="cbox4" name="cbox4_option2" value="negative">
 						<label for="cbox3">負面</label><br>
-					</div>
+					</div> -->
 				</div>
 				<button id="button" >查詢</button>
 				<div id="contents">

@@ -79,6 +79,8 @@ ajaxTopic("/api/1.0/profile", getTopic);
 const checkboxTwo = document.querySelectorAll("#cbox2");
 const checkboxThree = document.querySelectorAll("#cbox3");
 // const checkboxFour = document.querySelectorAll("#cbox4");
+const startDate = document.getElementById("cbox2_start");
+const endDate = document.getElementById("cbox2_end");
 
 // 時間只能單選
 for (let i = 0; i < checkboxTwo.length; i++) {
@@ -90,8 +92,33 @@ for (let i = 0; i < checkboxTwo.length; i++) {
                 checkboxTwo[j].checked = false;
             }
         }
+        if (checkboxTwo[0].checked === true || checkboxTwo[1].checked === true || checkboxTwo[2].checked === true || checkboxTwo[3].checked === true) {
+            checkboxTwo[4].selectedIndex = 0;
+            // startDate.placeholder = "yyyy-mm-dd";
+            // endDate.placeholder = "yyyy-mm-dd";
+            startDate.value = "";
+            endDate.value = "";
+        }
+        if (checkboxTwo[4].checked === true) {
+            startDate.value = "";
+            endDate.value = "";
+        }
     });
 }
+// 自選日期被點選後，前面的點選都回到預設值
+startDate.addEventListener("click", () => {
+    for (let i = 0; i < checkboxTwo.length; i++) {
+        checkboxTwo[i].checked = false;
+        checkboxTwo[4].selectedIndex = 0;
+    }
+});
+
+endDate.addEventListener("click", () => {
+    for (let i = 0; i < checkboxTwo.length; i++) {
+        checkboxTwo[i].checked = false;
+        checkboxTwo[4].selectedIndex = 0;
+    }
+});
 
 // 頻道點選全選，再點取消全選
 for (let i = 0; i < checkboxThree.length; i++) {
@@ -110,39 +137,17 @@ for (let i = 0; i < checkboxThree.length; i++) {
     });
 }
 
-// // 情緒點選全選，再點取消全選
-// for (let i = 0; i < checkboxFour.length; i++) {
-//     checkboxFour[i].addEventListener("change", function (event) {
-//         const isNotChecked = event.target.name === "cbox4_option1" && event.target.checked === true;
-//         const isChecked = event.target.name === "cbox4_option1" && event.target.checked === false;
-//         if (isChecked) {
-//             for (let j = 0; j < checkboxFour.length; j++) {
-//                 checkboxFour[j].checked = false;
-//             }
-//         } else if (isNotChecked) {
-//             for (let j = 0; j < checkboxFour.length; j++) {
-//                 checkboxFour[j].checked = true;
-//             }
-//         }
-//     });
-// }
-
 const button = document.getElementById("button");
 button.addEventListener("click", function (event) {
-    const content = document.querySelectorAll(".content");
+    const content = document.getElementById("content");
     const noContent = document.getElementById("noContent");
     if (noContent) {
         noContent.remove();
     }
-
-    for (let i = 0; i < content.length; i++) {
-        content[i].remove();
+    if (content) {
+        content.remove();
     }
     const checkboxOne = document.querySelectorAll("#cbox1");
-    const startDate = document.getElementById("cbox2_start");
-    console.log(startDate.value);
-    const endDate = document.getElementById("cbox2_end");
-    console.log(endDate.value);
     let topicId = "";
     let timeValue = "";
     const channel = [];
@@ -161,12 +166,12 @@ button.addEventListener("click", function (event) {
         alert("請選擇群組");
         return;
     }
-    if (startDate.vlaue !== "" && endDate.value === "") {
+    if (startDate.value !== "" && endDate.value === "") {
         alert("請選擇結束日期");
         return;
     }
     if (startDate.value === "" && endDate.value !== "") {
-        alert("請選擇開始日期");
+        alert("請選擇起始日期");
         return;
     }
     for (let i = 0; i < checkboxTwo.length; i++) {
@@ -175,9 +180,27 @@ button.addEventListener("click", function (event) {
             selectTime += 1;
         }
     }
-    console.log(selectTime);
     if (selectTime === 0 && startDate.value === "" && endDate.value === "") {
         alert("請選擇期間");
+        return;
+    }
+    if (Date.parse(startDate.value).valueOf() > Date.parse(endDate.value).valueOf()) {
+        alert("起始日期不可大於結束日期");
+        return;
+    }
+
+    // 定義當日
+    const date = new Date();
+    let dateInfo = "";
+    const dateString = date.getDate().toString();
+    if (dateString.length === 1) {
+        const dateZero = ("0" + dateString);
+        dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + dateZero;
+    } else {
+        dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+    }
+    if (Date.parse(startDate.value).valueOf() > Date.parse(dateInfo).valueOf()) {
+        alert("起始日期不可大於今天");
         return;
     }
     const month = document.querySelector(".month");
@@ -198,33 +221,19 @@ button.addEventListener("click", function (event) {
         alert("請選擇來源");
         return;
     }
-    // for (let i = 0; i < checkboxFour.length; i++) {
-    //     if (checkboxFour[i].checked === true) {
-    //         selectEmotion += 1;
-    //         if (checkboxFour[i].value !== "all") {
-    //             emotion.push(checkboxFour[i].value);
-    //         }
-    //     }
-    // }
-    // if (selectEmotion === 0) {
-    //     alert("請選擇情緒");
-    //     return;
-    // }
     alert("查詢中，請稍等");
 
-    const date = new Date();
-    // 若挑選單月大於現在月份，不可送出
-    let dateInfo = "";
-    const dateString = date.getDate().toString();
-    if (dateString.length === 1) {
-        const dateZero = ("0" + dateString);
-        dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + dateZero;
-    } else {
-        dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-    }
     let deadline = "";
-    if (timeValue === "0") {
-        deadline = dateInfo;
+    if (timeValue === "3") {
+        const nowDate = new Date();
+        nowDate.setDate(date.getDate() - 3);
+        const nowDateString = nowDate.getDate().toString();
+        if (nowDateString.length === 1) {
+            const deadlineZero = ("0" + nowDateString);
+            deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
+        } else {
+            deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+        }
     } else if (timeValue === "7") {
         const nowDate = new Date();
         nowDate.setDate(date.getDate() - 7);
@@ -258,9 +267,52 @@ button.addEventListener("click", function (event) {
         } else {
             deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
         }
+    } else if (timeValue === "Jan") {
+        dateInfo = "2021-1-31";
+        deadline = "2021-1-01";
+    } else if (timeValue === "Feb") {
+        dateInfo = "2021-2-28";
+        deadline = "2021-2-01";
+    } else if (timeValue === "Mar") {
+        dateInfo = "2021-3-31";
+        deadline = "2021-3-01";
+    } else if (timeValue === "Apr") {
+        dateInfo = "2021-4-30";
+        deadline = "2021-4-01";
+    } else if (timeValue === "May") {
+        dateInfo = "2021-5-31";
+        deadline = "2021-5-01";
+    } else if (timeValue === "June") {
+        dateInfo = "2021-6-30";
+        deadline = "2021-6-01";
+    } else if (timeValue === "July") {
+        dateInfo = "2021-7-31";
+        deadline = "2021-7-01";
+    } else if (timeValue === "Aug") {
+        dateInfo = "2021-8-31";
+        deadline = "2021-8-01";
+    } else if (timeValue === "Sep") {
+        dateInfo = "2021-9-30";
+        deadline = "2021-9-01";
+    } else if (timeValue === "Oct") {
+        dateInfo = "2021-10-31";
+        deadline = "2021-10-01";
+    } else if (timeValue === "Nov") {
+        dateInfo = "2021-11-30";
+        deadline = "2021-11-01";
+    } else if (timeValue === "Dec") {
+        dateInfo = "2021-12-31";
+        deadline = "2021-12-01";
+    } else {
+        const monthAfter = endDate.value.split("-")[1];
+        const monthBefore = startDate.value.split("-")[1];
+        const monthEnd = monthAfter.replace(/^[0]/g, "");
+        console.log(monthEnd);
+        const monthStart = monthBefore.replace(/^[0]/g, "");
+        console.log(monthStart);
+        dateInfo = endDate.value.split("-")[0] + "-" + monthEnd + "-" + endDate.value.split("-")[2];
+        deadline = startDate.value.split("-")[0] + "-" + monthStart + "-" + startDate.value.split("-")[2];
     }
-    console.log(date);
-    console.log(deadline);
     // const timeDetail = date.toString().split(" ")[4];
     // const timeInfo = timeDetail.split(":").slice(0, 2).join(":");
     // const time = dateInfo + " " + timeInfo;
@@ -271,6 +323,7 @@ button.addEventListener("click", function (event) {
         deadline: deadline,
         channel: channel
     };
+    console.log(data);
     ajax("/api/1.0/wordcloud", data, view);
 });
 
@@ -285,8 +338,17 @@ if (parseInt(negativeCounts) > 0) {
 }
 
 function view (response) {
-    const test = document.getElementById("contents");
-    // test.innerHTML = "test";
+    const contents = document.getElementById("contents");
+    if (response.length === 0) {
+        const noContent = document.createElement("div");
+        noContent.id = "noContent";
+        noContent.innerHTML = "<h3>沒有符合的內容<h3>";
+        contents.append(noContent);
+        return;
+    }
+    const content = document.createElement("div");
+    content.id = "content";
+    contents.append(content);
     const options = eval({
         list: response, // 或者[['各位觀衆',45],['詞雲', 21],['來啦!!!',13]],只要格式滿足這樣都可以
         gridSize: 6, // 密集程度 數字越小越密集
@@ -300,26 +362,7 @@ function view (response) {
     // rotateRatio: 1 // 字體傾斜(旋轉)概率，1代表總是傾斜(旋轉)
     });
     // WordCloud(test, { list: list });
-    WordCloud(test, options);
+    WordCloud(content, options);
 }
-
-// // const list = [["各位觀衆", 45], ["詞雲", 21], ["來啦!!!", 13]];
-// // const wordcloud = require("wordcloud");
-// const test = document.getElementById("contents");
-// // test.innerHTML = "test";
-// const options = eval({
-//     list: list, // 或者[['各位觀衆',45],['詞雲', 21],['來啦!!!',13]],只要格式滿足這樣都可以
-//     gridSize: 8, // 密集程度 數字越小越密集
-//     weightFactor: 1.5, // 字體大小=原始大小*weightFactor
-//     maxFontSize: 60, // 最大字號
-//     minFontSize: 14, // 最小字號
-//     fontWeight: "normal", // 字體粗細
-//     fontFamily: "Times, serif", // 字體
-//     color: "random-light" // 字體顏色 'random-dark' 或者 'random-light'
-//     // backgroundColor: "#333", // 背景顏色
-//     // rotateRatio: 1 // 字體傾斜(旋轉)概率，1代表總是傾斜(旋轉)
-// });
-// // WordCloud(test, { list: list });
-// WordCloud(test, options);
 
 ajax("api/1.0/wordcloud", view);

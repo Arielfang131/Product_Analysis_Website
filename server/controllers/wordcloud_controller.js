@@ -2,6 +2,8 @@ const nodejieba = require("nodejieba");
 nodejieba.load({
     stopWordDict: "server\\controllers\\stopwords.txt"
 });
+
+console.log(nodejieba);
 const fs = require("fs");
 
 const path = "server\\controllers\\stopwords.txt";
@@ -42,6 +44,7 @@ async function getWordcloud (req, res) {
         const nowTime = req.body.nowTime;
         // const timeValue = req.body.timeValue;
         const deadline = req.body.deadline;
+
         const sqlResult = await contentListModel.getKeywords(topicId);
         const symbols = sqlResult[0].symbols.split(",");
         const symbols2 = symbols.map((element) => {

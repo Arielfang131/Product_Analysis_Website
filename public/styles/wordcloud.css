@@ -5,6 +5,13 @@
     width:1000px;
     height:800px
 }
+#content{
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    width:1000px;
+    height:800px
+}
 .box2{
     flex-grow:1;
     display: flex;

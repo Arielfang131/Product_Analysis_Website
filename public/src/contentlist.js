@@ -158,6 +158,8 @@ ajaxTopic("/api/1.0/profile", getTopic);
 const checkboxTwo = document.querySelectorAll("#cbox2");
 const checkboxThree = document.querySelectorAll("#cbox3");
 const checkboxFour = document.querySelectorAll("#cbox4");
+const startDate = document.getElementById("cbox2_start");
+const endDate = document.getElementById("cbox2_end");
 
 // 時間只能單選
 for (let i = 0; i < checkboxTwo.length; i++) {
@@ -169,8 +171,31 @@ for (let i = 0; i < checkboxTwo.length; i++) {
                 checkboxTwo[j].checked = false;
             }
         }
+        if (checkboxTwo[0].checked === true || checkboxTwo[1].checked === true || checkboxTwo[2].checked === true || checkboxTwo[3].checked === true) {
+            checkboxTwo[4].selectedIndex = 0;
+            startDate.value = "";
+            endDate.value = "";
+        }
+        if (checkboxTwo[4].checked === true) {
+            startDate.value = "";
+            endDate.value = "";
+        }
     });
 }
+// 自選日期被點選後，前面的點選都回到預設值
+startDate.addEventListener("click", () => {
+    for (let i = 0; i < checkboxTwo.length; i++) {
+        checkboxTwo[i].checked = false;
+        checkboxTwo[4].selectedIndex = 0;
+    }
+});
+
+endDate.addEventListener("click", () => {
+    for (let i = 0; i < checkboxTwo.length; i++) {
+        checkboxTwo[i].checked = false;
+        checkboxTwo[4].selectedIndex = 0;
+    }
+});
 
 // 頻道點選全選，再點取消全選
 for (let i = 0; i < checkboxThree.length; i++) {
@@ -236,14 +261,50 @@ button.addEventListener("click", function (event) {
         alert("請選擇群組");
         return;
     }
+    if (startDate.value !== "" && endDate.value === "") {
+        alert("請選擇結束日期");
+        return;
+    }
+    if (startDate.value === "" && endDate.value !== "") {
+        alert("請選擇起始日期");
+        return;
+    }
     for (let i = 0; i < checkboxTwo.length; i++) {
         if (checkboxTwo[i].checked === true) {
             timeValue = checkboxTwo[i].value;
             selectTime += 1;
         }
     }
-    if (selectTime === 0) {
+    if (selectTime === 0 && startDate.value === "" && endDate.value === "") {
         alert("請選擇期間");
+        return;
+    }
+    if (Date.parse(startDate.value).valueOf() > Date.parse(endDate.value).valueOf()) {
+        alert("起始日期不可大於結束日期");
+        return;
+    }
+    // 定義當日
+    const date = new Date();
+    let dateInfo = "";
+    const dateString = date.getDate().toString();
+    if (dateString.length === 1) {
+        const dateZero = ("0" + dateString);
+        dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + dateZero;
+    } else {
+        dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+    }
+    if (Date.parse(startDate.value).valueOf() > Date.parse(dateInfo).valueOf()) {
+        alert("起始日期不可大於今天");
+        return;
+    }
+    const monthElement = document.querySelector(".month");
+    const month = monthElement.value;
+    function getMonthFromString (mon) {
+        return new Date(Date.parse(mon + " 1, 2021")).getMonth() + 1;
+    }
+    const nowMonth = (new Date().getMonth() + 1);
+    if (getMonthFromString(month) > nowMonth) {
+        alert("月份不可大於當月");
         return;
     }
     for (let i = 0; i < checkboxThree.length; i++) {
@@ -272,18 +333,18 @@ button.addEventListener("click", function (event) {
     }
     alert("查詢中，請稍等");
 
-    const date = new Date();
-    let dateInfo = "";
-    const dateString = date.getDate().toString();
-    if (dateString.length === 1) {
-        const dateZero = ("0" + dateString);
-        dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + dateZero;
-    } else {
-        dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-    }
     let deadline = "";
-    if (timeValue === "0") {
-        deadline = dateInfo;
+
+    if (timeValue === "3") {
+        const nowDate = new Date();
+        nowDate.setDate(date.getDate() - 3);
+        const nowDateString = nowDate.getDate().toString();
+        if (nowDateString.length === 1) {
+            const deadlineZero = ("0" + nowDateString);
+            deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
+        } else {
+            deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+        }
     } else if (timeValue === "7") {
         const nowDate = new Date();
         nowDate.setDate(date.getDate() - 7);
@@ -317,9 +378,52 @@ button.addEventListener("click", function (event) {
         } else {
             deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
         }
+    } else if (timeValue === "Jan") {
+        dateInfo = "2021-1-31";
+        deadline = "2021-1-01";
+    } else if (timeValue === "Feb") {
+        dateInfo = "2021-2-28";
+        deadline = "2021-2-01";
+    } else if (timeValue === "Mar") {
+        dateInfo = "2021-3-31";
+        deadline = "2021-3-01";
+    } else if (timeValue === "Apr") {
+        dateInfo = "2021-4-30";
+        deadline = "2021-4-01";
+    } else if (timeValue === "May") {
+        dateInfo = "2021-5-31";
+        deadline = "2021-5-01";
+    } else if (timeValue === "June") {
+        dateInfo = "2021-6-30";
+        deadline = "2021-6-01";
+    } else if (timeValue === "July") {
+        dateInfo = "2021-7-31";
+        deadline = "2021-7-01";
+    } else if (timeValue === "Aug") {
+        dateInfo = "2021-8-31";
+        deadline = "2021-8-01";
+    } else if (timeValue === "Sep") {
+        dateInfo = "2021-9-30";
+        deadline = "2021-9-01";
+    } else if (timeValue === "Oct") {
+        dateInfo = "2021-10-31";
+        deadline = "2021-10-01";
+    } else if (timeValue === "Nov") {
+        dateInfo = "2021-11-30";
+        deadline = "2021-11-01";
+    } else if (timeValue === "Dec") {
+        dateInfo = "2021-12-31";
+        deadline = "2021-12-01";
+    } else {
+        const monthAfter = endDate.value.split("-")[1];
+        const monthBefore = startDate.value.split("-")[1];
+        const monthEnd = monthAfter.replace(/^[0]/g, "");
+        console.log(monthEnd);
+        const monthStart = monthBefore.replace(/^[0]/g, "");
+        console.log(monthStart);
+        dateInfo = endDate.value.split("-")[0] + "-" + monthEnd + "-" + endDate.value.split("-")[2];
+        deadline = startDate.value.split("-")[0] + "-" + monthStart + "-" + startDate.value.split("-")[2];
     }
-    console.log(date);
-    console.log(deadline);
     // const timeDetail = date.toString().split(" ")[4];
     // const timeInfo = timeDetail.split(":").slice(0, 2).join(":");
     // const time = dateInfo + " " + timeInfo;
@@ -331,6 +435,7 @@ button.addEventListener("click", function (event) {
         channel: channel,
         emotion: emotion
     };
+    console.log(data);
     ajax("/api/1.0/contentlist", data, render);
 });
 

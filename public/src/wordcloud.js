@@ -78,7 +78,6 @@ ajaxTopic("/api/1.0/profile", getTopic);
 
 const checkboxTwo = document.querySelectorAll("#cbox2");
 const checkboxThree = document.querySelectorAll("#cbox3");
-// const checkboxFour = document.querySelectorAll("#cbox4");
 const startDate = document.getElementById("cbox2_start");
 const endDate = document.getElementById("cbox2_end");
 
@@ -94,8 +93,6 @@ for (let i = 0; i < checkboxTwo.length; i++) {
         }
         if (checkboxTwo[0].checked === true || checkboxTwo[1].checked === true || checkboxTwo[2].checked === true || checkboxTwo[3].checked === true) {
             checkboxTwo[4].selectedIndex = 0;
-            // startDate.placeholder = "yyyy-mm-dd";
-            // endDate.placeholder = "yyyy-mm-dd";
             startDate.value = "";
             endDate.value = "";
         }
@@ -203,9 +200,13 @@ button.addEventListener("click", function (event) {
         alert("起始日期不可大於今天");
         return;
     }
-    const month = document.querySelector(".month");
+    const monthElement = document.querySelector(".month");
+    const month = monthElement.value;
+    function getMonthFromString (mon) {
+        return new Date(Date.parse(mon + " 1, 2021")).getMonth() + 1;
+    }
     const nowMonth = (new Date().getMonth() + 1);
-    if (parseInt(month.value) > nowMonth) {
+    if (getMonthFromString(month) > nowMonth) {
         alert("月份不可大於當月");
         return;
     }

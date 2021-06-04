@@ -7,14 +7,14 @@ function ajax (src, callback, callbackTwo) {
             if (res.msg === "null") {
                 window.location.href = "member.html";
             } else {
-                if (res.admin === "yes") {
-                    callback();
-                }
                 const newXhr = new XMLHttpRequest();
                 newXhr.onreadystatechange = function () {
                     if (newXhr.readyState === 4 && newXhr.status === 200) {
                         const data = JSON.parse(newXhr.responseText);
-                        callbackTwo(data);
+                        callback(data);
+                        if (res.admin === "yes") {
+                            callbackTwo();
+                        }
                     }
                 };
                 newXhr.open("GET", "api/1.0/keywords");
@@ -188,62 +188,24 @@ function view (response) {
     }
 }
 
-ajax("api/1.0/profile", modifiedKeywords, view);
+ajax("api/1.0/profile", view, modifiedKeywords);
 
 // 新增輸入keywords欄位
 function inputKeywords () {
     const ajaxBox = document.getElementById("ajax");
-    const totalBoxes = document.querySelectorAll(".keywords_box");
-    // const oldKeywordsBox = document.querySelectorAll(".view_keyword");
-    // console.log(totalBoxes.length);
-    // console.log(oldKeywordsBox.length);
-    // const totalLength = totalBoxes.length + oldKeywordsBox.length;
-    const boxesLength = totalBoxes.length;
+    const inputBoxes = document.querySelectorAll(".keywords_box");
+    const viewBoxes = document.querySelectorAll(".view_keyword");
+    const boxesLength = inputBoxes.length;
     const keywordsBox = document.createElement("div");
     keywordsBox.className = "keywords_box";
-    // const number = document.createElement("div");
-    // number.className = "number";
-    // number.innerHTML = `${i + 1}`;
     const topic = document.createElement("input");
-    // topic.value = `群組${(boxesLength + oldKeywordsCounts + 1)}`;
-    topic.value = `群組${(boxesLength + 1)}`;
+    topic.value = `群組${(inputBoxes.length + viewBoxes.length + 1)}`;
     topic.type = "text";
     topic.className = "topic";
-    // topic.placeholder = "必填：主題";
-    // const brackets = document.createElement("div");
-    // brackets.className = "brackets";
-    // brackets.innerHTML = "(";
     const keyword1 = document.createElement("input");
     keyword1.type = "text";
     keyword1.className = `keyword${boxesLength + 1}`;
     keyword1.placeholder = "必填：品牌";
-    // const select = document.createElement("select");
-    // select.className = `symbol${boxesLength + 1}`;
-    // const option = document.createElement("option");
-    // option.value = "and";
-    // option.text = "and";
-    // const option2 = document.createElement("option");
-    // option2.value = "or";
-    // option2.text = "or";
-    // select.append(option, option2);
-    // const keyword2 = document.createElement("input");
-    // keyword2.type = "text";
-    // keyword2.className = `keyword${boxesLength + 1}`;
-    // const select2 = document.createElement("select");
-    // select2.className = `symbol${boxesLength + 1}`;
-    // const option3 = document.createElement("option");
-    // option3.value = "and";
-    // option3.text = "and";
-    // const option4 = document.createElement("option");
-    // option4.value = "or";
-    // option4.text = "or";
-    // select2.append(option3, option4);
-    // const keyword3 = document.createElement("input");
-    // keyword3.type = "text";
-    // keyword3.className = `keyword${boxesLength + 1}`;
-    // const brackets2 = document.createElement("div");
-    // brackets2.className = "brackets";
-    // brackets2.innerHTML = ")";
     const select3 = document.createElement("select");
     select3.className = `symbol${boxesLength + 1}`;
     select3.id = "symbol";
@@ -315,27 +277,13 @@ function modifiedKeywords () {
     const text = document.createElement("div");
     text.className = "text";
     text.innerHTML = "新增/修改關鍵字：最多六組";
-    // const keywordsTitle = document.createElement("div");
-    // keywordsTitle.id = "keywords_title";
-    // const topicText = document.createElement("div");
-    // topicText.id = "topic_text";
-    // topicText.innerHTML = "主題：";
-    // const search = document.createElement("div");
-    // search.id = "search";
-    // search.innerHTML = "搜尋關鍵字：";
     const button = document.createElement("button");
     button.type = "button";
     button.id = "button";
     button.className = "btn btn-secondary";
     button.innerHTML = "儲存";
-    // keywordsTitle.append(button);
-    // modifiedBox.append(text, button);
     ajaxBox.append(text, button);
     inputKeywords();
-    // const addItem = document.querySelector(".icon_add");
-    // addItem.addEventListener("click", function () {
-    //     inputKeywords(2);
-    // });
 
     // 點選按鈕，新增關鍵字
     button.addEventListener("click", function () {
@@ -443,13 +391,14 @@ function modifiedKeywords () {
         Swal.fire("已儲存，請至文章列表搜尋內容");
         ajaxKeywords("/api/1.0/profile", data, view);
         const items = document.querySelectorAll(".keywords_box");
+        const viewBoxes = document.querySelectorAll(".view_keyword");
         if (items) {
             const keyword1 = document.querySelectorAll(".keyword1");
             const topic = document.querySelectorAll(".topic");
             // console.log(keyword1);
             for (let i = 0; i < keyword1.length; i++) {
                 if (topic[i]) {
-                    topic[i].value = "";
+                    topic[i].value = `群組:${viewBoxes.length + items.length + 1}`;
                 }
                 keyword1[i].value = "";
             }

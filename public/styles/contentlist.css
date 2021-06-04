@@ -79,3 +79,9 @@
     flex-direction: row;
     justify-content:space-between;
 }
+#loading {  
+    position:fixed;  
+    top:60%;  
+    left:45%;  
+    z-index:999;  
+} 

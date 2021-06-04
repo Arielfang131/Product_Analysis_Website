@@ -26,6 +26,7 @@ header {
     background-color: #555b6e;
     color:#FFFFFF;
     padding:10px;
+    position: sticky;
 }
 .menu_bar{
     height: 60px;
@@ -67,3 +68,9 @@ header {
     height: 22px;
     line-height: 22px;
 }
+.sticky {
+    top:0px;
+    position: fixed;
+    width:140px;
+    height:100%;
+  }

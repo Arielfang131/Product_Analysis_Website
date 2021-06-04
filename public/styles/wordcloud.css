@@ -2,15 +2,17 @@
     margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
-    width:1000px;
-    height:800px
+    width: 1000px;
+    height: 800px;
+    margin-bottom: auto;
 }
 #content{
     margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
-    width:1000px;
-    height:800px
+    max-width: 1000px;
+    height: 800px;
+    margin-bottom: auto;
 }
 .box2{
     flex-grow:1;

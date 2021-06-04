@@ -4,6 +4,7 @@
    		<title>文章列表</title>
 		<link href="./styles/header.css" rel="stylesheet" />
 		<link href="./styles/contentlist.css" rel="stylesheet" />
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	</head>
 	<body>
 		<header>
@@ -31,17 +32,7 @@
 				<!-- <div class="menu_bar" style="background-color:#D2E9FF;"><h2>文章列表</h2></div> -->
 				<div id="filter">
 					<div class="littleBox">
-					<div style="font-size:20px;">群組</div>
-						<!-- <input type="checkbox" id="cbox1" name="cbox1_option_1" value="1">
-						<label for="cbox1">底妝</label><br>
-						<input type="checkbox" id="cbox1" name="cbox1_option_2" value="2">
-						<label for="cbox1">唇妝</label><br>
-						<input type="checkbox" id="cbox1" name="cbox1_option_3" value="3">
-						<label for="cbox1">眼妝</label><br>
-						<input type="checkbox" id="cbox1" name="cbox1_option_4" value="4">
-						<label for="cbox1">資生堂</label><br>
-						<input type="checkbox" id="cbox1" name="cbox1_option_5" value="5">
-						<label for="cbox1">競品</label><br> -->
+						<div style="font-size:20px;">群組</div>
 					</div>
 					<div class="littleBox">
 						<div style="font-size:20px;">期間</div>
@@ -97,6 +88,7 @@
 					</div>
 				</div>
 				<button id="button" >查詢</button>
+				<div id="loading" > <img src="./styles/images/Spinner-1s-200px.gif" class="img-responsive"></div>
 				<div id="contents">
 				</div>
 
@@ -104,8 +96,22 @@
 			<!-- <div class = "box3">
                 <div class="menu_bar"><a href="member.html"><img id="icon_profile" src="./styles/images/profile.jpeg"></a></div>
             </div> -->
-
 		</div>
 		<script src="./src/contentlist.js"></script>
+		<script>
+			const buttonOne = document.getElementById("button");
+			console.log(buttonOne);
+			buttonOne.addEventListener("click",function(){
+				console.log(123);
+				$(window).load(function () {
+					// 為ajax繫結loading_bottom
+					$(document).ajaxStart(function () {
+						$("#loading").show();// 在ajax請求開始的時候啟用loading
+							}).ajaxStop(function () {
+								$("#loading").hide(0);// 在ajax請求結束後隱藏loading
+							});
+						});
+			})		
+		</script>
 	</body>
 </html>

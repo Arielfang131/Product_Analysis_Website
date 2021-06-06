@@ -29,6 +29,8 @@ function ajax (src, callback) {
 }
 
 async function getNegativeContent (info) {
+    const loading = document.getElementById("loading");
+    loading.style = "display:none";
     const parentElement = document.getElementById("main");
     if (info.length === 0) {
         const noContent = document.createElement("div");

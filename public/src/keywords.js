@@ -71,6 +71,8 @@ function ajaxKeywords (src, data, callback) {
                                         console.log(response);
                                         const counts = response.length;
                                         localStorage.setItem("negativeCounts", counts);
+                                        const deleteItem = document.querySelector("#alert");
+                                        deleteItem.remove();
                                         getNegativeCounts();
                                     };
                                 };
@@ -484,6 +486,8 @@ question.addEventListener("click", () => {
 function getNegativeCounts () {
     const negativeCounts = localStorage.getItem("negativeCounts");
     if (parseInt(negativeCounts) > 0) {
+        // const deleteItem = document.querySelector("#alert");
+        // deleteItem.remove();
         const alertElement = document.createElement("div");
         alertElement.id = "alert";
         alertElement.innerHTML = negativeCounts;

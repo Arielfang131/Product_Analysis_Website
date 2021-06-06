@@ -181,7 +181,7 @@ async function pttCrawlerPush (url) {
 async function getPtt () {
     try {
         // const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index.html", page: 10 }, { url: "https://www.ptt.cc/bbs/BeautySalon/index.html", page: 10 }];
-        const arrUrl = [{ url: "https://www.ptt.cc/bbs/BeautySalon/index2977.html", page: 19 }];
+        const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index3628.html", page: 25 }];
         // const crawlerInfos = [];
         for (const k in arrUrl) {
             const mainUrl = arrUrl[k].url;
@@ -293,11 +293,10 @@ async function getNegativeInfo () {
     // console.log(negativeInfo);
 }
 
-alterEmotion();
-// cron.schedule("13 06 * * *", async () => {
-//     console.log("testEveryOneHour");
-//     console.log("========================================");
-//     await getPtt();
-//     await alterEmotion();
-//     await getNegativeInfo();
-// });
+cron.schedule("41 18 * * *", async () => {
+    console.log("testEveryOneHour");
+    console.log("========================================");
+    await getPtt();
+    await alterEmotion();
+    await getNegativeInfo();
+});

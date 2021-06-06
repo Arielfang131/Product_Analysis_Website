@@ -26,6 +26,7 @@
     "redis": "^3.1.2",
     "request": "^2.88.2",
     "sentiment-zh_cn": "^2.0.3",
+    "spin.js": "^4.1.0",
     "wordcloud": "^1.2.2",
     "xmlhttprequest": "^1.8.0"
   },

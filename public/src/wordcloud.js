@@ -222,7 +222,7 @@ button.addEventListener("click", function (event) {
         alert("請選擇來源");
         return;
     }
-    alert("查詢中，請稍等");
+    // alert("查詢中，請稍等");
 
     let deadline = "";
     if (timeValue === "3") {
@@ -325,6 +325,8 @@ button.addEventListener("click", function (event) {
         channel: channel
     };
     console.log(data);
+    const loading = document.getElementById("loading");
+    loading.style = "display:block";
     ajax("/api/1.0/wordcloud", data, view);
 });
 
@@ -339,6 +341,8 @@ if (parseInt(negativeCounts) > 0) {
 }
 
 function view (response) {
+    const loading = document.getElementById("loading");
+    loading.style = "display:none";
     const contents = document.getElementById("contents");
     if (response.length === 0) {
         const noContent = document.createElement("div");
@@ -367,3 +371,24 @@ function view (response) {
 }
 
 ajax("api/1.0/wordcloud", view);
+
+// When the user scrolls the page, execute myFunction
+window.onscroll = function () { myFunction(); };
+
+// Get the navbar
+const navbar = document.querySelector(".box1");
+
+// Get the offset position of the navbar
+const sticky = navbar.offsetTop;
+
+// Add the sticky class to the navbar when you reach its scroll position. Remove "sticky" when you leave the scroll position
+function myFunction () {
+    const box3 = document.querySelector(".box3");
+    if (window.pageYOffset >= sticky) {
+        box3.style = "display:flex";
+        navbar.classList.add("sticky");
+    } else {
+        navbar.classList.remove("sticky");
+        box3.style = "display:none";
+    }
+}

@@ -136,7 +136,7 @@ const insertAllNegative = async function () {
                 }
             }
             // const sqlText = `SELECT id FROM text_table WHERE (${contentQuery} OR ${titleQuery}) AND (time >'${dateInfo} 00:00') AND emotion < -0.25 order by time DESC;`;
-            const sqlText = `SELECT id FROM text_table WHERE (${contentQuery} OR ${titleQuery}) AND emotion < -0.25 order by time DESC;`;
+            const sqlText = `SELECT id FROM text_table_modified WHERE (${contentQuery} OR ${titleQuery}) AND emotion < -0.25 order by time DESC;`;
             const sqlResult = await query(sqlText);
             if (sqlResult.length === 0) {
                 continue;
@@ -188,7 +188,7 @@ const selectNegative = async function (companyNo, deadline) {
         }
         idString += `${result[i].text_id},`;
     }
-    const sqlContent = `SELECT * FROM text_table WHERE id IN ${idString} AND (time > '${deadline} 00:00') order by time DESC;`;
+    const sqlContent = `SELECT * FROM text_table_modified WHERE id IN ${idString} AND (time > '${deadline} 00:00') order by time DESC;`;
     const sqlResult = await query(sqlContent);
     // const ans = [];
     // for (const i in result) {

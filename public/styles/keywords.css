@@ -62,18 +62,16 @@
     border-radius: 5px;
     width:80px;
     height:30px;
-    margin:10px;
+    margin-top:20px;
+    margin-left: auto;
+    margin-right: auto;
     background-color: #555555;
     border: none;
     color: white;
-  /* padding: 15px 32px; */
     text-align: center;
     text-decoration: none;
     display: inline-block;
-  /* font-size: 16px; */
     cursor: pointer;
-    /* background-color: #495057; */
-    /* align-items: flex-start; */
 }
 input{
     line-height:2em;

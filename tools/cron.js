@@ -41,7 +41,7 @@ function delay () {
         }, 1500);
     });
 }
-
+// const specialWords = ["好燒", "燒到", "生火"];
 let googleCounts = 0;
 // 爬取PTT文章列表，取得文章連結和上頁連結
 function pttCrawler (url) {
@@ -153,6 +153,12 @@ async function pttCrawlerPush (url) {
                     const time = year + "-" + timeZero.replace(/^[0]/g, "");
                     await delay();
                     const commentEmotion = await googleEmotion.emotion(comment);
+                    // for (const j in specialWords) {
+                    //     const specialWord = new RegExp(specialWords[j]);
+                    //     if (specialWord.test(comment) === true) {
+                    //         commentEmotion = 0.3;
+                    //     }
+                    // }
                     googleCounts = googleCounts + 1;
                     console.log(`Count: ${googleCounts}`);
                     const googleTime = new Date();
@@ -175,7 +181,7 @@ async function pttCrawlerPush (url) {
 async function getPtt () {
     try {
         // const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index.html", page: 10 }, { url: "https://www.ptt.cc/bbs/BeautySalon/index.html", page: 10 }];
-        const arrUrl = [{ url: "https://www.ptt.cc/bbs/BeautySalon/index2997.html", page: 19 }];
+        const arrUrl = [{ url: "https://www.ptt.cc/bbs/BeautySalon/index2978.html", page: 1 }];
         // const crawlerInfos = [];
         for (const k in arrUrl) {
             const mainUrl = arrUrl[k].url;
@@ -229,6 +235,12 @@ async function getPtt () {
                         const time = year + "-" + month + "-" + day + " " + (timeSeg.slice(0, 2).join(":"));
                         await delay();
                         const emotion = await googleEmotion.emotion(detail[3].article);
+                        // for (const j in specialWords) {
+                        //     const specialWord = new RegExp(specialWords[j]);
+                        //     if (specialWord.test(detail[3].article) === true) {
+                        //         emotion = 0.3;
+                        //     }
+                        // }
                         googleCounts = googleCounts + 1;
                         console.log(`Count: ${googleCounts}`);
                         const googleTime = new Date();
@@ -272,16 +284,19 @@ async function getPtt () {
     // console.log(crawlerInfos);s
 }
 
+async function alterEmotion () {
+    await googleEmotion.modifiedEmotion();
+}
+
 async function getNegativeInfo () {
     const negativeInfo = await negativeModel.insertAllNegative();
     // console.log(negativeInfo);
 }
 
-// getNegativeInfo();
-
-cron.schedule("05 03 * * *", async () => {
+cron.schedule("45 02 * * *", async () => {
     console.log("testEveryOneHour");
     console.log("========================================");
     await getPtt();
+    await alterEmotion();
     await getNegativeInfo();
 });

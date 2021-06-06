@@ -1,5 +1,6 @@
 const language = require("@google-cloud/language");
 const client = new language.LanguageServiceClient();
+const emotionModel = require("../models/emotion_model.js");
 
 function emotion (text) {
     return new Promise((resolve, reject) => {
@@ -20,6 +21,11 @@ function emotion (text) {
     });
 }
 
+async function modifiedEmotion (req, res) {
+    await emotionModel.sqlModifiedEmotion();
+}
+
 module.exports = {
-    emotion
+    emotion,
+    modifiedEmotion
 };

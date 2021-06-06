@@ -76,6 +76,8 @@ function getTopic (data) {
 
 // DOM
 function render (info) {
+    const loading = document.getElementById("loading");
+    loading.style = "display:none";
     const contents = document.getElementById("contents");
 
     if (info.length === 0) {
@@ -147,6 +149,14 @@ function render (info) {
         } else {
             emotionInfo.innerHTML = "情緒：舊資料";
         }
+        // const specialWords = ["好燒", "燒到", "生火"];
+        // for (const j in specialWords) {
+        //     const specialWord = new RegExp(specialWords[j]);
+        //     if (specialWord.test(info[i].content) === true) {
+        //         console.log("okay");
+        //         emotionInfo.innerHTML = "情緒：正面";
+        //     }
+        // }
         information.append(channel, push, likes, author, time, emotionInfo);
         content.append(link, paragraph, information);
         contents.append(content);
@@ -331,7 +341,7 @@ button.addEventListener("click", function (event) {
         alert("請選擇情緒");
         return;
     }
-    alert("查詢中，請稍等");
+    // alert("查詢中，請稍等");
 
     let deadline = "";
 
@@ -436,6 +446,8 @@ button.addEventListener("click", function (event) {
         emotion: emotion
     };
     console.log(data);
+    const loading = document.getElementById("loading");
+    loading.style = "display:block";
     ajax("/api/1.0/contentlist", data, render);
 });
 
@@ -460,9 +472,12 @@ const sticky = navbar.offsetTop;
 
 // Add the sticky class to the navbar when you reach its scroll position. Remove "sticky" when you leave the scroll position
 function myFunction () {
+    const box3 = document.querySelector(".box3");
     if (window.pageYOffset >= sticky) {
+        box3.style = "display:flex";
         navbar.classList.add("sticky");
     } else {
         navbar.classList.remove("sticky");
+        box3.style = "display:none";
     }
 }

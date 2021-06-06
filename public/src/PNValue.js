@@ -170,6 +170,8 @@ function contentInfo (info) {
 
 // 取得正負評數字
 function getPNValue (info) {
+    const loading = document.getElementById("loading");
+    loading.style = "display:none";
     const contents = document.getElementById("contents");
     const positive = document.createElement("div");
     positive.className = "emotion";
@@ -387,7 +389,7 @@ button.addEventListener("click", function (event) {
         return;
     }
 
-    alert("查詢中，請稍等");
+    // alert("查詢中，請稍等");
 
     let deadline = "";
     if (timeValue === "3") {
@@ -483,6 +485,8 @@ button.addEventListener("click", function (event) {
         channel: channel
     };
     console.log(data);
+    const loading = document.getElementById("loading");
+    loading.style = "display:block";
     ajax("/api/1.0/PNValue", data, getPNValue);
 });
 
@@ -494,4 +498,25 @@ if (parseInt(negativeCounts) > 0) {
     alertElement.innerHTML = negativeCounts;
     const parentElement = document.getElementById("little_menu");
     parentElement.append(alertElement);
+}
+
+// When the user scrolls the page, execute myFunction
+window.onscroll = function () { myFunction(); };
+
+// Get the navbar
+const navbar = document.querySelector(".box1");
+
+// Get the offset position of the navbar
+const sticky = navbar.offsetTop;
+
+// Add the sticky class to the navbar when you reach its scroll position. Remove "sticky" when you leave the scroll position
+function myFunction () {
+    const box3 = document.querySelector(".box3");
+    if (window.pageYOffset >= sticky) {
+        box3.style = "display:flex";
+        navbar.classList.add("sticky");
+    } else {
+        navbar.classList.remove("sticky");
+        box3.style = "display:none";
+    }
 }

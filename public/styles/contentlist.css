@@ -4,6 +4,7 @@
     flex-direction: column;
 }
 #filter{
+    margin-top: 10px;
     display: flex;
     flex-direction: row;
     justify-content:space-around;
@@ -79,9 +80,9 @@
     flex-direction: row;
     justify-content:space-between;
 }
-#loading {  
+/* #loading {  
     position:fixed;  
     top:60%;  
     left:45%;  
     z-index:999;  
-} 
+}  */

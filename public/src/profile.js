@@ -48,3 +48,24 @@ if (parseInt(negativeCounts) > 0) {
     const parentElement = document.getElementById("little_menu");
     parentElement.append(alertElement);
 }
+
+// When the user scrolls the page, execute myFunction
+window.onscroll = function () { myFunction(); };
+
+// Get the navbar
+const navbar = document.querySelector(".box1");
+
+// Get the offset position of the navbar
+const sticky = navbar.offsetTop;
+
+// Add the sticky class to the navbar when you reach its scroll position. Remove "sticky" when you leave the scroll position
+function myFunction () {
+    const box3 = document.querySelector(".box3");
+    if (window.pageYOffset >= sticky) {
+        box3.style = "display:flex";
+        navbar.classList.add("sticky");
+    } else {
+        navbar.classList.remove("sticky");
+        box3.style = "display:none";
+    }
+}

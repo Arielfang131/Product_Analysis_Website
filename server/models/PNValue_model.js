@@ -2,7 +2,7 @@ const { query } = require("./mysqlcon");
 
 const sqlPositiveCount = async function (contentQuery, titleQuery, channel, nowTime, deadline) {
     try {
-        const sql = `SELECT COUNT(*) FROM text_table WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion > 0.25;`;
+        const sql = `SELECT COUNT(*) FROM text_table_modified WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion > 0.25;`;
         const result = await query(sql);
         return result;
     } catch (err) {
@@ -14,7 +14,7 @@ const sqlPositiveCount = async function (contentQuery, titleQuery, channel, nowT
 
 const sqlNeutralCount = async function (contentQuery, titleQuery, channel, nowTime, deadline) {
     try {
-        const sql = `SELECT COUNT(*) FROM text_table WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion BETWEEN '-0.25' AND '0.25';`;
+        const sql = `SELECT COUNT(*) FROM text_table_modified WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion BETWEEN '-0.25' AND '0.25';`;
         const result = await query(sql);
         return result;
     } catch (err) {
@@ -26,7 +26,7 @@ const sqlNeutralCount = async function (contentQuery, titleQuery, channel, nowTi
 
 const sqlNegativeCount = async function (contentQuery, titleQuery, channel, nowTime, deadline) {
     try {
-        const sql = `SELECT COUNT(*) FROM text_table WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion < -0.25;`;
+        const sql = `SELECT COUNT(*) FROM text_table_modified WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion < -0.25;`;
         const result = await query(sql);
         return result;
     } catch (err) {
@@ -38,7 +38,7 @@ const sqlNegativeCount = async function (contentQuery, titleQuery, channel, nowT
 
 const sqlPositive = async function (contentQuery, titleQuery, channel, nowTime, deadline) {
     try {
-        const sql = `SELECT * FROM text_table WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion > 0.25 order by time DESC;`;
+        const sql = `SELECT * FROM text_table_modified WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion > 0.25 order by time DESC;`;
         const result = await query(sql);
         return result;
     } catch (err) {
@@ -50,7 +50,7 @@ const sqlPositive = async function (contentQuery, titleQuery, channel, nowTime, 
 
 const sqlNeutral = async function (contentQuery, titleQuery, channel, nowTime, deadline) {
     try {
-        const sql = `SELECT * FROM text_table WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion BETWEEN '-0.25' AND 0.25 order by time DESC;`;
+        const sql = `SELECT * FROM text_table_modified WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion BETWEEN '-0.25' AND 0.25 order by time DESC;`;
         const result = await query(sql);
         return result;
     } catch (err) {
@@ -62,7 +62,7 @@ const sqlNeutral = async function (contentQuery, titleQuery, channel, nowTime, d
 
 const sqlNegative = async function (contentQuery, titleQuery, channel, nowTime, deadline) {
     try {
-        const sql = `SELECT * FROM text_table WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion < -0.25 order by time DESC;`;
+        const sql = `SELECT * FROM text_table_modified WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion < -0.25 order by time DESC;`;
         const result = await query(sql);
         return result;
     } catch (err) {

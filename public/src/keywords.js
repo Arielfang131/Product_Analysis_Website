@@ -1,4 +1,3 @@
-
 function ajax (src, callback, callbackTwo) {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
@@ -142,7 +141,6 @@ function view (response) {
     const trash = document.querySelectorAll(".icon_trash");
     for (let i = 0; i < trash.length; i++) {
         trash[i].addEventListener("click", function (event) {
-            console.log(event.target.id);
             Swal.fire({
                 title: "確定刪除?",
                 icon: "warning",
@@ -156,6 +154,7 @@ function view (response) {
                     Swal.fire(
                         "刪除成功!"
                     );
+
                     const parentElement = document.querySelectorAll(".view_keyword");
                     let data = {};
                     for (let j = 0; j < parentElement.length; j++) {
@@ -167,6 +166,7 @@ function view (response) {
                             parentElement[j].remove();
                         }
                     }
+                    calculateNumber();
                     const xhr = new XMLHttpRequest();
                     xhr.onreadystatechange = function () {
                         if (xhr.readyState === 4 && xhr.status === 200) {
@@ -190,6 +190,20 @@ function view (response) {
 
 ajax("api/1.0/profile", view, modifiedKeywords);
 
+function calculateNumber () {
+    // console.log(index);
+    // const inputBoxes = document.querySelectorAll(".keywords_box");
+    const viewBoxes = document.querySelectorAll(".view_keyword");
+    const topic = document.querySelectorAll(".topic");
+    for (let i = 0; i < topic.length; i++) {
+        // if (index < i) {
+        //     topic[i].value = `群組${(inputBoxes.length + viewBoxes.length + 1)}`;
+        // } else {
+        topic[i].value = `群組${(viewBoxes.length + i + 1)}`;
+        // }
+    }
+}
+
 // 新增輸入keywords欄位
 function inputKeywords () {
     const ajaxBox = document.getElementById("ajax");
@@ -198,6 +212,11 @@ function inputKeywords () {
     const boxesLength = inputBoxes.length;
     const keywordsBox = document.createElement("div");
     keywordsBox.className = "keywords_box";
+    const addItem = document.createElement("div");
+    addItem.className = "add";
+    addItem.innerHTML = "<img class=\"icon_add\" src=\"./styles/images/add.png\" title=\"新增\">";
+    const deleteItem = document.createElement("div");
+    deleteItem.innerHTML = "<img class=\"delete\" src=\"./styles/images/trash.png\" title=\"刪除\">";
     const topic = document.createElement("input");
     topic.value = `群組${(inputBoxes.length + viewBoxes.length + 1)}`;
     topic.type = "text";
@@ -250,41 +269,38 @@ function inputKeywords () {
     const brackets4 = document.createElement("div");
     brackets4.className = "brackets";
     brackets4.innerHTML = ")";
-    const addItem = document.createElement("div");
-    addItem.className = "add";
-    addItem.innerHTML = "<img class=\"icon_add\" src=\"./styles/images/add.png\" title=\"新增\">";
-    const deleteItem = document.createElement("div");
-    deleteItem.innerHTML = "<img class=\"delete\" src=\"./styles/images/trash.png\" title=\"刪除\">";
-    keywordsBox.append(topic, keyword1, select3, brackets3, keyword4, select4, keyword5, select5, keyword6, brackets4, addItem, deleteItem);
+    keywordsBox.append(addItem, deleteItem, topic, keyword1, select3, brackets3, keyword4, select4, keyword5, select5, keyword6, brackets4);
     addItem.addEventListener("click", function () {
+        const button = document.getElementById("button");
+        button.remove();
         inputKeywords();
+        addButton();
     });
-    deleteItem.addEventListener("click", function () {
+    deleteItem.addEventListener("click", function (event) {
         const allDeleteItems = document.querySelectorAll(".delete");
         if (allDeleteItems.length === 1) {
             alert("無法刪除最後一項");
         } else {
             keywordsBox.remove();
+            // for (let i = 0; i < allDeleteItems.length; i++) {
+            //     if (allDeleteItems[i] === event.target) {
+            //         console.log(123);
+            calculateNumber();
+            // }
+            // }
         }
     });
     ajaxBox.append(keywordsBox);
 }
 
-function modifiedKeywords () {
+function addButton () {
     const ajaxBox = document.getElementById("ajax");
-    // const modifiedBox = document.createElement("div");
-    // modifiedBox.id = "modified_box";
-    const text = document.createElement("div");
-    text.className = "text";
-    text.innerHTML = "新增/修改關鍵字：最多六組";
     const button = document.createElement("button");
     button.type = "button";
     button.id = "button";
     button.className = "btn btn-secondary";
     button.innerHTML = "儲存";
-    ajaxBox.append(text, button);
-    inputKeywords();
-
+    ajaxBox.append(button);
     // 點選按鈕，新增關鍵字
     button.addEventListener("click", function () {
         const topicEl = document.querySelectorAll(".topic");
@@ -398,7 +414,7 @@ function modifiedKeywords () {
             // console.log(keyword1);
             for (let i = 0; i < keyword1.length; i++) {
                 if (topic[i]) {
-                    topic[i].value = `群組:${viewBoxes.length + items.length + 1}`;
+                    topic[i].value = `群組${viewBoxes.length + items.length + 1}`;
                 }
                 keyword1[i].value = "";
             }
@@ -407,6 +423,18 @@ function modifiedKeywords () {
             }
         }
     });
+}
+
+function modifiedKeywords () {
+    const ajaxBox = document.getElementById("ajax");
+    // const modifiedBox = document.createElement("div");
+    // modifiedBox.id = "modified_box";
+    const text = document.createElement("div");
+    text.className = "text";
+    text.innerHTML = "新增/修改關鍵字：最多六組";
+    ajaxBox.append(text);
+    inputKeywords();
+    addButton();
 }
 
 // 規則預設為隱藏，點選才開啟
@@ -429,4 +457,25 @@ if (parseInt(negativeCounts) > 0) {
     alertElement.innerHTML = negativeCounts;
     const parentElement = document.getElementById("little_menu");
     parentElement.append(alertElement);
+}
+
+// When the user scrolls the page, execute myFunction
+window.onscroll = function () { myFunction(); };
+
+// Get the navbar
+const navbar = document.querySelector(".box1");
+
+// Get the offset position of the navbar
+const sticky = navbar.offsetTop;
+
+// Add the sticky class to the navbar when you reach its scroll position. Remove "sticky" when you leave the scroll position
+function myFunction () {
+    const box3 = document.querySelector(".box3");
+    if (window.pageYOffset >= sticky) {
+        box3.style = "display:flex";
+        navbar.classList.add("sticky");
+    } else {
+        navbar.classList.remove("sticky");
+        box3.style = "display:none";
+    }
 }

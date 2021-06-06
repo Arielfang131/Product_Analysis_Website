@@ -1,9 +1,10 @@
 const router = require("express").Router();
 
 const {
-    getNegativeContent
+    getNegativeContent, insertNegative
 } = require("../controllers/negativeContent_controller.js");
 
 router.route("/negativeContent").get(getNegativeContent);
+router.route("/sendNegative").get(insertNegative);
 
 module.exports = router;

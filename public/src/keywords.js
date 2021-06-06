@@ -52,7 +52,39 @@ function ajaxKeywords (src, data, callback) {
                             noResult.remove();
                         }
                         callback(res);
-                    }
+                        const insertN = new XMLHttpRequest();
+                        insertN.onreadystatechange = function () {
+                            // console.log("hhh");
+                            // console.log(insertN.readyState);
+                            // console.log(insertN.status);
+                            if (insertN.readyState === 4 && insertN.status === 200) {
+                                console.log(123);
+                                const test = this.responseText;
+                                console.log(test);
+                                // 更新負評數量
+                                const getNeg = new XMLHttpRequest();
+                                getNeg.onreadystatechange = function () {
+                                    console.log("hi");
+                                    if (getNeg.readyState === 4 && getNeg.status === 200) {
+                                        const response = JSON.parse(getNeg.responseText);
+                                        console.log("+++++++++++++++++");
+                                        console.log(response);
+                                        const counts = response.length;
+                                        localStorage.setItem("negativeCounts", counts);
+                                        getNegativeCounts();
+                                    };
+                                };
+                                getNeg.open("GET", "api/1.0/negativeContent");
+                                getNeg.setRequestHeader("Content-Type", "application/json");
+                                const accessToken = localStorage.getItem("access_token");
+                                getNeg.setRequestHeader("Authorization", "bearer " + accessToken);
+                                getNeg.send();
+                            }
+                        };
+                        insertN.open("GET", "api/1.0/sendNegative");
+                        insertN.setRequestHeader("Content-Type", "application/json");
+                        insertN.send();
+                    };
                 };
                 newXhr.open("POST", "api/1.0/keywords");
                 newXhr.setRequestHeader("Content-Type", "application/json");
@@ -135,7 +167,6 @@ function view (response) {
         const oldKeywordsBox = document.querySelectorAll(".view_keyword");
         // console.log(totalBoxes.length);
         oldKeywordsCounts = oldKeywordsBox.length;
-        console.log(oldKeywordsCounts);
     }
     // 刪除按鈕
     const trash = document.querySelectorAll(".icon_trash");
@@ -450,14 +481,17 @@ question.addEventListener("click", () => {
 });
 
 // 取得負評數量
-const negativeCounts = localStorage.getItem("negativeCounts");
-if (parseInt(negativeCounts) > 0) {
-    const alertElement = document.createElement("div");
-    alertElement.id = "alert";
-    alertElement.innerHTML = negativeCounts;
-    const parentElement = document.getElementById("little_menu");
-    parentElement.append(alertElement);
+function getNegativeCounts () {
+    const negativeCounts = localStorage.getItem("negativeCounts");
+    if (parseInt(negativeCounts) > 0) {
+        const alertElement = document.createElement("div");
+        alertElement.id = "alert";
+        alertElement.innerHTML = negativeCounts;
+        const parentElement = document.getElementById("little_menu");
+        parentElement.append(alertElement);
+    }
 }
+getNegativeCounts();
 
 // When the user scrolls the page, execute myFunction
 window.onscroll = function () { myFunction(); };

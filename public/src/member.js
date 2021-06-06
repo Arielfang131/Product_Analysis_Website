@@ -23,6 +23,7 @@ function ajax (src, data) {
                     if (res.msg === "null") {
                         window.location.href = "member.html";
                     } else {
+                        // 登入後取得負評數量
                         const getNeg = new XMLHttpRequest();
                         getNeg.onreadystatechange = function () {
                             if (getNeg.readyState === 4 && getNeg.status === 200) {

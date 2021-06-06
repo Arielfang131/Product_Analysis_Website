@@ -91,12 +91,12 @@ for (let i = 0; i < checkboxTwo.length; i++) {
                 checkboxTwo[j].checked = false;
             }
         }
-        if (checkboxTwo[0].checked === true || checkboxTwo[1].checked === true || checkboxTwo[2].checked === true || checkboxTwo[3].checked === true) {
-            checkboxTwo[4].selectedIndex = 0;
+        if (checkboxTwo[0].checked === true || checkboxTwo[1].checked === true) {
+            checkboxTwo[2].selectedIndex = 0;
             startDate.value = "";
             endDate.value = "";
         }
-        if (checkboxTwo[4].checked === true) {
+        if (checkboxTwo[2].checked === true) {
             startDate.value = "";
             endDate.value = "";
         }
@@ -106,14 +106,14 @@ for (let i = 0; i < checkboxTwo.length; i++) {
 startDate.addEventListener("click", () => {
     for (let i = 0; i < checkboxTwo.length; i++) {
         checkboxTwo[i].checked = false;
-        checkboxTwo[4].selectedIndex = 0;
+        checkboxTwo[2].selectedIndex = 0;
     }
 });
 
 endDate.addEventListener("click", () => {
     for (let i = 0; i < checkboxTwo.length; i++) {
         checkboxTwo[i].checked = false;
-        checkboxTwo[4].selectedIndex = 0;
+        checkboxTwo[2].selectedIndex = 0;
     }
 });
 
@@ -200,6 +200,15 @@ button.addEventListener("click", function (event) {
         alert("起始日期不可大於今天");
         return;
     }
+    // 建議日期不要小於15日
+    const beginDay = new Date(startDate.value);
+    const finishDay = new Date(endDate.value);
+    const difference = finishDay.getTime() - beginDay.getTime();
+    if ((difference / (1000 * 3600 * 24)) < 15) {
+        alert("建議日期不要小於15日");
+        return;
+    }
+
     const monthElement = document.querySelector(".month");
     const month = monthElement.value;
     function getMonthFromString (mon) {

@@ -2,6 +2,9 @@ const { query } = require("./mysqlcon");
 
 const sqlModifiedEmotion = async function () {
     try {
+        const deleteSql = "DELETE FROM text_table_modified";
+        const deleteResult = await query(deleteSql);
+        console.log(deleteResult);
         const sql = "SELECT * FROM text_table";
         const result = await query(sql);
         const specialWords = ["好燒", "燒到", "生火", "被燒"];

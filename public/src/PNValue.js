@@ -175,30 +175,79 @@ function getPNValue (info) {
     const content = document.getElementById("content");
     const positive = document.createElement("div");
     positive.className = "emotion";
+
     const neutral = document.createElement("div");
     neutral.className = "emotion";
+
     const negative = document.createElement("div");
     negative.className = "emotion";
+    // positive.innerHTML = `<a><span>正評：${info.positive}</span>閱讀正面文章</a>`;
+    // positive.innerHTML = `<span showhints="閱讀正面文章">正評：${info.positive}</span>`;
+    // positive.innerHTML = `<span>正評：${info.positive}<span class="hint">閱讀正面文章</span></span>`;
     positive.innerHTML = `正評：${info.positive}`;
     neutral.innerHTML = `中立：${info.neutral}`;
     negative.innerHTML = `負評：${info.negative}`;
     const valueElement = document.createElement("div");
     valueElement.className = "value";
+    // const hover1 = document.createElement("div");
+    // hover1.className = "hover";
+    // hover1.style = "display:none";
+    // hover1.innerHTML = "閱讀正面文章";
+    // const hover2 = document.createElement("div");
+    // hover2.className = "hover";
+    // hover2.style = "display:none";
+    // hover2.innerHTML = "閱讀中立文章";
+    // const hover3 = document.createElement("div");
+    // hover3.className = "hover";
+    // hover3.style = "display:none";
+    // hover3.innerHTML = "閱讀負面文章";
+    // positive.append(hover1);
+    // neutral.append(hover2);
+    // negative.append(hover3);
     const PNValue = (parseInt(info.positive) / parseInt(info.negative)).toFixed(2);
     if (isNaN(PNValue)) {
         valueElement.innerHTML = "正負PN值：0";
     } else if (parseInt(info.positive) >= 1 && parseInt(info.negative) === 0) {
-        valueElement.innerHTML = "沒有負評";
+        valueElement.innerHTML = "正負PN值：沒有負評";
     } else {
         valueElement.innerHTML = `正負PN值：${PNValue}`;
     }
     content.append(positive, neutral, negative, valueElement);
+    positive.addEventListener("mouseover", function () {
+        positive.innerHTML = "點選閱讀正評文章";
+        // positive.style = "color:#d81616";
+        positive.style = "cursor: pointer; color:#d81616";
+    });
+    positive.addEventListener("mouseout", function () {
+        positive.innerHTML = `正評：${info.positive}`;
+        positive.style = "color:black";
+    });
+    neutral.addEventListener("mouseover", function () {
+        neutral.innerHTML = "點選閱讀中立文章";
+        // neutral.style = "color:#d81616";
+        neutral.style = "cursor: pointer;color:#d81616";
+    });
+    neutral.addEventListener("mouseout", function () {
+        neutral.innerHTML = `中立：${info.neutral}`;
+        neutral.style = "color:black";
+    });
+    negative.addEventListener("mouseover", function () {
+        negative.innerHTML = "點選閱讀負評文章";
+        // negative.style = "color:#d81616";
+        negative.style = "cursor: pointer;color:#d81616";
+    });
+    negative.addEventListener("mouseout", function () {
+        negative.innerHTML = `負評：${info.negative}`;
+        negative.style = "color:black";
+    });
+    // neutral.addEventListener("mouseover", change);
+    // neutral.addEventListener("mouseout", restore);
+    // negative.addEventListener("mouseover", change);
+    // negative.addEventListener("mouseout", restore);
 
     // 點選正評、中立、負評出現文章列表
-    const emotionButton = document.querySelectorAll(".emotion");
-
     // 正評Button
-    emotionButton[0].addEventListener("click", function () {
+    positive.addEventListener("click", function () {
         const removeDetails = document.querySelectorAll(".detail");
         const noContent = document.getElementById("noContent");
         if (noContent) {
@@ -210,7 +259,7 @@ function getPNValue (info) {
         contentInfo(info.positiveInfo);
     });
     // 中立Button
-    emotionButton[1].addEventListener("click", function () {
+    neutral.addEventListener("click", function () {
         const noContent = document.getElementById("noContent");
         if (noContent) {
             noContent.remove();
@@ -222,7 +271,7 @@ function getPNValue (info) {
         contentInfo(info.neutralInfo);
     });
     // 負面Button
-    emotionButton[2].addEventListener("click", function () {
+    negative.addEventListener("click", function () {
         const noContent = document.getElementById("noContent");
         if (noContent) {
             noContent.remove();

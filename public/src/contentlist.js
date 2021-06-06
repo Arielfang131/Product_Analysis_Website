@@ -11,6 +11,22 @@ function ajaxTopic (src, callback) {
                     if (xhrSec.readyState === 4 && xhrSec.status === 200) {
                         const response = JSON.parse(xhrSec.responseText);
                         callback(response);
+                        // 登入後取得負評數量
+                        const getNeg = new XMLHttpRequest();
+                        getNeg.onreadystatechange = function () {
+                            if (getNeg.readyState === 4 && getNeg.status === 200) {
+                                const response = JSON.parse(getNeg.responseText);
+                                console.log(response);
+                                const counts = response.length;
+                                console.log(counts);
+                                localStorage.setItem("negativeCounts", counts);
+                            }
+                        };
+                        getNeg.open("GET", "api/1.0/negativeContent");
+                        getNeg.setRequestHeader("Content-Type", "application/json");
+                        const accessToken = localStorage.getItem("access_token");
+                        getNeg.setRequestHeader("Authorization", "bearer " + accessToken);
+                        getNeg.send();
                     }
                 };
                 xhrSec.open("GET", "api/1.0/contentlist");

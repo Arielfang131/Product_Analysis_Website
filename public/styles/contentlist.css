@@ -86,3 +86,34 @@
     left:45%;  
     z-index:999;  
 }  */
+/* .emotion a{
+    overflow:hidden;
+} */
+/* span:hover:after{
+    content:"閱讀正面文章";
+    position:absolute;    margin:0px auto;
+    font-size: 16px; font-family: 微軟正黑體;
+    max-width:400px; height: auto;
+    text-align: left;    background: #EDC200; color: #000;
+    padding-bottom: 6px; padding-top: 6px;
+    border-radius: 6px;
+    z-index: 999;
+} */
+#cbox1{
+    margin-top:10px;
+}
+#cbox2{
+    margin-top:10px;
+}
+#cbox2_start{
+    margin-top:10px;
+}
+#cbox2_end{
+    margin-top:10px;
+}
+#cbox3{
+    margin-top:10px;
+}
+#cbox4{
+    margin-top:10px;
+}

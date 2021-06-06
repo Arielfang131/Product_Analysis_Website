@@ -73,8 +73,9 @@ const { query } = require("./mysqlcon");
 
 const insertAllNegative = async function () {
     try {
-        // 選取當天時間
+        // 選取前十天時間
         const date = new Date();
+        date.setDate(date.getDate() - 10);
         let dateInfo = "";
         const dateString = date.getDate().toString();
         if (dateString.length === 1) {
@@ -135,8 +136,9 @@ const insertAllNegative = async function () {
                     titleSecond += `${symbols2.shift()} `;
                 }
             }
-            // const sqlText = `SELECT id FROM text_table WHERE (${contentQuery} OR ${titleQuery}) AND (time >'${dateInfo} 00:00') AND emotion < -0.25 order by time DESC;`;
-            const sqlText = `SELECT id FROM text_table_modified WHERE (${contentQuery} OR ${titleQuery}) AND emotion < -0.25 order by time DESC;`;
+            // 挑選近十天的負評
+            const sqlText = `SELECT id FROM text_table_modified WHERE (${contentQuery} OR ${titleQuery}) AND (time >'${dateInfo} 00:00') AND emotion < -0.25 order by time DESC;`;
+            // const sqlText = `SELECT id FROM text_table_modified WHERE (${contentQuery} OR ${titleQuery}) AND emotion < -0.25 order by time DESC;`;
             const sqlResult = await query(sqlText);
             if (sqlResult.length === 0) {
                 continue;
@@ -157,13 +159,24 @@ const insertAllNegative = async function () {
             ans.push(topicId, textId);
             ansArr.push(ans);
         }
+
+        const newArr = [];
         if (ansArr.length !== 0) {
-            console.log("insert negative");
-            const sqlNegative = "INSERT INTO negative_table (topic_id, text_id) VALUES ?";
-            await query(sqlNegative, [ansArr]);
-            const selectQuery = "SELECT user_table.email,company_table.company_number,topic_table.topic_id,negative_table.text_id FROM user_table INNER JOIN company_table ON company_table.company_number = user_table.company_number INNER JOIN topic_table ON topic_table.company_id = company_table.company_id INNER JOIN negative_table ON negative_table.topic_id = topic_table.topic_id;";
-            const selectUserInfo = await query(selectQuery);
-            return selectUserInfo;
+            for (const i in ansArr) {
+                const sqlCheck = `SELECT * FROM negative_table WHERE topic_id = ${ansArr[i][0]} AND text_id =${ansArr[i][1]};`;
+                const checkResult = await query(sqlCheck);
+                if (checkResult.length === 0) {
+                    newArr.push(ansArr[i]);
+                }
+            }
+            console.log(newArr);
+            if (newArr.length !== 0) {
+                const sqlNegative = "INSERT INTO negative_table (topic_id, text_id) VALUES ?";
+                await query(sqlNegative, [newArr]);
+                const selectQuery = "SELECT user_table.email,company_table.company_number,topic_table.topic_id,negative_table.text_id FROM user_table INNER JOIN company_table ON company_table.company_number = user_table.company_number INNER JOIN topic_table ON topic_table.company_id = company_table.company_id INNER JOIN negative_table ON negative_table.topic_id = topic_table.topic_id;";
+                const selectUserInfo = await query(selectQuery);
+                return selectUserInfo;
+            }
         } else {
             console.log("no negative");
         }

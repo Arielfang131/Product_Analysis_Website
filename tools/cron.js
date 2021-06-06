@@ -293,10 +293,11 @@ async function getNegativeInfo () {
     // console.log(negativeInfo);
 }
 
-cron.schedule("13 06 * * *", async () => {
-    console.log("testEveryOneHour");
-    console.log("========================================");
-    await getPtt();
-    await alterEmotion();
-    await getNegativeInfo();
-});
+alterEmotion();
+// cron.schedule("13 06 * * *", async () => {
+//     console.log("testEveryOneHour");
+//     console.log("========================================");
+//     await getPtt();
+//     await alterEmotion();
+//     await getNegativeInfo();
+// });

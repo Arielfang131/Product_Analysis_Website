@@ -172,7 +172,7 @@ function contentInfo (info) {
 function getPNValue (info) {
     const loading = document.getElementById("loading");
     loading.style = "display:none";
-    const contents = document.getElementById("contents");
+    const content = document.getElementById("content");
     const positive = document.createElement("div");
     positive.className = "emotion";
     const neutral = document.createElement("div");
@@ -192,7 +192,7 @@ function getPNValue (info) {
     } else {
         valueElement.innerHTML = `正負PN值：${PNValue}`;
     }
-    contents.append(positive, neutral, negative, valueElement);
+    content.append(positive, neutral, negative, valueElement);
 
     // 點選正評、中立、負評出現文章列表
     const emotionButton = document.querySelectorAll(".emotion");

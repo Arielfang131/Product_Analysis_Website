@@ -29,19 +29,21 @@
     text-align:left;
 }
 #button{
-    width:80px;
+    width:90px;
     margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
-    border-radius: 5px;
-    height:30px;
-    background-color: #555555;
+    border-radius: 8px;
+    height:35px;
+    background-color: #555b6e;
     border: none;
     color: white;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     cursor: pointer;
+    box-shadow: 3.5px 3.5px 2px rgba(0, 0, 0, 0.5);
+    font-size: 15px;
 }
 #cbox1{
     margin-top:10px;

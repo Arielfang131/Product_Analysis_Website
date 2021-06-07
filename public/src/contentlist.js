@@ -208,29 +208,56 @@ for (let i = 0; i < checkboxTwo.length; i++) {
                 checkboxTwo[j].checked = false;
             }
         }
-        if (checkboxTwo[0].checked === true || checkboxTwo[1].checked === true || checkboxTwo[2].checked === true || checkboxTwo[3].checked === true) {
-            checkboxTwo[4].selectedIndex = 0;
-            startDate.value = "";
-            endDate.value = "";
-        }
-        if (checkboxTwo[4].checked === true) {
-            startDate.value = "";
-            endDate.value = "";
-        }
+        // if (checkboxTwo[0].checked === true) {
+        //     console.log(checkboxTwo);
+        //     console.log(checkboxTwo[0]);
+        //     console.log(checkboxTwo[1]);
+        //     console.log(123456);
+        //     checkboxTwo[1].selectedIndex = 0;
+        //     startDate.value = "";
+        //     endDate.value = "";
+        // }
+        // if (checkboxTwo[1].checked === true) {
+        //     console.log("rrr");
+        //     checkboxTwo[0].selectedIndex = 0;
+        //     startDate.value = "";
+        //     endDate.value = "";
+        // }
     });
 }
+checkboxTwo[0].addEventListener("click", function (event) {
+    if (checkboxTwo[0].value === event.target.value) {
+        // console.log(checkboxTwo[0].value);
+        // checkboxTwo[0].checked = true;
+        checkboxTwo[1].selectedIndex = 0;
+        startDate.value = "";
+        endDate.value = "";
+    }
+});
+
+checkboxTwo[1].addEventListener("click", function (event) {
+    if (checkboxTwo[1].value === event.target.value) {
+        // console.log(checkboxTwo[1].value);
+        // checkboxTwo[1].checked = true;
+        checkboxTwo[0].selectedIndex = 0;
+        startDate.value = "";
+        endDate.value = "";
+    }
+});
 // 自選日期被點選後，前面的點選都回到預設值
 startDate.addEventListener("click", () => {
     for (let i = 0; i < checkboxTwo.length; i++) {
-        checkboxTwo[i].checked = false;
-        checkboxTwo[4].selectedIndex = 0;
+        // checkboxTwo[i].checked = false;
+        checkboxTwo[0].selectedIndex = 0;
+        checkboxTwo[1].selectedIndex = 0;
     }
 });
 
 endDate.addEventListener("click", () => {
     for (let i = 0; i < checkboxTwo.length; i++) {
-        checkboxTwo[i].checked = false;
-        checkboxTwo[4].selectedIndex = 0;
+        // checkboxTwo[i].checked = false;
+        checkboxTwo[0].selectedIndex = 0;
+        checkboxTwo[1].selectedIndex = 0;
     }
 });
 
@@ -306,9 +333,13 @@ button.addEventListener("click", function (event) {
         alert("請選擇起始日期");
         return;
     }
+    console.log("testsetst");
     for (let i = 0; i < checkboxTwo.length; i++) {
-        if (checkboxTwo[i].checked === true) {
+        console.log(checkboxTwo[i].checked);
+        console.log(checkboxTwo[i].value);
+        if (checkboxTwo[i].checked === true && checkboxTwo[i].value !== "0") {
             timeValue = checkboxTwo[i].value;
+            console.log(timeValue);
             selectTime += 1;
         }
     }

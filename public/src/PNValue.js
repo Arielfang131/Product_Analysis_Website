@@ -42,20 +42,6 @@ function ajax (src, data, callback) {
     xhr.send(JSON.stringify(data));
 }
 
-// // 取得正負評、中立文章列表
-// function ajaxContent (src) {
-//     const xhr = new XMLHttpRequest();
-//     xhr.onreadystatechange = function () {
-//         if (xhr.readyState === 4 && xhr.status === 200) {
-//             // callback(JSON.parse(xhr.responseText));
-//             console.log(JSON.parse(xhr.responseText));
-//         }
-//     };
-//     xhr.open("GET", src);
-//     xhr.setRequestHeader("Content-Type", "application/json");
-//     xhr.send();
-// }
-
 function getTopic (data) {
     const littleBox = document.querySelectorAll(".littleBox");
     const parentElement = littleBox[0];
@@ -102,13 +88,26 @@ function contentInfo (info) {
     for (const i in info) {
         const detail = document.createElement("div");
         detail.className = "detail";
-        // const contentTitle = document.createElement("div");
         const link = document.createElement("a");
         link.className = "content_title";
         link.innerHTML = `${info[i].title}`;
         link.href = `${info[i].link}`;
         link.target = "_blank";
-        // contentTitle.innerHTML = `${info[i].title} <a href = ${info[i].link}>`;
+        detail.append(link);
+        const timeAndChannel = document.createElement("div");
+        timeAndChannel.className = "timeAndChannel";
+        const time = document.createElement("div");
+        time.className = "time";
+        time.innerHTML = `${info[i].time}`;
+        const channel = document.createElement("div");
+        channel.innerHTML = `${info[i].channel}`;
+        if (`${info[i].channel}`.includes("Makeup")) {
+            channel.className = "makeup";
+        } else if (`${info[i].channel}`.includes("BeautySalon")) {
+            channel.className = "beautysalon";
+        }
+        timeAndChannel.append(time, channel);
+        detail.append(timeAndChannel);
         const paragraph = document.createElement("div");
         paragraph.className = "paragraph";
         const tag = document.createElement("div");
@@ -125,9 +124,6 @@ function contentInfo (info) {
         paragraph.append(tag, article);
         const information = document.createElement("div");
         information.className = "information";
-        const channel = document.createElement("div");
-        channel.className = "channel";
-        channel.innerHTML = `${info[i].channel}`;
         const push = document.createElement("div");
         push.className = "push";
         if (info[i].push_number === null) {
@@ -135,19 +131,16 @@ function contentInfo (info) {
         } else {
             push.innerHTML = `共${info[i].push_number}則推文`;
         }
-        const likes = document.createElement("div");
-        likes.className = "likes";
-        if (info[i].likes_number === null) {
-            likes.innerHTML = "共0個讚";
-        } else {
-            likes.innerHTML = `共${info[i].likes_number}個讚`;
-        }
+        // const likes = document.createElement("div");
+        // likes.className = "likes";
+        // if (info[i].likes_number === null) {
+        //     likes.innerHTML = "共0個讚";
+        // } else {
+        //     likes.innerHTML = `共${info[i].likes_number}個讚`;
+        // }
         const author = document.createElement("div");
         author.className = "author";
         author.innerHTML = `作者：${info[i].author}`;
-        const time = document.createElement("div");
-        time.className = "time";
-        time.innerHTML = `時間：${info[i].time}`;
         const emotionInfo = document.createElement("div");
         emotionInfo.className = "emotion_info";
         const rawEmotion = info[i].emotion;
@@ -162,14 +155,15 @@ function contentInfo (info) {
         } else {
             emotionInfo.innerHTML = "情緒：舊資料";
         }
-        information.append(channel, push, likes, author, time, emotionInfo);
-        detail.append(link, paragraph, information);
+        information.append(author, emotionInfo, push);
+        detail.append(paragraph, information);
         details.append(detail);
     }
 }
-
+let count = 0; // counter of button
 // 取得正負評數字
 function getPNValue (info) {
+    count = 0;
     const loading = document.getElementById("loading");
     loading.style = "display:none";
     const content = document.getElementById("content");
@@ -189,21 +183,21 @@ function getPNValue (info) {
     negative.innerHTML = `負評：${info.negative}`;
     const valueElement = document.createElement("div");
     valueElement.className = "value";
-    // const hover1 = document.createElement("div");
-    // hover1.className = "hover";
-    // hover1.style = "display:none";
-    // hover1.innerHTML = "閱讀正面文章";
-    // const hover2 = document.createElement("div");
-    // hover2.className = "hover";
-    // hover2.style = "display:none";
-    // hover2.innerHTML = "閱讀中立文章";
-    // const hover3 = document.createElement("div");
-    // hover3.className = "hover";
-    // hover3.style = "display:none";
-    // hover3.innerHTML = "閱讀負面文章";
-    // positive.append(hover1);
-    // neutral.append(hover2);
-    // negative.append(hover3);
+    const hover1 = document.createElement("div");
+    hover1.className = "hover";
+    hover1.style = "display:none";
+    hover1.innerHTML = "閱讀正面文章";
+    const hover2 = document.createElement("div");
+    hover2.className = "hover";
+    hover2.style = "display:none";
+    hover2.innerHTML = "閱讀中立文章";
+    const hover3 = document.createElement("div");
+    hover3.className = "hover";
+    hover3.style = "display:none";
+    hover3.innerHTML = "閱讀負面文章";
+    positive.append(hover1);
+    neutral.append(hover2);
+    negative.append(hover3);
     const PNValue = (parseInt(info.positive) / parseInt(info.negative)).toFixed(2);
     if (isNaN(PNValue)) {
         valueElement.innerHTML = "正負PN值：0";
@@ -216,29 +210,29 @@ function getPNValue (info) {
     positive.addEventListener("mouseover", function () {
         positive.innerHTML = "點選閱讀正評文章";
         // positive.style = "color:#d81616";
-        positive.style = "cursor: pointer; color:#d81616";
+        positive.style = "cursor: pointer; color:#FFFFFF";
     });
     positive.addEventListener("mouseout", function () {
         positive.innerHTML = `正評：${info.positive}`;
-        positive.style = "color:black";
+        positive.style = "color:#FFFFFF";
     });
     neutral.addEventListener("mouseover", function () {
         neutral.innerHTML = "點選閱讀中立文章";
         // neutral.style = "color:#d81616";
-        neutral.style = "cursor: pointer;color:#d81616";
+        neutral.style = "cursor: pointer;color:#FFFFFF";
     });
     neutral.addEventListener("mouseout", function () {
         neutral.innerHTML = `中立：${info.neutral}`;
-        neutral.style = "color:black";
+        neutral.style = "color:#FFFFFF";
     });
     negative.addEventListener("mouseover", function () {
         negative.innerHTML = "點選閱讀負評文章";
         // negative.style = "color:#d81616";
-        negative.style = "cursor: pointer;color:#d81616";
+        negative.style = "cursor: pointer;color:#FFFFFF";
     });
     negative.addEventListener("mouseout", function () {
         negative.innerHTML = `負評：${info.negative}`;
-        negative.style = "color:black";
+        negative.style = "color:#FFFFFF";
     });
     // neutral.addEventListener("mouseover", change);
     // neutral.addEventListener("mouseout", restore);
@@ -346,197 +340,200 @@ for (let i = 0; i < checkboxThree.length; i++) {
 
 const button = document.getElementById("button");
 button.addEventListener("click", function (event) {
-    const emotion = document.querySelectorAll(".emotion");
-    const value = document.querySelector(".value");
-    for (let i = 0; i < emotion.length; i++) {
-        emotion[i].remove();
-    }
-    if (value) {
-        value.remove();
-    }
-    const removeDetails = document.querySelectorAll(".detail");
-    const noContent = document.getElementById("noContent");
-    if (noContent) {
-        noContent.remove();
-    }
-    for (let i = 0; i < removeDetails.length; i++) {
-        removeDetails[i].remove();
-    }
-    const checkboxOne = document.querySelectorAll("#cbox1");
-    let topicId = "";
-    let timeValue = "";
-    const channel = [];
-    let selectTopic = 0;
-    let selectTime = 0;
-    let selectChannel = 0;
-    for (let i = 0; i < checkboxOne.length; i++) {
-        if (checkboxOne[i].checked === true) {
-            topicId = checkboxOne[i].value;
-            selectTopic += 1;
+    count += 1;
+    if (count === 1) {
+        const emotion = document.querySelectorAll(".emotion");
+        const value = document.querySelector(".value");
+        for (let i = 0; i < emotion.length; i++) {
+            emotion[i].remove();
         }
-    }
-    if (selectTopic === 0) {
-        alert("請選擇群組");
-        return;
-    }
-    if (startDate.value !== "" && endDate.value === "") {
-        alert("請選擇結束日期");
-        return;
-    }
-    if (startDate.value === "" && endDate.value !== "") {
-        alert("請選擇起始日期");
-        return;
-    }
-    for (let i = 0; i < checkboxTwo.length; i++) {
-        if (checkboxTwo[i].checked === true) {
-            timeValue = checkboxTwo[i].value;
-            selectTime += 1;
+        if (value) {
+            value.remove();
         }
-    }
-    if (selectTime === 0 && startDate.value === "" && endDate.value === "") {
-        alert("請選擇期間");
-        return;
-    }
-    if (Date.parse(startDate.value).valueOf() > Date.parse(endDate.value).valueOf()) {
-        alert("起始日期不可大於結束日期");
-        return;
-    }
-    // 定義當日
-    const date = new Date();
-    let dateInfo = "";
-    const dateString = date.getDate().toString();
-    if (dateString.length === 1) {
-        const dateZero = ("0" + dateString);
-        dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + dateZero;
-    } else {
-        dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-    }
-    if (Date.parse(startDate.value).valueOf() > Date.parse(dateInfo).valueOf()) {
-        alert("起始日期不可大於今天");
-        return;
-    }
-    const monthElement = document.querySelector(".month");
-    const month = monthElement.value;
-    function getMonthFromString (mon) {
-        return new Date(Date.parse(mon + " 1, 2021")).getMonth() + 1;
-    }
-    const nowMonth = (new Date().getMonth() + 1);
-    if (getMonthFromString(month) > nowMonth) {
-        alert("月份不可大於當月");
-        return;
-    }
-    for (let i = 0; i < checkboxThree.length; i++) {
-        if (checkboxThree[i].checked === true) {
-            selectChannel += 1;
-            if (checkboxThree[i].value !== "all") {
-                channel.push(checkboxThree[i].value);
+        const removeDetails = document.querySelectorAll(".detail");
+        const noContent = document.getElementById("noContent");
+        if (noContent) {
+            noContent.remove();
+        }
+        for (let i = 0; i < removeDetails.length; i++) {
+            removeDetails[i].remove();
+        }
+        const checkboxOne = document.querySelectorAll("#cbox1");
+        let topicId = "";
+        let timeValue = "";
+        const channel = [];
+        let selectTopic = 0;
+        let selectTime = 0;
+        let selectChannel = 0;
+        for (let i = 0; i < checkboxOne.length; i++) {
+            if (checkboxOne[i].checked === true) {
+                topicId = checkboxOne[i].value;
+                selectTopic += 1;
             }
         }
-    }
-    if (selectChannel === 0) {
-        alert("請選擇來源");
-        return;
-    }
+        if (selectTopic === 0) {
+            alert("請選擇群組");
+            return;
+        }
+        if (startDate.value !== "" && endDate.value === "") {
+            alert("請選擇結束日期");
+            return;
+        }
+        if (startDate.value === "" && endDate.value !== "") {
+            alert("請選擇起始日期");
+            return;
+        }
+        for (let i = 0; i < checkboxTwo.length; i++) {
+            if (checkboxTwo[i].checked === true) {
+                timeValue = checkboxTwo[i].value;
+                selectTime += 1;
+            }
+        }
+        if (selectTime === 0 && startDate.value === "" && endDate.value === "") {
+            alert("請選擇期間");
+            return;
+        }
+        if (Date.parse(startDate.value).valueOf() > Date.parse(endDate.value).valueOf()) {
+            alert("起始日期不可大於結束日期");
+            return;
+        }
+        // 定義當日
+        const date = new Date();
+        let dateInfo = "";
+        const dateString = date.getDate().toString();
+        if (dateString.length === 1) {
+            const dateZero = ("0" + dateString);
+            dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + dateZero;
+        } else {
+            dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        }
+        if (Date.parse(startDate.value).valueOf() > Date.parse(dateInfo).valueOf()) {
+            alert("起始日期不可大於今天");
+            return;
+        }
+        const monthElement = document.querySelector(".month");
+        const month = monthElement.value;
+        function getMonthFromString (mon) {
+            return new Date(Date.parse(mon + " 1, 2021")).getMonth() + 1;
+        }
+        const nowMonth = (new Date().getMonth() + 1);
+        if (getMonthFromString(month) > nowMonth) {
+            alert("月份不可大於當月");
+            return;
+        }
+        for (let i = 0; i < checkboxThree.length; i++) {
+            if (checkboxThree[i].checked === true) {
+                selectChannel += 1;
+                if (checkboxThree[i].value !== "all") {
+                    channel.push(checkboxThree[i].value);
+                }
+            }
+        }
+        if (selectChannel === 0) {
+            alert("請選擇來源");
+            return;
+        }
 
-    // alert("查詢中，請稍等");
+        // alert("查詢中，請稍等");
 
-    let deadline = "";
-    if (timeValue === "3") {
-        const nowDate = new Date();
-        nowDate.setDate(date.getDate() - 3);
-        const nowDateString = nowDate.getDate().toString();
-        if (nowDateString.length === 1) {
-            const deadlineZero = ("0" + nowDateString);
-            deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
+        let deadline = "";
+        if (timeValue === "3") {
+            const nowDate = new Date();
+            nowDate.setDate(date.getDate() - 3);
+            const nowDateString = nowDate.getDate().toString();
+            if (nowDateString.length === 1) {
+                const deadlineZero = ("0" + nowDateString);
+                deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
+            } else {
+                deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+            }
+        } else if (timeValue === "7") {
+            const nowDate = new Date();
+            nowDate.setDate(date.getDate() - 7);
+            const nowDateString = nowDate.getDate().toString();
+            if (nowDateString.length === 1) {
+                const deadlineZero = ("0" + nowDateString);
+                deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
+            } else {
+                deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+            }
+        } else if (timeValue === "15") {
+            const nowDate = new Date();
+            nowDate.setDate(date.getDate() - 15);
+            const nowDateString = nowDate.getDate().toString();
+            if (nowDateString.length === 1) {
+                const deadlineZero = ("0" + nowDateString);
+                deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
+            } else {
+                deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+            }
+        } else if (timeValue === "30") {
+            const nowDate = new Date();
+            nowDate.setDate(date.getDate() - 30);
+            const nowDateString = nowDate.getDate().toString();
+            if (nowDateString.length === 1) {
+                const deadlineZero = ("0" + nowDateString);
+                deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
+            } else {
+                deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+            }
+        } else if (timeValue === "Jan") {
+            dateInfo = "2021-1-31";
+            deadline = "2021-1-01";
+        } else if (timeValue === "Feb") {
+            dateInfo = "2021-2-28";
+            deadline = "2021-2-01";
+        } else if (timeValue === "Mar") {
+            dateInfo = "2021-3-31";
+            deadline = "2021-3-01";
+        } else if (timeValue === "Apr") {
+            dateInfo = "2021-4-30";
+            deadline = "2021-4-01";
+        } else if (timeValue === "May") {
+            dateInfo = "2021-5-31";
+            deadline = "2021-5-01";
+        } else if (timeValue === "June") {
+            dateInfo = "2021-6-30";
+            deadline = "2021-6-01";
+        } else if (timeValue === "July") {
+            dateInfo = "2021-7-31";
+            deadline = "2021-7-01";
+        } else if (timeValue === "Aug") {
+            dateInfo = "2021-8-31";
+            deadline = "2021-8-01";
+        } else if (timeValue === "Sep") {
+            dateInfo = "2021-9-30";
+            deadline = "2021-9-01";
+        } else if (timeValue === "Oct") {
+            dateInfo = "2021-10-31";
+            deadline = "2021-10-01";
+        } else if (timeValue === "Nov") {
+            dateInfo = "2021-11-30";
+            deadline = "2021-11-01";
+        } else if (timeValue === "Dec") {
+            dateInfo = "2021-12-31";
+            deadline = "2021-12-01";
         } else {
-            deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+            const monthAfter = endDate.value.split("-")[1];
+            const monthBefore = startDate.value.split("-")[1];
+            const monthEnd = monthAfter.replace(/^[0]/g, "");
+            const monthStart = monthBefore.replace(/^[0]/g, "");
+            dateInfo = endDate.value.split("-")[0] + "-" + monthEnd + "-" + endDate.value.split("-")[2];
+            deadline = startDate.value.split("-")[0] + "-" + monthStart + "-" + startDate.value.split("-")[2];
         }
-    } else if (timeValue === "7") {
-        const nowDate = new Date();
-        nowDate.setDate(date.getDate() - 7);
-        const nowDateString = nowDate.getDate().toString();
-        if (nowDateString.length === 1) {
-            const deadlineZero = ("0" + nowDateString);
-            deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
-        } else {
-            deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
-        }
-    } else if (timeValue === "15") {
-        const nowDate = new Date();
-        nowDate.setDate(date.getDate() - 15);
-        const nowDateString = nowDate.getDate().toString();
-        if (nowDateString.length === 1) {
-            const deadlineZero = ("0" + nowDateString);
-            deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
-        } else {
-            deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
-        }
-    } else if (timeValue === "30") {
-        const nowDate = new Date();
-        nowDate.setDate(date.getDate() - 30);
-        const nowDateString = nowDate.getDate().toString();
-        if (nowDateString.length === 1) {
-            const deadlineZero = ("0" + nowDateString);
-            deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
-        } else {
-            deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
-        }
-    } else if (timeValue === "Jan") {
-        dateInfo = "2021-1-31";
-        deadline = "2021-1-01";
-    } else if (timeValue === "Feb") {
-        dateInfo = "2021-2-28";
-        deadline = "2021-2-01";
-    } else if (timeValue === "Mar") {
-        dateInfo = "2021-3-31";
-        deadline = "2021-3-01";
-    } else if (timeValue === "Apr") {
-        dateInfo = "2021-4-30";
-        deadline = "2021-4-01";
-    } else if (timeValue === "May") {
-        dateInfo = "2021-5-31";
-        deadline = "2021-5-01";
-    } else if (timeValue === "June") {
-        dateInfo = "2021-6-30";
-        deadline = "2021-6-01";
-    } else if (timeValue === "July") {
-        dateInfo = "2021-7-31";
-        deadline = "2021-7-01";
-    } else if (timeValue === "Aug") {
-        dateInfo = "2021-8-31";
-        deadline = "2021-8-01";
-    } else if (timeValue === "Sep") {
-        dateInfo = "2021-9-30";
-        deadline = "2021-9-01";
-    } else if (timeValue === "Oct") {
-        dateInfo = "2021-10-31";
-        deadline = "2021-10-01";
-    } else if (timeValue === "Nov") {
-        dateInfo = "2021-11-30";
-        deadline = "2021-11-01";
-    } else if (timeValue === "Dec") {
-        dateInfo = "2021-12-31";
-        deadline = "2021-12-01";
-    } else {
-        const monthAfter = endDate.value.split("-")[1];
-        const monthBefore = startDate.value.split("-")[1];
-        const monthEnd = monthAfter.replace(/^[0]/g, "");
-        const monthStart = monthBefore.replace(/^[0]/g, "");
-        dateInfo = endDate.value.split("-")[0] + "-" + monthEnd + "-" + endDate.value.split("-")[2];
-        deadline = startDate.value.split("-")[0] + "-" + monthStart + "-" + startDate.value.split("-")[2];
+
+        const data = {
+            topicId: topicId,
+            timeValue: timeValue,
+            nowTime: dateInfo,
+            deadline: deadline,
+            channel: channel
+        };
+        console.log(data);
+        const loading = document.getElementById("loading");
+        loading.style = "display:block";
+        ajax("/api/1.0/PNValue", data, getPNValue);
     }
-
-    const data = {
-        topicId: topicId,
-        timeValue: timeValue,
-        nowTime: dateInfo,
-        deadline: deadline,
-        channel: channel
-    };
-    console.log(data);
-    const loading = document.getElementById("loading");
-    loading.style = "display:block";
-    ajax("/api/1.0/PNValue", data, getPNValue);
 });
 
 // 取得負評數量

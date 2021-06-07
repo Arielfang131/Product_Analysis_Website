@@ -49,7 +49,22 @@ async function getNegativeContent (info) {
         link.innerHTML = `${info[i].title}`;
         link.href = `${info[i].link}`;
         link.target = "_blank";
+        content.append(link);
         // contentTitle.innerHTML = `${info[i].title} <a href = ${info[i].link}>`;
+        const timeAndChannel = document.createElement("div");
+        timeAndChannel.className = "timeAndChannel";
+        const time = document.createElement("div");
+        time.className = "time";
+        time.innerHTML = `${info[i].time}`;
+        const channel = document.createElement("div");
+        channel.innerHTML = `${info[i].channel}`;
+        if (`${info[i].channel}`.includes("Makeup")) {
+            channel.className = "makeup";
+        } else if (`${info[i].channel}`.includes("BeautySalon")) {
+            channel.className = "beautysalon";
+        }
+        timeAndChannel.append(time, channel);
+        content.append(timeAndChannel);
         const paragraph = document.createElement("div");
         paragraph.className = "paragraph";
         const tag = document.createElement("div");
@@ -66,29 +81,25 @@ async function getNegativeContent (info) {
         paragraph.append(tag, article);
         const information = document.createElement("div");
         information.className = "information";
-        const channel = document.createElement("div");
-        channel.className = "channel";
-        channel.innerHTML = `${info[i].channel}`;
         const push = document.createElement("div");
         push.className = "push";
         if (info[i].push_number === null) {
-            push.innerHTML = "共0則推文";
+            push.innerHTML = "<img class=\"icon_comment\" src=\"./styles/images/comment.png\">";
+            push.innerHTML += " 0";
         } else {
-            push.innerHTML = `共${info[i].push_number}則推文`;
+            push.innerHTML = "<img class=\"icon_comment\" src=\"./styles/images/comment.png\">";
+            push.innerHTML += ` ${info[i].push_number}`;
         }
-        const likes = document.createElement("div");
-        likes.className = "likes";
-        if (info[i].likes_number === null) {
-            likes.innerHTML = "共0個讚";
-        } else {
-            likes.innerHTML = `共${info[i].likes_number}個讚`;
-        }
+        // const likes = document.createElement("div");
+        // likes.className = "likes";
+        // if (info[i].likes_number === null) {
+        //     likes.innerHTML = "共0個讚";
+        // } else {
+        //     likes.innerHTML = `共${info[i].likes_number}個讚`;
+        // }
         const author = document.createElement("div");
         author.className = "author";
         author.innerHTML = `作者：${info[i].author}`;
-        const time = document.createElement("div");
-        time.className = "time";
-        time.innerHTML = `時間：${info[i].time}`;
         const emotion = document.createElement("div");
         emotion.className = "emotion";
         const rawEmotion = info[i].emotion;
@@ -113,9 +124,9 @@ async function getNegativeContent (info) {
         // checkBox2.type = "checkbox";
         // const label2 = document.createElement("label");
         // label2.innerHTML = "移除負評";
-        information.append(channel, push, likes, author, time, emotion);
+        information.append(author, emotion, push);
         // flexBox.append(checkBox1, label1, checkBox2, label2);
-        content.append(link, paragraph, information);
+        content.append(paragraph, information);
         // bigBox.append(content);
         parentElement.append(content);
     }

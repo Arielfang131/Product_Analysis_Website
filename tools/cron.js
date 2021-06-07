@@ -181,7 +181,7 @@ async function pttCrawlerPush (url) {
 async function getPtt () {
     try {
         // const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index.html", page: 10 }, { url: "https://www.ptt.cc/bbs/BeautySalon/index.html", page: 10 }];
-        const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index3628.html", page: 25 }];
+        const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index3603.html", page: 15 }];
         // const crawlerInfos = [];
         for (const k in arrUrl) {
             const mainUrl = arrUrl[k].url;
@@ -198,7 +198,7 @@ async function getPtt () {
             // for迴圈爬取多頁的文章列表和上一頁的URL
             let pageURL = arrUrl[k].url;
             for (let i = 0; i < arrUrl[k].page; i++) {
-                // console.log("page: " + i + " in " + arrUrl[k].page);
+                console.log("page: " + i + " in " + arrUrl[k].page);
                 // await delay();
                 const result = await pttCrawler(pageURL);
                 // const lastPageUrl = result.lastURL;
@@ -286,14 +286,15 @@ async function getPtt () {
 
 async function alterEmotion () {
     await googleEmotion.modifiedEmotion();
+    console.log("modified");
 }
 
 async function getNegativeInfo () {
     const negativeInfo = await negativeModel.insertAllNegative();
-    // console.log(negativeInfo);
+    console.log(negativeInfo);
 }
 
-cron.schedule("41 18 * * *", async () => {
+cron.schedule("05 06 * * *", async () => {
     console.log("testEveryOneHour");
     console.log("========================================");
     await getPtt();

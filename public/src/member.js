@@ -4,15 +4,23 @@ function ajax (src, data) {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const obj = JSON.parse(xhr.responseText);
             if (obj.msg === "此email已經有註冊") {
-                alert("email已經有註冊");
+                //  alert("email已經有註冊");
+                Swal.fire("email已經有註冊");
+                return;
             } else if (obj.msg === "註冊成功") {
-                alert("註冊成功");
+                // alert("註冊成功");
+                Swal.fire("註冊成功");
             } else if (obj.msg === "查無此會員，請先註冊") {
-                alert("查無此會員，請先註冊");
+                // alert("查無此會員，請先註冊");
+                Swal.fire("查無此會員，請先註冊");
+                return;
             } else if (obj.msg === "登入成功") {
-                alert("登入成功");
+                // alert("登入成功");
+                Swal.fire("登入成功");
             } else if (obj.msg === "密碼錯誤") {
-                alert("密碼錯誤");
+                // alert("密碼錯誤");
+                Swal.fire("密碼錯誤");
+                return;
             }
             window.localStorage.setItem("access_token", obj.token);
             const newXhr = new XMLHttpRequest();
@@ -86,7 +94,8 @@ signInButton.addEventListener("click", function () {
     const signInEmail = document.getElementById("sign_in_email");
     const signInPass = document.getElementById("sign_in_password");
     if (signInCompany.value === "" || signInEmail.value === "" || signInPass.value === "") {
-        alert("每一項皆須填寫");
+        // alert("每一項皆須填寫");
+        Swal.fire("每一項皆須填寫");
         return;
     }
     const data = {
@@ -106,7 +115,8 @@ registerButton.addEventListener("click", function () {
     const registerPassword = document.getElementById("register_password");
     const admin = document.getElementById("admin");
     if (registerCompanyName.value === "" || registerCompanyNo.value === "" || userName.value === "" || registerEmail.value === "" || registerPassword.vale === "" || admin.value === "") {
-        alert("每一項皆須填寫");
+        // alert("每一項皆須填寫");
+        Swal.fire("每一項皆須填寫");
         return;
     }
     const data = {

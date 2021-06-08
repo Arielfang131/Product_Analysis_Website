@@ -4,7 +4,18 @@ function ajaxTopic (src, callback) {
         if (newXhr.readyState === 4 && newXhr.status === 200) {
             const res = JSON.parse(newXhr.responseText);
             if (res.msg === "null") {
-                window.location.href = "member.html";
+                Swal.fire({
+                    title: "請先登入會員",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "確定"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "member.html";
+                    }
+                });
             } else {
                 const xhrSec = new XMLHttpRequest();
                 xhrSec.onreadystatechange = function () {
@@ -90,8 +101,10 @@ function getTopic (data) {
     }
 }
 
+let count = 0; // counter of button
 // DOM
 function render (info) {
+    count = 0;
     const loading = document.getElementById("loading");
     loading.style = "display:none";
     const contents = document.getElementById("contents");
@@ -297,216 +310,234 @@ for (let i = 0; i < checkboxFour.length; i++) {
 
 const button = document.getElementById("button");
 button.addEventListener("click", function (event) {
-    const content = document.querySelectorAll(".content");
-    const noContent = document.getElementById("noContent");
-    if (noContent) {
-        noContent.remove();
-    }
+    count += 1;
+    if (count === 1) {
+        const content = document.querySelectorAll(".content");
+        const noContent = document.getElementById("noContent");
+        if (noContent) {
+            noContent.remove();
+        }
 
-    for (let i = 0; i < content.length; i++) {
-        content[i].remove();
-    }
-    const checkboxOne = document.querySelectorAll("#cbox1");
-    let topicId = "";
-    let timeValue = "";
-    const channel = [];
-    const emotion = [];
-    let selectTopic = 0;
-    let selectTime = 0;
-    let selectChannel = 0;
-    let selectEmotion = 0;
-    for (let i = 0; i < checkboxOne.length; i++) {
-        if (checkboxOne[i].checked === true) {
-            topicId = checkboxOne[i].value;
-            selectTopic += 1;
+        for (let i = 0; i < content.length; i++) {
+            content[i].remove();
         }
-    }
-    if (selectTopic === 0) {
-        alert("請選擇群組");
-        return;
-    }
-    if (startDate.value !== "" && endDate.value === "") {
-        alert("請選擇結束日期");
-        return;
-    }
-    if (startDate.value === "" && endDate.value !== "") {
-        alert("請選擇起始日期");
-        return;
-    }
-    console.log("testsetst");
-    for (let i = 0; i < checkboxTwo.length; i++) {
-        console.log(checkboxTwo[i].checked);
-        console.log(checkboxTwo[i].value);
-        if (checkboxTwo[i].checked === true && checkboxTwo[i].value !== "0") {
-            timeValue = checkboxTwo[i].value;
-            console.log(timeValue);
-            selectTime += 1;
-        }
-    }
-    if (selectTime === 0 && startDate.value === "" && endDate.value === "") {
-        alert("請選擇期間");
-        return;
-    }
-    if (Date.parse(startDate.value).valueOf() > Date.parse(endDate.value).valueOf()) {
-        alert("起始日期不可大於結束日期");
-        return;
-    }
-    // 定義當日
-    const date = new Date();
-    let dateInfo = "";
-    const dateString = date.getDate().toString();
-    if (dateString.length === 1) {
-        const dateZero = ("0" + dateString);
-        dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + dateZero;
-    } else {
-        dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-    }
-    if (Date.parse(startDate.value).valueOf() > Date.parse(dateInfo).valueOf()) {
-        alert("起始日期不可大於今天");
-        return;
-    }
-    const monthElement = document.querySelector(".month");
-    const month = monthElement.value;
-    function getMonthFromString (mon) {
-        return new Date(Date.parse(mon + " 1, 2021")).getMonth() + 1;
-    }
-    const nowMonth = (new Date().getMonth() + 1);
-    if (getMonthFromString(month) > nowMonth) {
-        alert("月份不可大於當月");
-        return;
-    }
-    for (let i = 0; i < checkboxThree.length; i++) {
-        if (checkboxThree[i].checked === true) {
-            selectChannel += 1;
-            if (checkboxThree[i].value !== "all") {
-                channel.push(checkboxThree[i].value);
+        const checkboxOne = document.querySelectorAll("#cbox1");
+        let topicId = "";
+        let timeValue = "";
+        const channel = [];
+        const emotion = [];
+        let selectTopic = 0;
+        let selectTime = 0;
+        let selectChannel = 0;
+        let selectEmotion = 0;
+        for (let i = 0; i < checkboxOne.length; i++) {
+            if (checkboxOne[i].checked === true) {
+                topicId = checkboxOne[i].value;
+                selectTopic += 1;
             }
         }
-    }
-    if (selectChannel === 0) {
-        alert("請選擇來源");
-        return;
-    }
-    for (let i = 0; i < checkboxFour.length; i++) {
-        if (checkboxFour[i].checked === true) {
-            selectEmotion += 1;
-            if (checkboxFour[i].value !== "all") {
-                emotion.push(checkboxFour[i].value);
+        if (selectTopic === 0) {
+            // alert("請選擇群組");
+            Swal.fire("請選擇群組");
+            count = 0;
+            return;
+        }
+        if (startDate.value !== "" && endDate.value === "") {
+            // alert("請選擇結束日期");
+            Swal.fire("請選擇結束日期");
+            count = 0;
+            return;
+        }
+        if (startDate.value === "" && endDate.value !== "") {
+            // alert("請選擇起始日期");
+            Swal.fire("請選擇起始日期");
+            count = 0;
+            return;
+        }
+        for (let i = 0; i < checkboxTwo.length; i++) {
+            if (checkboxTwo[i].checked === true && checkboxTwo[i].value !== "0") {
+                timeValue = checkboxTwo[i].value;
+                console.log(timeValue);
+                selectTime += 1;
             }
         }
-    }
-    if (selectEmotion === 0) {
-        alert("請選擇情緒");
-        return;
-    }
-    // alert("查詢中，請稍等");
+        if (selectTime === 0 && startDate.value === "" && endDate.value === "") {
+            // alert("請選擇期間");
+            Swal.fire("請選擇期間");
+            count = 0;
+            return;
+        }
+        if (Date.parse(startDate.value).valueOf() > Date.parse(endDate.value).valueOf()) {
+            // alert("起始日期不可大於結束日期");
+            Swal.fire("起始日期不可大於結束日期");
+            count = 0;
+            return;
+        }
+        // 定義當日
+        const date = new Date();
+        let dateInfo = "";
+        const dateString = date.getDate().toString();
+        if (dateString.length === 1) {
+            const dateZero = ("0" + dateString);
+            dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + dateZero;
+        } else {
+            dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        }
+        if (Date.parse(startDate.value).valueOf() > Date.parse(dateInfo).valueOf()) {
+            // alert("起始日期不可大於今天");
+            Swal.fire("起始日期不可大於今天");
+            count = 0;
+            return;
+        }
+        const monthElement = document.querySelector(".month");
+        const month = monthElement.value;
+        function getMonthFromString (mon) {
+            return new Date(Date.parse(mon + " 1, 2021")).getMonth() + 1;
+        }
+        const nowMonth = (new Date().getMonth() + 1);
+        if (getMonthFromString(month) > nowMonth) {
+            // alert("月份不可大於當月");
+            Swal.fire("月份不可大於當月");
+            count = 0;
+            return;
+        }
+        for (let i = 0; i < checkboxThree.length; i++) {
+            if (checkboxThree[i].checked === true) {
+                selectChannel += 1;
+                if (checkboxThree[i].value !== "all") {
+                    channel.push(checkboxThree[i].value);
+                }
+            }
+        }
+        if (selectChannel === 0) {
+            // alert("請選擇來源");
+            Swal.fire("請選擇來源");
+            count = 0;
+            return;
+        }
+        for (let i = 0; i < checkboxFour.length; i++) {
+            if (checkboxFour[i].checked === true) {
+                selectEmotion += 1;
+                if (checkboxFour[i].value !== "all") {
+                    emotion.push(checkboxFour[i].value);
+                }
+            }
+        }
+        if (selectEmotion === 0) {
+            // alert("請選擇情緒");
+            Swal.fire("請選擇情緒");
+            count = 0;
+            return;
+        }
+        // alert("查詢中，請稍等");
 
-    let deadline = "";
+        let deadline = "";
 
-    if (timeValue === "3") {
-        const nowDate = new Date();
-        nowDate.setDate(date.getDate() - 3);
-        const nowDateString = nowDate.getDate().toString();
-        if (nowDateString.length === 1) {
-            const deadlineZero = ("0" + nowDateString);
-            deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
+        if (timeValue === "3") {
+            const nowDate = new Date();
+            nowDate.setDate(date.getDate() - 3);
+            const nowDateString = nowDate.getDate().toString();
+            if (nowDateString.length === 1) {
+                const deadlineZero = ("0" + nowDateString);
+                deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
+            } else {
+                deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+            }
+        } else if (timeValue === "7") {
+            const nowDate = new Date();
+            nowDate.setDate(date.getDate() - 7);
+            const nowDateString = nowDate.getDate().toString();
+            if (nowDateString.length === 1) {
+                const deadlineZero = ("0" + nowDateString);
+                deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
+            } else {
+                deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+            }
+        } else if (timeValue === "15") {
+            const nowDate = new Date();
+            nowDate.setDate(date.getDate() - 15);
+            const nowDateString = nowDate.getDate().toString();
+            console.log(nowDateString);
+            if (nowDateString.length === 1) {
+                const deadlineZero = ("0" + nowDateString);
+                deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
+            } else {
+                deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+            }
+        } else if (timeValue === "30") {
+            const nowDate = new Date();
+            nowDate.setDate(date.getDate() - 30);
+            // console.log(nowDate.setDate(date.getDate() - 30));
+            const nowDateString = nowDate.getDate().toString();
+            console.log(nowDateString);
+            if (nowDateString.length === 1) {
+                const deadlineZero = ("0" + nowDateString);
+                deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
+            } else {
+                deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+            }
+        } else if (timeValue === "Jan") {
+            dateInfo = "2021-1-31";
+            deadline = "2021-1-01";
+        } else if (timeValue === "Feb") {
+            dateInfo = "2021-2-28";
+            deadline = "2021-2-01";
+        } else if (timeValue === "Mar") {
+            dateInfo = "2021-3-31";
+            deadline = "2021-3-01";
+        } else if (timeValue === "Apr") {
+            dateInfo = "2021-4-30";
+            deadline = "2021-4-01";
+        } else if (timeValue === "May") {
+            dateInfo = "2021-5-31";
+            deadline = "2021-5-01";
+        } else if (timeValue === "June") {
+            dateInfo = "2021-6-30";
+            deadline = "2021-6-01";
+        } else if (timeValue === "July") {
+            dateInfo = "2021-7-31";
+            deadline = "2021-7-01";
+        } else if (timeValue === "Aug") {
+            dateInfo = "2021-8-31";
+            deadline = "2021-8-01";
+        } else if (timeValue === "Sep") {
+            dateInfo = "2021-9-30";
+            deadline = "2021-9-01";
+        } else if (timeValue === "Oct") {
+            dateInfo = "2021-10-31";
+            deadline = "2021-10-01";
+        } else if (timeValue === "Nov") {
+            dateInfo = "2021-11-30";
+            deadline = "2021-11-01";
+        } else if (timeValue === "Dec") {
+            dateInfo = "2021-12-31";
+            deadline = "2021-12-01";
         } else {
-            deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+            const monthAfter = endDate.value.split("-")[1];
+            const monthBefore = startDate.value.split("-")[1];
+            const monthEnd = monthAfter.replace(/^[0]/g, "");
+            console.log(monthEnd);
+            const monthStart = monthBefore.replace(/^[0]/g, "");
+            console.log(monthStart);
+            dateInfo = endDate.value.split("-")[0] + "-" + monthEnd + "-" + endDate.value.split("-")[2];
+            deadline = startDate.value.split("-")[0] + "-" + monthStart + "-" + startDate.value.split("-")[2];
         }
-    } else if (timeValue === "7") {
-        const nowDate = new Date();
-        nowDate.setDate(date.getDate() - 7);
-        const nowDateString = nowDate.getDate().toString();
-        if (nowDateString.length === 1) {
-            const deadlineZero = ("0" + nowDateString);
-            deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
-        } else {
-            deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
-        }
-    } else if (timeValue === "15") {
-        const nowDate = new Date();
-        nowDate.setDate(date.getDate() - 15);
-        const nowDateString = nowDate.getDate().toString();
-        console.log(nowDateString);
-        if (nowDateString.length === 1) {
-            const deadlineZero = ("0" + nowDateString);
-            deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
-        } else {
-            deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
-        }
-    } else if (timeValue === "30") {
-        const nowDate = new Date();
-        nowDate.setDate(date.getDate() - 30);
-        // console.log(nowDate.setDate(date.getDate() - 30));
-        const nowDateString = nowDate.getDate().toString();
-        console.log(nowDateString);
-        if (nowDateString.length === 1) {
-            const deadlineZero = ("0" + nowDateString);
-            deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
-        } else {
-            deadline = nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
-        }
-    } else if (timeValue === "Jan") {
-        dateInfo = "2021-1-31";
-        deadline = "2021-1-01";
-    } else if (timeValue === "Feb") {
-        dateInfo = "2021-2-28";
-        deadline = "2021-2-01";
-    } else if (timeValue === "Mar") {
-        dateInfo = "2021-3-31";
-        deadline = "2021-3-01";
-    } else if (timeValue === "Apr") {
-        dateInfo = "2021-4-30";
-        deadline = "2021-4-01";
-    } else if (timeValue === "May") {
-        dateInfo = "2021-5-31";
-        deadline = "2021-5-01";
-    } else if (timeValue === "June") {
-        dateInfo = "2021-6-30";
-        deadline = "2021-6-01";
-    } else if (timeValue === "July") {
-        dateInfo = "2021-7-31";
-        deadline = "2021-7-01";
-    } else if (timeValue === "Aug") {
-        dateInfo = "2021-8-31";
-        deadline = "2021-8-01";
-    } else if (timeValue === "Sep") {
-        dateInfo = "2021-9-30";
-        deadline = "2021-9-01";
-    } else if (timeValue === "Oct") {
-        dateInfo = "2021-10-31";
-        deadline = "2021-10-01";
-    } else if (timeValue === "Nov") {
-        dateInfo = "2021-11-30";
-        deadline = "2021-11-01";
-    } else if (timeValue === "Dec") {
-        dateInfo = "2021-12-31";
-        deadline = "2021-12-01";
-    } else {
-        const monthAfter = endDate.value.split("-")[1];
-        const monthBefore = startDate.value.split("-")[1];
-        const monthEnd = monthAfter.replace(/^[0]/g, "");
-        console.log(monthEnd);
-        const monthStart = monthBefore.replace(/^[0]/g, "");
-        console.log(monthStart);
-        dateInfo = endDate.value.split("-")[0] + "-" + monthEnd + "-" + endDate.value.split("-")[2];
-        deadline = startDate.value.split("-")[0] + "-" + monthStart + "-" + startDate.value.split("-")[2];
+        // const timeDetail = date.toString().split(" ")[4];
+        // const timeInfo = timeDetail.split(":").slice(0, 2).join(":");
+        // const time = dateInfo + " " + timeInfo;
+        const data = {
+            topicId: topicId,
+            timeValue: timeValue,
+            nowTime: dateInfo,
+            deadline: deadline,
+            channel: channel,
+            emotion: emotion
+        };
+        console.log(data);
+        const loading = document.getElementById("loading");
+        loading.style = "display:block";
+        ajax("/api/1.0/contentlist", data, render);
     }
-    // const timeDetail = date.toString().split(" ")[4];
-    // const timeInfo = timeDetail.split(":").slice(0, 2).join(":");
-    // const time = dateInfo + " " + timeInfo;
-    const data = {
-        topicId: topicId,
-        timeValue: timeValue,
-        nowTime: dateInfo,
-        deadline: deadline,
-        channel: channel,
-        emotion: emotion
-    };
-    console.log(data);
-    const loading = document.getElementById("loading");
-    loading.style = "display:block";
-    ajax("/api/1.0/contentlist", data, render);
 });
 
 // 取得負評數量

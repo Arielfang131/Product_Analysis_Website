@@ -4,6 +4,7 @@
    		<title>熱門關鍵字</title>
 		<link href="./styles/header.css" rel="stylesheet" />
 		<link href="./styles/wordcloud.css" rel="stylesheet" />
+		<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</head>
 	<body>
 		<header>
@@ -39,10 +40,16 @@
 						<label for="cbox2">最近三天</label><br>
 						<input type="checkbox" id="cbox2" name="cbox2_option2" value="7">
 						<label for="cbox2">最近7天</label><br> -->
-						<input type="checkbox" id="cbox2" name="cbox2_option3" value="15">
+						<!-- <input type="checkbox" id="cbox2" name="cbox2_option3" value="15">
 						<label for="cbox2">最近15天</label><br>
 						<input type="checkbox" id="cbox2" name="cbox2_option4" value="30">
-						<label for="cbox2">最近30天</label><br>
+						<label for="cbox2">最近30天</label><br> -->
+						<label for="cbox2">近期區間</label>
+						<select  class = "recent"  id = "cbox2"> 
+							<option  value = "0">請選擇時間</option>
+							<option  value = "15">最近15天</option>
+							<option  value = "30">最近30天</option>
+						</select><br>
 						<label for="cbox2">單選月份</label>
 						<select  class = "month"  id = "cbox2"> 
 							<option  value = "0">請選擇月份</option>

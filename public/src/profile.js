@@ -28,10 +28,7 @@ xhr.onreadystatechange = function () {
             getNeg.onreadystatechange = function () {
                 if (getNeg.readyState === 4 && getNeg.status === 200) {
                     const response = JSON.parse(getNeg.responseText);
-                    console.log(response);
                     const counts = response.length;
-                    console.log(counts);
-                    console.log(123);
                     localStorage.setItem("negativeCounts", counts);
                     // window.location.href = "contentlist.html";
                 }
@@ -50,11 +47,27 @@ const accessToken = localStorage.getItem("access_token");
 xhr.setRequestHeader("Authorization", "bearer " + accessToken);
 xhr.send();
 
+// 登出按鈕
 const button = document.getElementById("button");
 button.addEventListener("click", function () {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("negativeCounts");
-    window.location.href = "member.html";
+    Swal.fire({
+        title: "確定登出?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "登出",
+        cancelButtonText: "取消"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire(
+                "已登出!"
+            );
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("negativeCounts");
+            window.location.href = "member.html";
+        }
+    });
 });
 
 // 取得負評數量

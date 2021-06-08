@@ -164,6 +164,7 @@ let count = 0; // counter of button
 // 取得正負評數字
 function getPNValue (info) {
     count = 0;
+    console.log(count);
     const loading = document.getElementById("loading");
     loading.style = "display:none";
     const content = document.getElementById("content");
@@ -295,17 +296,36 @@ for (let i = 0; i < checkboxTwo.length; i++) {
                 checkboxTwo[j].checked = false;
             }
         }
-        if (checkboxTwo[0].checked === true || checkboxTwo[1].checked === true || checkboxTwo[2].checked === true || checkboxTwo[3].checked === true) {
-            checkboxTwo[4].selectedIndex = 0;
-            startDate.value = "";
-            endDate.value = "";
-        }
-        if (checkboxTwo[4].checked === true) {
-            startDate.value = "";
-            endDate.value = "";
-        }
+        // if (checkboxTwo[0].checked === true || checkboxTwo[1].checked === true || checkboxTwo[2].checked === true || checkboxTwo[3].checked === true) {
+        //     checkboxTwo[4].selectedIndex = 0;
+        //     startDate.value = "";
+        //     endDate.value = "";
+        // }
+        // if (checkboxTwo[4].checked === true) {
+        //     startDate.value = "";
+        //     endDate.value = "";
+        // }
     });
 }
+checkboxTwo[0].addEventListener("click", function (event) {
+    if (checkboxTwo[0].value === event.target.value) {
+        // console.log(checkboxTwo[0].value);
+        // checkboxTwo[0].checked = true;
+        checkboxTwo[1].selectedIndex = 0;
+        startDate.value = "";
+        endDate.value = "";
+    }
+});
+
+checkboxTwo[1].addEventListener("click", function (event) {
+    if (checkboxTwo[1].value === event.target.value) {
+        // console.log(checkboxTwo[1].value);
+        // checkboxTwo[1].checked = true;
+        checkboxTwo[0].selectedIndex = 0;
+        startDate.value = "";
+        endDate.value = "";
+    }
+});
 // 自選日期被點選後，前面的點選都回到預設值
 startDate.addEventListener("click", () => {
     for (let i = 0; i < checkboxTwo.length; i++) {
@@ -372,29 +392,40 @@ button.addEventListener("click", function (event) {
             }
         }
         if (selectTopic === 0) {
-            alert("請選擇群組");
+            // alert("請選擇群組");
+            Swal.fire("請選擇群組");
+            count = 0;
             return;
         }
         if (startDate.value !== "" && endDate.value === "") {
-            alert("請選擇結束日期");
+            // alert("請選擇結束日期");
+            Swal.fire("請選擇結束日期");
+            count = 0;
             return;
         }
         if (startDate.value === "" && endDate.value !== "") {
-            alert("請選擇起始日期");
+            // alert("請選擇起始日期");
+            Swal.fire("請選擇起始日期");
+            count = 0;
             return;
         }
         for (let i = 0; i < checkboxTwo.length; i++) {
-            if (checkboxTwo[i].checked === true) {
+            if (checkboxTwo[i].checked === true && checkboxTwo[i].value !== "0") {
                 timeValue = checkboxTwo[i].value;
+                console.log(timeValue);
                 selectTime += 1;
             }
         }
         if (selectTime === 0 && startDate.value === "" && endDate.value === "") {
-            alert("請選擇期間");
+            // alert("請選擇期間");
+            Swal.fire("請選擇期間");
+            count = 0;
             return;
         }
         if (Date.parse(startDate.value).valueOf() > Date.parse(endDate.value).valueOf()) {
-            alert("起始日期不可大於結束日期");
+            // alert("起始日期不可大於結束日期");
+            Swal.fire("起始日期不可大於結束日期");
+            count = 0;
             return;
         }
         // 定義當日
@@ -408,7 +439,9 @@ button.addEventListener("click", function (event) {
             dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
         }
         if (Date.parse(startDate.value).valueOf() > Date.parse(dateInfo).valueOf()) {
-            alert("起始日期不可大於今天");
+            // alert("起始日期不可大於今天");
+            Swal.fire("起始日期不可大於今天");
+            count = 0;
             return;
         }
         const monthElement = document.querySelector(".month");
@@ -418,7 +451,9 @@ button.addEventListener("click", function (event) {
         }
         const nowMonth = (new Date().getMonth() + 1);
         if (getMonthFromString(month) > nowMonth) {
-            alert("月份不可大於當月");
+            // alert("月份不可大於當月");
+            Swal.fire("月份不可大於當月");
+            count = 0;
             return;
         }
         for (let i = 0; i < checkboxThree.length; i++) {
@@ -430,7 +465,9 @@ button.addEventListener("click", function (event) {
             }
         }
         if (selectChannel === 0) {
-            alert("請選擇來源");
+            // alert("請選擇來源");
+            Swal.fire("請選擇來源");
+            count = 0;
             return;
         }
 

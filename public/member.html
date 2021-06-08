@@ -4,6 +4,7 @@
    		<title>會員登入/註冊</title>
         <link href="./styles/header.css" rel="stylesheet" />
 		<link href="./styles/member.css" rel="stylesheet" />
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	</head>
 	<body>
         <header>
@@ -45,7 +46,7 @@
                         <input type="text" name="register_user_name" id="register_user_name" class="input" placeholder = "用戶暱稱" ><br>
                         <input type="text" name="register_email" id="register_email" class="input" placeholder = "E-mail" ><br>
                         <input type="text" name="register_password" id="register_password" class="input" placeholder = "密碼"><br>
-                        <label>是否為管理者</label>
+                        <label>是否為管理者(建議勾選"是"，才可設定關鍵字)</label><br>
                         <select  name='admin' id="admin">
                             <option value="yes">是</option>
                             <option value="no">否</option>

@@ -58,16 +58,13 @@ function ajaxKeywords (src, data, callback) {
                             // console.log(insertN.readyState);
                             // console.log(insertN.status);
                             if (insertN.readyState === 4 && insertN.status === 200) {
-                                console.log(123);
-                                const test = this.responseText;
-                                console.log(test);
+                                // const test = this.responseText;
+                                // console.log(test);
                                 // 更新負評數量
                                 const getNeg = new XMLHttpRequest();
                                 getNeg.onreadystatechange = function () {
-                                    console.log("hi");
                                     if (getNeg.readyState === 4 && getNeg.status === 200) {
                                         const response = JSON.parse(getNeg.responseText);
-                                        console.log("+++++++++++++++++");
                                         console.log(response);
                                         const counts = response.length;
                                         localStorage.setItem("negativeCounts", counts);
@@ -312,7 +309,8 @@ function inputKeywords () {
     deleteItem.addEventListener("click", function (event) {
         const allDeleteItems = document.querySelectorAll(".delete");
         if (allDeleteItems.length === 1) {
-            alert("無法刪除最後一項");
+            // alert("無法刪除最後一項");
+            Swal.fire("無法刪除最後一項");
         } else {
             keywordsBox.remove();
             // for (let i = 0; i < allDeleteItems.length; i++) {

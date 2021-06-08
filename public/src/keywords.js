@@ -1,3 +1,4 @@
+let admin = "";
 function ajax (src, callback, callbackTwo) {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
@@ -9,6 +10,9 @@ function ajax (src, callback, callbackTwo) {
                 const newXhr = new XMLHttpRequest();
                 newXhr.onreadystatechange = function () {
                     if (newXhr.readyState === 4 && newXhr.status === 200) {
+                        if (res.admin === "yes") {
+                            admin = "yes";
+                        }
                         const data = JSON.parse(newXhr.responseText);
                         callback(data);
                         if (res.admin === "yes") {
@@ -157,10 +161,14 @@ function view (response) {
         } else {
             keywordList.innerHTML = firstString;
         }
-        const remove = document.createElement("div");
-        remove.className = "remove";
-        remove.innerHTML = `<img id=${response[i].topicId} class="icon_trash" src="./styles/images/trash.png" title="刪除">`;
-        keywordBox.append(topicBox, keywordList, remove);
+        if (admin === "yes") {
+            const remove = document.createElement("div");
+            remove.className = "remove";
+            remove.innerHTML = `<img id=${response[i].topicId} class="icon_trash" src="./styles/images/trash.png" title="刪除">`;
+            keywordBox.append(topicBox, keywordList, remove);
+        } else {
+            keywordBox.append(topicBox, keywordList);
+        }
         keywordsBox.append(keywordBox);
         // const totalBoxes = document.querySelectorAll(".keywords_box");
         const oldKeywordsBox = document.querySelectorAll(".view_keyword");

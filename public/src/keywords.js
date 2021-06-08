@@ -200,6 +200,37 @@ function view (response) {
                     const xhr = new XMLHttpRequest();
                     xhr.onreadystatechange = function () {
                         if (xhr.readyState === 4 && xhr.status === 200) {
+                            const insertN = new XMLHttpRequest();
+                            insertN.onreadystatechange = function () {
+                            // console.log("hhh");
+                            // console.log(insertN.readyState);
+                            // console.log(insertN.status);
+                                if (insertN.readyState === 4 && insertN.status === 200) {
+                                // const test = this.responseText;
+                                // console.log(test);
+                                // 更新負評數量
+                                    const getNeg = new XMLHttpRequest();
+                                    getNeg.onreadystatechange = function () {
+                                        if (getNeg.readyState === 4 && getNeg.status === 200) {
+                                            const response = JSON.parse(getNeg.responseText);
+                                            console.log(response);
+                                            const counts = response.length;
+                                            localStorage.setItem("negativeCounts", counts);
+                                            const deleteItem = document.querySelector("#alert");
+                                            deleteItem.remove();
+                                            getNegativeCounts();
+                                        };
+                                    };
+                                    getNeg.open("GET", "api/1.0/negativeContent");
+                                    getNeg.setRequestHeader("Content-Type", "application/json");
+                                    const accessToken = localStorage.getItem("access_token");
+                                    getNeg.setRequestHeader("Authorization", "bearer " + accessToken);
+                                    getNeg.send();
+                                }
+                            };
+                            insertN.open("GET", "api/1.0/sendNegative");
+                            insertN.setRequestHeader("Content-Type", "application/json");
+                            insertN.send();
                         }
                     };
                     xhr.open("POST", "api/1.0/deleteKeywords");

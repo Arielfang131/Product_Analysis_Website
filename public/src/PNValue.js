@@ -329,15 +329,17 @@ checkboxTwo[1].addEventListener("click", function (event) {
 // 自選日期被點選後，前面的點選都回到預設值
 startDate.addEventListener("click", () => {
     for (let i = 0; i < checkboxTwo.length; i++) {
-        checkboxTwo[i].checked = false;
-        checkboxTwo[4].selectedIndex = 0;
+        // checkboxTwo[i].checked = false;
+        checkboxTwo[0].selectedIndex = 0;
+        checkboxTwo[1].selectedIndex = 0;
     }
 });
 
 endDate.addEventListener("click", () => {
     for (let i = 0; i < checkboxTwo.length; i++) {
-        checkboxTwo[i].checked = false;
-        checkboxTwo[4].selectedIndex = 0;
+        // checkboxTwo[i].checked = false;
+        checkboxTwo[0].selectedIndex = 0;
+        checkboxTwo[1].selectedIndex = 0;
     }
 });
 

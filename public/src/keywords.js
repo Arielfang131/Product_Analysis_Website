@@ -554,3 +554,24 @@ function myFunction () {
         box3.style = "display:none";
     }
 }
+
+// // // 滑動icon memeber會變化
+// const iconMember = document.getElementById("icon_profile");
+// iconMember.addEventListener("mouseover", function () {
+//     iconMember.style = "cursor: pointer; display:none";
+//     const menuBar = document.querySelectorAll(".menu_bar");
+//     const logout = document.createElement("a");
+//     logout.id = "logout";
+//     logout.innerHTML = "會員登出";
+//     logout.href = "profile.html";
+//     logout.style = "cursor: pointer; font-weight:bold; font-size:18px";
+//     menuBar[1].append(logout);
+//     console.log(logout);
+//     // positive.style = "color:#d81616";
+// });
+// iconMember.addEventListener("mouseout", function () {
+//     iconMember.style = "cursor: pointer; display:block";
+//     const logout = document.getElementById("logout");
+//     logout.remove();
+//     // logout.style = "display:none";
+// });

@@ -1,18 +1,4 @@
 const nodejieba = require("nodejieba");
-// nodejieba.load({
-//     stopWordDict: nodejieba.DEFAULT_STOP_WORD_DICT
-// });
-// const fs = require("fs");
-
-// const path = "server\\controllers\\stopwords.txt";
-
-// try {
-//     if (fs.existsSync(path)) {
-//         console.log("file exists");
-//     }
-// } catch (err) {
-//     console.error(err);
-// }
 const contentListModel = require("../models/contentlist_model.js");
 
 function linkify (inputText) {
@@ -45,6 +31,7 @@ async function getWordcloud (req, res) {
 
         const sqlResult = await contentListModel.getKeywords(topicId);
         const symbols = sqlResult[0].symbols.split(",");
+        console.log(symbols);
         const symbols2 = symbols.map((element) => {
             return element;
         });
@@ -111,7 +98,6 @@ async function getWordcloud (req, res) {
         }
 
         const popularData = nodejieba.extract(sentence, 15);
-        console.log(popularData);
         const popularKeywords = [];
         for (const i in popularData) {
             const popularKeyword = [];

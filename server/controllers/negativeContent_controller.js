@@ -22,7 +22,7 @@ async function getNegativeContent (req, res) {
     } else {
         deadline = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
     }
-    console.log(deadline);
+    // console.log(deadline);
     const result = await negativeModel.selectNegative(companyNo, deadline);
     // const topicId = result[0].topic_id;
     // let deadline;

@@ -70,6 +70,10 @@ header {
     height: 40px;
     /* margin-top: 12px; */
 }
+#icon_profile{
+    height: 40px;
+    /* margin-top: 12px; */
+}
 #little_menu{
     display: flex;
     justify-content: center;

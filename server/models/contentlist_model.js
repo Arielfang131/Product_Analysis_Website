@@ -7,9 +7,16 @@ const selectTopic = async function (companyNo) {
 };
 
 const getKeywords = async function (topicId) {
-    const sql = "SELECT keywords, symbols FROM keywords_table WHERE keywords_id = ?;";
-    const keywords = await query(sql, topicId);
-    return keywords;
+    try {
+        const sql = "SELECT keywords, symbols FROM keywords_table WHERE keywords_id = ?;";
+        const keywords = await query(sql, topicId);
+        return keywords;
+    } catch (err) {
+        console.log("+++++++++++++++++++");
+        console.log("test24");
+        console.log(err);
+        return {};
+    }
 };
 
 const getSQLcontent = async function (contentQuery, titleQuery, channel, nowTime, deadline, emotionQuery) {

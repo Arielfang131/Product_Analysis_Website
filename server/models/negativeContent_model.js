@@ -203,14 +203,6 @@ const selectNegative = async function (companyNo, deadline) {
     }
     const sqlContent = `SELECT * FROM text_table_modified WHERE id IN ${idString} AND (time > '${deadline} 00:00') order by time DESC;`;
     const sqlResult = await query(sqlContent);
-    // const ans = [];
-    // for (const i in result) {
-    //     const sqlContent = `SELECT * FROM text_table WHERE id = ${result[i].text_id};`;
-    //     const sqlResult = await query(sqlContent);
-    //     ans.push(sqlResult);
-    // }
-    // // console.log(ans);
-    console.log(sqlResult);
     return sqlResult;
 };
 

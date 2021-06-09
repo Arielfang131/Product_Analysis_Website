@@ -20,9 +20,6 @@ const selectAllTopics = async function (companyNo) {
     INNER JOIN keywords_table ON topic_table.topic_id = keywords_table.keywords_id
     WHERE company_table.company_number = ?;`;
     const result = await query(sql, companyNo);
-    // console.log(core.format(sql, companyNo));
-    // console.log("model");
-    // console.log(result);
     return result;
 };
 

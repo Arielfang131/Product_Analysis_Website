@@ -19,7 +19,6 @@ async function viewKeywords (req, res) {
             };
             result.push(obj);
         }
-        console.log(result);
         res.send(result);
     } catch (err) {
         console.log("test5");
@@ -57,6 +56,11 @@ async function getKeywords (req, res) {
                 data.push(obj);
                 topicData.push(topicObj);
             }
+        }
+        const existTopic = await keywordstModel.selectAllTopics(companyNo);
+        if ((topicData.length + existTopic.length) > 6) {
+            console.log("超過六個，被擋下");
+            return;
         }
         await keywordstModel.createKeywords(data);
         await keywordstModel.createTopic(topicData);

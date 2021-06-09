@@ -23,6 +23,7 @@ function linkify (inputText) {
 
 async function getWordcloud (req, res) {
     try {
+        console.log(req.body);
         const topicId = req.body.topicId;
         const channels = req.body.channel;
         const nowTime = req.body.nowTime;

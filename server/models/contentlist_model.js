@@ -12,7 +12,6 @@ const getKeywords = async function (topicId) {
         const keywords = await query(sql, topicId);
         return keywords;
     } catch (err) {
-        console.log("+++++++++++++++++++");
         console.log("test24");
         console.log(err);
         return {};

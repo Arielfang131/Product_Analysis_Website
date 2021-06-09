@@ -294,7 +294,7 @@ async function getNegativeInfo () {
     console.log(negativeInfo);
 }
 
-cron.schedule("37 23 * * *", async () => {
+cron.schedule("00 10 * * *", async () => {
     console.log("testEveryOneHour");
     console.log("========================================");
     await getPtt();

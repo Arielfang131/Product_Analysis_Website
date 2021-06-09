@@ -23,7 +23,7 @@ app.use("/api/" + "1.0",
 );
 
 app.get(["/"], (req, res) => {
-    res.sendFile(path.join(__dirname, "/public/member.html"));
+    res.sendFile(path.join(__dirname, "/public/contentlist.html"));
 });
 
 app.listen(3000, () => {

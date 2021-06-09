@@ -228,6 +228,12 @@ button.addEventListener("click", function (event) {
             count = 0;
             return;
         }
+        if (Date.parse(endDate.value).valueOf() > Date.parse(dateInfo).valueOf()) {
+            // alert("起始日期不可大於今天");
+            Swal.fire("結束日期不可大於今天");
+            count = 0;
+            return;
+        }
         // 建議日期不要小於15日
         const beginDay = new Date(startDate.value);
         const finishDay = new Date(endDate.value);

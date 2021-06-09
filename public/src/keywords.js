@@ -468,7 +468,6 @@ function addButton () {
         }
         const oldKeywords = document.querySelectorAll(".view_keyword");
         const newKeywords = document.querySelectorAll(".keywords_box");
-        // console.log((oldKeywords.length + newKeywords.length));
         if ((oldKeywords.length + newKeywords.length) > 6) {
             Swal.fire("最多只能有六個群組，請刪減");
             // alert("最多只能有六個群組，請刪減");

@@ -21,6 +21,12 @@ function ajax (src, data) {
                 // alert("密碼錯誤");
                 Swal.fire("密碼錯誤");
                 return;
+            } else if (obj.msg === "email格式不符") {
+                Swal.fire("email格式不符");
+                return;
+            } else if (obj.msg === "公司統編只能為數字") {
+                Swal.fire("公司統編只能為數字");
+                return;
             }
             window.localStorage.setItem("access_token", obj.token);
             const newXhr = new XMLHttpRequest();
@@ -114,11 +120,26 @@ registerButton.addEventListener("click", function () {
     const registerEmail = document.getElementById("register_email");
     const registerPassword = document.getElementById("register_password");
     const admin = document.getElementById("admin");
+
+    // Regular expression Testing
+    const emailRule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
+    // validate email is ok or not
+    if (registerEmail.value.search(emailRule) === -1) {
+        Swal.fire("email格式有誤");
+        return;
+    }
+
+    if (/^\d+$/.test(registerCompanyNo.value) === false) {
+        Swal.fire("公司統編只能為數字");
+        return;
+    };
+
     if (registerCompanyName.value === "" || registerCompanyNo.value === "" || userName.value === "" || registerEmail.value === "" || registerPassword.vale === "" || admin.value === "") {
         // alert("每一項皆須填寫");
         Swal.fire("每一項皆須填寫");
         return;
     }
+
     const data = {
         companyName: registerCompanyName.value,
         companyNo: registerCompanyNo.value,

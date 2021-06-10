@@ -73,7 +73,8 @@ function getTopic (data) {
     const parentElement = littleBox[0];
     if (data.length === 0) {
         const noResult = document.createElement("div");
-        noResult.innerHTML = "無主題，請先設定主題";
+        noResult.innerHTML = "無主題，請至「關鍵字設定」設定";
+        noResult.style = "font-weight:bold;";
         parentElement.append(noResult);
     }
     for (let i = 0; i < data.length; i++) {

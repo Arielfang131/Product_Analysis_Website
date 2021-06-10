@@ -41,15 +41,31 @@ async function register (req, res) {
     const email = req.body.email;
     const password = req.body.password;
     const admin = req.body.admin;
-    const checkEmail = await memberModel.selectEmail(email);
     let obj = {};
+    // Regular expression Testing
+    const emailRule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
+    // validate email is ok or not
+    if (email.search(emailRule) === -1) {
+        obj = {
+            msg: "email格式不符"
+        };
+        res.send(obj);
+        return;
+    }
+    if (/^\d+$/.test(companyNo) === false) {
+        obj = {
+            msg: "公司統編只能為數字"
+        };
+        res.send(obj);
+        return;
+    };
+    const checkEmail = await memberModel.selectEmail(email);
     if (checkEmail.length === 0) {
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(password, salt);
         const sqlResult = await memberModel.registerMember(companyName, companyNo, userName, email, hashedPassword, admin);
         const token = jwt.sign({ companyName: companyName, companyNo: companyNo, userName: userName, email: email, password: password, admin: admin }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 });
         req.header.authorization = "Bearer " + token;
-        console.log(sqlResult);
         obj = {
             msg: "註冊成功",
             token: token

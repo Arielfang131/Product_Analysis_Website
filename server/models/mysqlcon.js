@@ -1,10 +1,20 @@
 require("dotenv").config();
 const mysql = require("mysql");
-// 使用redis
-// const redis = require("redis");
+const mysql2 = require("mysql2/promise");
+
 
 // create connection
 const db = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PWD,
+    database: "side_project_test",
+    waitForConnections: true,
+    connectionLimit: 20
+});
+
+// create mysql2 connection
+const pool = mysql2.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PWD,
@@ -25,6 +35,11 @@ db.getConnection(function (err, connection) {
     }
 });
 
+pool.getConnection((err) => {
+    if (err) throw err;
+    console.log("mysql(pool) connecting...");
+});
+
 // SQL function
 function dbsql (sql, value) {
     const result = new Promise((resolve, reject) => {
@@ -37,11 +52,10 @@ function dbsql (sql, value) {
     return result;
 }
 
-// // 設定redis port
-// const REDIS_PORT = process.env.PORT || 6379;
-// const client = redis.createClient(REDIS_PORT);
+
 
 module.exports = {
     core: mysql,
-    query: dbsql
+    query: dbsql,
+    pool
 };

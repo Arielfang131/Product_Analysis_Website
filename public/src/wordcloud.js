@@ -410,14 +410,11 @@ function view (response) {
         gridSize: 6, // 密集程度 數字越小越密集
         weightFactor: 1, // 字體大小=原始大小*weightFactor
         maxFontSize: 15, // 最大字號
-        minFontSize: 2, // 最小字號
+        minFontSize: 4, // 最小字號
         fontWeight: "normal", // 字體粗細
         fontFamily: "Times, serif", // 字體
         color: "random-light" // 字體顏色 'random-dark' 或者 'random-light'
-    // backgroundColor: "#333", // 背景顏色
-    // rotateRatio: 1 // 字體傾斜(旋轉)概率，1代表總是傾斜(旋轉)
     });
-    // WordCloud(test, { list: list });
     WordCloud(content, options);
 }
 

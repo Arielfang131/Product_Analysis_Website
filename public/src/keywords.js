@@ -87,7 +87,15 @@ function ajaxKeywords (src, data, callback) {
                         insertN.open("GET", "api/1.0/sendNegative");
                         insertN.setRequestHeader("Content-Type", "application/json");
                         insertN.send();
-                    };
+                    } else if (newXhr.readyState === 4 && newXhr.status === 400) {
+                        Swal.fire("error");
+                    } else if (newXhr.readyState === 4 && newXhr.status === 404) {
+                        Swal.fire("請勿包含特殊字元");
+                    }else if (newXhr.readyState === 4 && newXhr.status === 403) {
+                        Swal.fire("驗證過期，請重新登入");
+                    }else if (newXhr.readyState === 4 && newXhr.status === 401) {
+                        Swal.fire("Unauthorized");
+                    }
                 };
                 newXhr.open("POST", "api/1.0/keywords");
                 newXhr.setRequestHeader("Content-Type", "application/json");
@@ -107,6 +115,7 @@ function ajaxKeywords (src, data, callback) {
 // DOM
 let oldKeywordsCounts = 0;
 function view (response) {
+    console.log(response);
     const keywordsBox = document.getElementById("view_keywords");
     if (response.length === 0) {
         const noResult = document.createElement("div");
@@ -281,6 +290,9 @@ function inputKeywords () {
     const boxesLength = inputBoxes.length;
     const keywordsBox = document.createElement("div");
     keywordsBox.className = "keywords_box";
+    const count = document.querySelectorAll(".keywords_box");
+    const id = count.length + 1;
+    keywordsBox.id = id;
     const addItem = document.createElement("div");
     addItem.className = "add";
     addItem.innerHTML = "<img class=\"icon_add\" src=\"./styles/images/add.png\" title=\"新增\">";
@@ -351,13 +363,28 @@ function inputKeywords () {
             // alert("無法刪除最後一項");
             Swal.fire("無法刪除最後一項");
         } else {
+            const parentElement = deleteItem.parentElement;
+            const allElements = document.querySelectorAll(".keywords_box");
+            const modifiedLength = allElements.length - parseInt(parentElement.id);
+            // 改className名稱
+            for (let i = 0; i < modifiedLength; i++) {
+                const startDiv = document.getElementById(`${parseInt(parentElement.id) + i + 1}`);
+                const modifiedKeyword = startDiv.querySelectorAll(`:scope >.keyword${parseInt(parentElement.id) + i + 1}`);
+                const modifiedSymbol = startDiv.querySelectorAll(`:scope >.symbol${parseInt(parentElement.id) + i + 1}`);
+                for (let j = 0; j < modifiedKeyword.length; j++) {
+                    modifiedKeyword[j].className = `keyword${parseInt(parentElement.id) + i}`;
+                    if (j < modifiedKeyword.length - 1) {
+                        modifiedSymbol[j].className = `symbol${parseInt(parentElement.id) + i}`;
+                    }
+                }
+            }
+            // 改id名稱
             keywordsBox.remove();
-            // for (let i = 0; i < allDeleteItems.length; i++) {
-            //     if (allDeleteItems[i] === event.target) {
-            //         console.log(123);
+            const update = document.querySelectorAll(".keywords_box");
+            for (let i = 0; i < update.length; i++) {
+                update[i].id = i + 1;
+            }
             calculateNumber();
-            // }
-            // }
         }
     });
     ajaxBox.append(keywordsBox);
@@ -380,22 +407,27 @@ function addButton () {
         const data = [];
         for (let i = 0; i < topicEl.length; i++) {
             const topic = topicEl[i].value;
-            // console.log(topic);
             let keywordsCount = 0;
-            if (topic !== "") {
+            if (topic !== "" && topic.length <= 50) {
                 topicCount += 1;
+            }
+            if (topic.length > 50) {
+                Swal.fire("群組字數不可大於50字");
+                return;
             }
             const keywordsEl = document.querySelectorAll(`.keyword${i + 1}`);
             const keywords = [];
             // 每一個主題的關鍵字
             for (let j = 0; j < keywordsEl.length; j++) {
                 const keyword = keywordsEl[j].value;
-                // if (keyword !== "") {
+                if (keyword.length >= 50) {
+                    Swal.fire("群組字數不可大於50字");
+                    return;
+                }
                 keywords.push(keyword);
-                // }
             }
             // console.log(keywords);
-            // 每一個主題的符號
+            // 每一個主題的符號=u
             const symbolsEl = document.querySelectorAll(`.symbol${i + 1}`);
             const symbols = [];
             for (let k = 0; k < symbolsEl.length; k++) {
@@ -459,6 +491,7 @@ function addButton () {
             const finalArr = [];
             finalArr.push(newFirst, newSecond);
             const obj = { topicNumber: (i + 1), topic: topic, keywords: finalArr, symbols: newSymbols };
+            console.log(obj);
             data.push(obj);
         }
         if (topicCount === 0 & totalKeywordsCount === 0) {

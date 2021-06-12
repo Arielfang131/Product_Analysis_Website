@@ -1,22 +1,26 @@
 const { query } = require("./mysqlcon");
+const {pool} = require("./mysqlcon");
 
 const sqlModifiedEmotion = async function () {
+    const conn = await pool.getConnection();
     try {
+        await conn.query("START TRANSACTION");
+        const updateSql = "UPDATE text_table_modified SET likes_number = likes_number + 0 WHERE likes_number = 0";
+        await conn.query(updateSql);
         const deleteSql = "DELETE FROM text_table_modified";
-        const deleteResult = await query(deleteSql);
-        console.log(deleteResult);
+        await conn.query(deleteSql);
         const sql = "SELECT * FROM text_table";
-        const result = await query(sql);
+        const result = await conn.query(sql);
         const specialWords = ["好燒", "燒到", "生火", "被燒"];
         const newResult = [];
-        for (const i in result) {
+        for (const i in result[0]) {
             for (const j in specialWords) {
                 const specialWord = new RegExp(specialWords[j]);
-                if (specialWord.test(result[i].content) === true) {
-                    result[i].emotion = 0.3;
+                if (specialWord.test(result[0][i].content) === true) {
+                    result[0][i].emotion = 0.3;
                 }
             }
-            newResult.push(result[i]);
+            newResult.push(result[0][i]);
         }
         const dataArr = [];
         for (const i in newResult) {
@@ -35,15 +39,18 @@ const sqlModifiedEmotion = async function () {
             data.push(title, content, bodyTextORcomment, channel, link, time, push, likes, author, emotion, modifiedTime);
             dataArr.push(data);
         }
-        // console.log(dataArr);
         const sqlInsert = "INSERT INTO text_table_modified (title, content, body_textORcomment, channel, link, time, push_number, likes_number, author, emotion,modified_time) VALUES ?";
-        const modifiedResult = await query(sqlInsert, [dataArr]);
+        const modifiedResult = await conn.query(sqlInsert, [dataArr]);
         console.log("modified emotion");
+        await conn.query("COMMIT");
         return modifiedResult;
     } catch (err) {
         console.log("test23");
         console.log(err);
-        return {};
+        await conn.query("ROLLBACK");
+        return false;
+    }finally {
+        await conn.release();
     }
 };
 

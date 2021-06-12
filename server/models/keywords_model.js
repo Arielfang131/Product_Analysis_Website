@@ -33,7 +33,6 @@ const createTopic = async function (topicData) {
         result.push(topicNumber, topicName, companyId);
         resultArr.push(result);
     }
-    console.log(resultArr);
     const sql = "INSERT INTO topic_table (topic_number, topic_name, company_id) VALUES ?;";
     const result = await query(sql, [resultArr]);
     console.log(result);

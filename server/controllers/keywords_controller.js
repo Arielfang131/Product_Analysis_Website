@@ -39,15 +39,34 @@ async function getKeywords (req, res) {
         const topicData = [];
         let obj = {};
         let topicObj = {};
+        // verifyUnescape();
         for (let i = 0; i < req.body.length; i++) {
             const topicName = req.body[i].topic;
-            // 若topicName是空的，就不放
-            if (topicName !== "") {
+            const regex = new RegExp("[!@#$%^&*(),.?\":{}|<>]");
+            if (regex.test(topicName)) {
+                res.status(400).send("error");
+                return;
+            }
+            // 若topicName是空且大於50字，就不放
+            if (topicName !== "" && topicName.length <= 50) {
                 obj = {
                     topicNumber: req.body[i].topicNumber,
                     keywords: req.body[i].keywords,
                     symbols: req.body[i].symbols
                 };
+                const keywordsArr = req.body[i].keywords;
+                for (const j in keywordsArr) {
+                    for (const k in keywordsArr[j]) {
+                        if (keywordsArr[j][k].length > 50) {
+                            res.status(400).send("error");
+                            return;
+                        }
+                        if (regex.test(keywordsArr[j][k])) {
+                            res.status(404).send("請勿包含特殊字元");
+                            return;
+                        }
+                    }
+                }
                 topicObj = {
                     topicNumber: req.body[i].topicNumber,
                     topicName: topicName,
@@ -55,11 +74,14 @@ async function getKeywords (req, res) {
                 };
                 data.push(obj);
                 topicData.push(topicObj);
+            } else {
+                res.status(400).send("error");
+                return;
             }
         }
         const existTopic = await keywordstModel.selectAllTopics(companyNo);
         if ((topicData.length + existTopic.length) > 6) {
-            console.log("超過六個，被擋下");
+            res.status(400).send("error");
             return;
         }
         await keywordstModel.createKeywords(data);
@@ -75,10 +97,7 @@ async function getKeywords (req, res) {
             };
             result.push(obj);
         }
-        // res.send(result);
         res.send(result);
-        // console.log(sqlResult);
-        // console.log(sqlTopic);
     } catch (err) {
         console.log("test6");
         console.log("error: " + err);

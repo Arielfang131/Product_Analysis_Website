@@ -1,4 +1,5 @@
 const { query } = require("./mysqlcon");
+const {pool} = require("./mysqlcon");
 
 const checkCrawlerInfo = async (link) => {
     try {
@@ -11,17 +12,6 @@ const checkCrawlerInfo = async (link) => {
         console.log(err);
     }
 };
-
-// const deleteCrawlerInfo = async (link) => {
-//     try {
-//         const sql = "DELETE FROM text_table WHERE link = ?;";
-//         const result = await query(sql, link);
-//         return result;
-//     } catch (err) {
-//         console.log("test19");
-//         console.log(err);
-//     }
-// };
 
 const createCrawlerInfo = async (crawlerInfo) => {
     try {
@@ -65,11 +55,13 @@ const createCrawlerInfo = async (crawlerInfo) => {
         console.log(err);
     }
 };
-// sprint 4改
+
 const updateCrawlerInfo = async (crawlerInfo, link) => {
+    const conn = await pool.getConnection();
     try {
+        await conn.query("START TRANSACTION");
         const sql = "DELETE FROM text_table WHERE link = ?;";
-        await query(sql, link);
+        await conn.query(sql, link);
         const dataArr = [];
         for (const i in crawlerInfo) {
             const data = [];
@@ -102,12 +94,18 @@ const updateCrawlerInfo = async (crawlerInfo, link) => {
         }
         // console.log(dataArr);
         const update = "INSERT INTO text_table (title, content, body_textORcomment, channel, link, time, push_number, likes_number, author, emotion) VALUES ?";
-        const result = await query(update, [dataArr]);
+        const result = await conn.query(update, [dataArr]);
         console.log(result);
+        console.log("update crawler")
+        await conn.query("COMMIT");
         return result;
     } catch (err) {
         console.log("test20");
         console.log(err);
+        await conn.query("ROLLBACK");
+        return false;
+    }finally {
+        await conn.release();
     }
 };
 

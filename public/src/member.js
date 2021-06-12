@@ -61,6 +61,8 @@ function ajax (src, data) {
             const accessToken = localStorage.getItem("access_token");
             newXhr.setRequestHeader("Authorization", "bearer " + accessToken);
             newXhr.send();
+        } else if (xhr.readyState === 4 && xhr.status === 404) {
+            Swal.fire("請勿包含特殊字元");
         }
     };
     xhr.open("POST", src);
@@ -137,6 +139,26 @@ registerButton.addEventListener("click", function () {
     if (registerCompanyName.value === "" || registerCompanyNo.value === "" || userName.value === "" || registerEmail.value === "" || registerPassword.vale === "" || admin.value === "") {
         // alert("每一項皆須填寫");
         Swal.fire("每一項皆須填寫");
+        return;
+    }
+    if (registerCompanyName.value.length > 50) {
+        Swal.fire("公司名稱不可超過50字");
+        return;
+    }
+    if (registerCompanyNo.value.length > 50) {
+        Swal.fire("公司統編不可超過50字");
+        return;
+    }
+    if (userName.value.length > 50) {
+        Swal.fire("用戶暱稱不可超過50字");
+        return;
+    }
+    if (registerEmail.value.length > 100) {
+        Swal.fire("E-mail不可超過100字");
+        return;
+    }
+    if (registerPassword.value.length > 50) {
+        Swal.fire("密碼不可超過50字");
         return;
     }
 

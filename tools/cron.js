@@ -1,6 +1,7 @@
 const cron = require("node-cron");
 require("dotenv").config();
 const mysql = require("mysql");
+const mysql2 = require("mysql2/promise");
 
 const crawlerModel = require("../server/models/crawler_model");
 const negativeModel = require("../server/models/negativeContent_model");
@@ -16,6 +17,21 @@ const db = mysql.createPool({
     database: "side_project_test",
     waitForConnections: true,
     connectionLimit: 20
+});
+
+// create mysql2 connection
+const pool = mysql2.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PWD,
+    database: "side_project_test",
+    waitForConnections: true,
+    connectionLimit: 20
+});
+
+pool.getConnection((err) => {
+    if (err) throw err;
+    console.log("mysql(pool) connecting...");
 });
 
 db.getConnection(function (err, connection) {

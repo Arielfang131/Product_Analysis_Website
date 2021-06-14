@@ -12,6 +12,19 @@
 .littleBox{
     text-align:left;
 }
+.topic_flex{
+    text-align:left;
+}
+.littleBox_topic{
+    display: flex;
+    flex-direction: column;
+}
+.label_name{
+    margin-left: 5px;
+}
+#topic_title{
+    text-align:left;
+}
 #button{
     width:90px;
     margin-top: 20px;
@@ -30,11 +43,6 @@
     font-size: 15px;
 }
 #contents{
-    /* background-color: white;
-    border-color:#D9D9D9;
-    border-width:2px;
-    border-style:solid;
-    border-radius: 5px; */
     display: flex;
     flex-direction: column;
     margin-left: auto;
@@ -53,27 +61,6 @@
     margin-left: auto;
     margin-right: auto;
 }
-/* .emotion{
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 20px;
-    height:40px;
-    width:180px;
-    border-radius: 50px;
-    border-color:#bcb8b1;
-    border-style: solid;
-    border-width:2px;
-    background: hsla(233, 100%, 90%, 1);
-    background: linear-gradient(90deg, hsla(233, 100%, 90%, 1) 0%, hsla(0, 0%, 89%, 1) 100%);
-    background: -moz-linear-gradient(90deg, hsla(233, 100%, 90%, 1) 0%, hsla(0, 0%, 89%, 1) 100%);
-    background: -webkit-linear-gradient(90deg, hsla(233, 100%, 90%, 1) 0%, hsla(0, 0%, 89%, 1) 100%);
-    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#CAD0FF", endColorstr="#E3E3E3", GradientType=1 );
-    color:#696969;
-    font-weight:bold;
-    text-align:center;
-    line-height:40px;
-    margin-top: 10px;
-} */
 .emotion{
     margin-left: auto;
     margin-right: auto;
@@ -88,37 +75,14 @@
     font-weight:bold;
     text-align: center;
     padding: 10px;
-    width: 150px;
-    height:20px;
+    width: 170px;
+    height:40px;
     transition: all 0.5s;
     cursor: pointer;
     margin: 5px;
     line-height: 20px;
     font-family:monospace;
   }
-  /* .emotion {
-    cursor: pointer;
-    display: inline-block;
-    position: relative;
-    transition: 0.5s;
-  }
-  .emotion:after {
-    content: '\00bb';
-    position: absolute;
-    opacity: 0;
-    top: 0;
-    right: -20px;
-    transition: 0.5s;
-  }
-  
-  .emotion:hover {
-    padding-right: 25px;
-  }
-  
-  .emotion:hover :after {
-    opacity: 1;
-    right: 0;
-  } */
 .value{
     margin-top: 25px;
     font-size: 22px; 
@@ -165,7 +129,8 @@
 }
 .tag{
     width:50px;
-    max-height: 22px;
+    height: 28px;
+    padding:auto;
     text-align: center;
     margin-right: 10px;
     margin-left: 40px;
@@ -229,7 +194,8 @@
 }
 .makeup{
     width:160px;
-    max-height: 22px;
+    max-height: 28px;
+    line-height: 14px;
     text-align: center;
     margin-right: 10px;
     margin-left: 40px;
@@ -245,7 +211,8 @@
 }
 .beautysalon{
     width:160px;
-    max-height: 22px;
+    max-height: 28px;
+    line-height: 14px;
     text-align: center;
     margin-right: 10px;
     margin-left: 40px;
@@ -258,4 +225,28 @@
     font-weight:bold;
     font-family:monospace;
     font-size:16px;
+}
+.label{
+    margin-top: 15px;
+    margin-right:10px;
+}
+.flex{
+    display: flex;
+    align-items: center;
+}
+#cbox2_start{
+    margin-left: 5px;
+    border-radius: 5px;
+    border-color:#E0E0E0;
+    border-style: solid;
+    border-width: 1px;
+    height:38px;
+}
+#cbox2_end{
+    margin-left: 5px;
+    border-radius: 5px;
+    border-color:#E0E0E0;
+    border-style: solid;
+    border-width: 1px;
+    height:38px;
 }

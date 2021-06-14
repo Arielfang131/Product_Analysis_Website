@@ -76,9 +76,9 @@
 }
 input{
     line-height:2em;
-    margin-right: 5px;
-    margin-left: 5px;
-    width: 140px;
+    margin-right: 10px;
+    margin-left: 10px;
+    width: 160px;
     border: none;
     border-style: solid;
     border-width: 1px;
@@ -91,12 +91,23 @@ select{
     border-radius: 5px;
 }
 .brackets{
+    margin-right: 5px;
+    margin-left: 5px;
     line-height:32.67px;
+    font-weight: bold;
 }
 .number{
     line-height:32.67px;
 }
 #symbol{
+    /* margin-right: 5px; */
+    margin-left: 5px;
+}
+#symbol2{
+    margin-right: 5px;
+    margin-left: 5px;
+}
+#symbol3{
     margin-right: 5px;
     margin-left: 5px;
 }
@@ -205,7 +216,7 @@ select{
     border-radius: 5px;
     margin-right: 100px;
 }
-/* #modified_box{
-    display: flex;
-    flex-direction: row;
-} */
+.topic{
+    margin-left: 5px;
+    margin-right: 5px;
+}

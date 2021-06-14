@@ -91,9 +91,9 @@ function ajaxKeywords (src, data, callback) {
                         Swal.fire("error");
                     } else if (newXhr.readyState === 4 && newXhr.status === 404) {
                         Swal.fire("請勿包含特殊字元");
-                    }else if (newXhr.readyState === 4 && newXhr.status === 403) {
+                    } else if (newXhr.readyState === 4 && newXhr.status === 403) {
                         Swal.fire("驗證過期，請重新登入");
-                    }else if (newXhr.readyState === 4 && newXhr.status === 401) {
+                    } else if (newXhr.readyState === 4 && newXhr.status === 401) {
                         Swal.fire("Unauthorized");
                     }
                 };
@@ -325,6 +325,7 @@ function inputKeywords () {
     keyword4.placeholder = "選填，建議可填產品";
     const select4 = document.createElement("select");
     select4.className = `symbol${boxesLength + 1}`;
+    select4.id = "symbol2";
     const option7 = document.createElement("option");
     option7.value = "or";
     option7.text = "or";
@@ -337,6 +338,7 @@ function inputKeywords () {
     keyword5.className = `keyword${boxesLength + 1}`;
     const select5 = document.createElement("select");
     select5.className = `symbol${boxesLength + 1}`;
+    select5.id = "symbol3";
     const option9 = document.createElement("option");
     option9.value = "or";
     option9.text = "or";

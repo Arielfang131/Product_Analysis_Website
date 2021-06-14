@@ -42,22 +42,25 @@ function ajax (src, data, callback) {
 }
 
 function getTopic (data) {
-    const littleBox = document.querySelectorAll(".littleBox");
-    const parentElement = littleBox[0];
+    const parentElement = document.querySelector(".littleBox_topic");
     if (data.length === 0) {
         const noResult = document.createElement("div");
         noResult.innerHTML = "無主題，請先設定主題";
         parentElement.append(noResult);
     }
     for (let i = 0; i < data.length; i++) {
+        const topicFlex = document.createElement("div");
+        topicFlex.className = "topic_flex";
         const input = document.createElement("input");
         input.type = "checkbox";
         input.id = "cbox1";
         input.name = `cbox1_option_${(i + 1)}`;
         const label = document.createElement("label");
         input.value = data[i].topicId;
-        label.innerHTML = `${data[i].topicName}<br>`;
-        parentElement.append(input, label);
+        label.innerHTML = `${data[i].topicName}`;
+        label.className = "label_name";
+        topicFlex.append(input, label);
+        parentElement.append(topicFlex);
     }
     const checkboxOne = document.querySelectorAll("#cbox1");
     // 選項只能單選
@@ -76,57 +79,50 @@ function getTopic (data) {
 
 ajaxTopic("/api/1.0/profile", getTopic);
 
-const checkboxTwo = document.querySelectorAll("#cbox2");
+// const checkboxTwo = document.querySelectorAll("#cbox2");
 const checkboxThree = document.querySelectorAll("#cbox3");
 const startDate = document.getElementById("cbox2_start");
 const endDate = document.getElementById("cbox2_end");
 
-// 時間只能單選
-for (let i = 0; i < checkboxTwo.length; i++) {
-    checkboxTwo[i].addEventListener("change", function (event) {
-        for (let j = 0; j < checkboxTwo.length; j++) {
-            if (checkboxTwo[j].name === event.target.name) {
-                checkboxTwo[j].checked = true;
-            } else {
-                checkboxTwo[j].checked = false;
-            }
-        }
+let timeSeleted = "0"; // 選擇時間區間回傳值
+// FOR SELECT DAYS
+const selectDays = document.querySelectorAll(".days");
+for (let i = 0; i < selectDays.length; i++) {
+    selectDays[i].addEventListener("click", (event) => {
+        timeSeleted = event.target.id;
+        // 初始化
+        startDate.value = "";
+        endDate.value = "";
+        document.querySelector(".month-selected-title").innerHTML = "請選擇月份";
     });
 }
-checkboxTwo[0].addEventListener("click", function (event) {
-    if (checkboxTwo[0].value === event.target.value) {
-        // console.log(checkboxTwo[0].value);
-        // checkboxTwo[0].checked = true;
-        checkboxTwo[1].selectedIndex = 0;
-        startDate.value = "";
-        endDate.value = "";
-    }
-});
 
-checkboxTwo[1].addEventListener("click", function (event) {
-    if (checkboxTwo[1].value === event.target.value) {
-        // console.log(checkboxTwo[1].value);
-        // checkboxTwo[1].checked = true;
-        checkboxTwo[0].selectedIndex = 0;
+// FOR SELECT MONTH
+const selectMonth = document.querySelectorAll(".months");
+for (let i = 0; i < selectMonth.length; i++) {
+    selectMonth[i].addEventListener("click", (event) => {
+        timeSeleted = event.target.id;
+
+        // 初始化
         startDate.value = "";
         endDate.value = "";
-    }
-});
+        document.querySelector(".day-selected-title").innerHTML = "請選擇時間";
+    });
+}
+
 // 自選日期被點選後，前面的點選都回到預設值
 startDate.addEventListener("click", () => {
-    for (let i = 0; i < checkboxTwo.length; i++) {
-        // checkboxTwo[i].checked = false;
-        checkboxTwo[0].selectedIndex = 0;
-        checkboxTwo[1].selectedIndex = 0;
-    }
+    // 初始化
+    timeSeleted = "0";
+    document.querySelector(".day-selected-title").innerHTML = "請選擇時間";
+    document.querySelector(".month-selected-title").innerHTML = "請選擇月份";
 });
 
 endDate.addEventListener("click", () => {
-    for (let i = 0; i < checkboxTwo.length; i++) {
-        // checkboxTwo[i].checked = false;
-        checkboxTwo[0].selectedIndex = 0;
-        checkboxTwo[1].selectedIndex = 0;
-    }
+    // 初始化
+    timeSeleted = "0";
+    document.querySelector(".day-selected-title").innerHTML = "請選擇時間";
+    document.querySelector(".month-selected-title").innerHTML = "請選擇月份";
 });
 
 // 頻道點選全選，再點取消全選
@@ -161,11 +157,10 @@ button.addEventListener("click", function (event) {
         }
         const checkboxOne = document.querySelectorAll("#cbox1");
         let topicId = "";
-        let timeValue = "";
+        const timeValue = timeSeleted;
         const channel = [];
         // const emotion = [];
         let selectTopic = 0;
-        let selectTime = 0;
         let selectChannel = 0;
         // let selectEmotion = 0;
         for (let i = 0; i < checkboxOne.length; i++) {
@@ -192,19 +187,13 @@ button.addEventListener("click", function (event) {
             count = 0;
             return;
         }
-        for (let i = 0; i < checkboxTwo.length; i++) {
-            if (checkboxTwo[i].checked === true && checkboxTwo[i].value !== "0") {
-                timeValue = checkboxTwo[i].value;
-                console.log(timeValue);
-                selectTime += 1;
-            }
-        }
-        if (selectTime === 0 && startDate.value === "" && endDate.value === "") {
-            // alert("請選擇期間");
+
+        if (timeValue === "0" && startDate.value === "" && endDate.value === "") {
             Swal.fire("請選擇期間");
             count = 0;
             return;
         }
+
         if (Date.parse(startDate.value).valueOf() > Date.parse(endDate.value).valueOf()) {
             // alert("起始日期不可大於結束日期");
             Swal.fire("起始日期不可大於結束日期");
@@ -214,7 +203,7 @@ button.addEventListener("click", function (event) {
 
         // 定義當日
         const date = new Date();
-        let dateInfo = "";
+        let dateInfo = ""; // 今天日期
         const dateString = date.getDate().toString();
         if (dateString.length === 1) {
             const dateZero = ("0" + dateString);
@@ -228,12 +217,14 @@ button.addEventListener("click", function (event) {
             count = 0;
             return;
         }
-        if (Date.parse(endDate.value).valueOf() > Date.parse(dateInfo).valueOf()) {
-            // alert("起始日期不可大於今天");
-            Swal.fire("結束日期不可大於今天");
-            count = 0;
-            return;
-        }
+
+        // if (Date.parse(endDate.value).valueOf() > Date.parse(dateInfo).valueOf()) {
+        //     // alert("起始日期不可大於今天");
+        //     Swal.fire("結束日期不可大於今天");
+        //     count = 0;
+        //     return;
+        // }
+
         // 建議日期不要小於15日
         const beginDay = new Date(startDate.value);
         const finishDay = new Date(endDate.value);
@@ -245,18 +236,18 @@ button.addEventListener("click", function (event) {
             return;
         }
 
-        const monthElement = document.querySelector(".month");
-        const month = monthElement.value;
-        function getMonthFromString (mon) {
-            return new Date(Date.parse(mon + " 1, 2021")).getMonth() + 1;
+        if (timeSeleted.length > 1) { // 月份字數必定大於1
+            function getMonthFromString (mon) {
+                return new Date(Date.parse(mon + " 1, 2021")).getMonth() + 1;
+            }
+            const nowMonth = (new Date().getMonth() + 1);
+            if (getMonthFromString(timeSeleted) > nowMonth) {
+                Swal.fire("月份不可大於當月");
+                count = 0;
+                return;
+            }
         }
-        const nowMonth = (new Date().getMonth() + 1);
-        if (getMonthFromString(month) > nowMonth) {
-            // alert("月份不可大於當月");
-            Swal.fire("月份不可大於當月");
-            count = 0;
-            return;
-        }
+
         for (let i = 0; i < checkboxThree.length; i++) {
             if (checkboxThree[i].checked === true) {
                 selectChannel += 1;
@@ -407,7 +398,7 @@ function view (response) {
     contents.append(content);
     const options = eval({
         list: response, // 或者[['各位觀衆',45],['詞雲', 21],['來啦!!!',13]],只要格式滿足這樣都可以
-        gridSize: 6, // 密集程度 數字越小越密集
+        gridSize: 9, // 密集程度 數字越小越密集
         weightFactor: 1, // 字體大小=原始大小*weightFactor
         maxFontSize: 15, // 最大字號
         minFontSize: 4, // 最小字號
@@ -440,3 +431,12 @@ function myFunction () {
         box3.style = "display:none";
     }
 }
+
+// jquery
+$(".menu1 a").click(function () {
+    $(".btn1:first-child").html($(this).text() + " <span class=\"sr-only\"></span>");
+});
+
+$(".menu2 a").click(function () {
+    $(".btn2:first-child").html($(this).text() + " <span class=\"sr-only\"></span>");
+});

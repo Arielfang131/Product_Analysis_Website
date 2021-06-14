@@ -7,20 +7,23 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com">
 		<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300&display=swap" rel="stylesheet">
 		<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-		<!-- <meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
   		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
  		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
- 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script> -->
+ 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 	</head>
 	<body>
-		<header>
+		<!-- <header>
             <div class="menu_bar"><h2>文章列表</h2></div>
             <div class="menu_bar"><a href="profile.html"><img id="icon_profile" src="./styles/images/user2.png"></a></div>
-        </header>
+        </header> -->
+		<div id = "header">
+            <div class="menu_bar"><h2>文章列表</h2></div>
+            <div class="menu_bar"><a href="profile.html"><img id="icon_profile" src="./styles/images/user2.png"></a></div>
+        </div>
   		<div class="container1">
 			<div class="box1">
-				<!-- <div class="menu_bar" style="background-color:#E8FFF5;"><h2>觀測形式</h2></div> -->
 				<div id = "menu">
 					<div><a href="keywords.html">關鍵字設定</a></div><br>
 					<div><a href="contentlist.html">文章列表</a></div><br>
@@ -33,38 +36,40 @@
 			</div>
 			<div class="box3" style="display:none"></div>
 			<div class="box2">
-				<!-- <div class="menu_bar" style="background-color:#D2E9FF;"><h2>文章列表</h2></div> -->
 				<div id="filter">
-					<div class="littleBox">
-						<div style="font-size:20px;">群組</div>
+					<div class="littleBox_topic">
+						<div  id="topic_title" style="font-size:20px;">群組</div>
 					</div>
 					<div class="littleBox">
 						<div style="font-size:20px;">期間</div>
 						<!-- Example split danger button -->
+						<div class="flex">
+							<label for="cbox2" class="label">近期區間</label>
+							<div class="btn-group" id="cbox2">
+								<button type="button" class="btn1 btn bg-white border day-selected-title">請選擇時間</button>
+								<button type="button" class="btn1 btn bg-white dropdown-toggle dropdown-toggle-split border" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="sr-only">Toggle Dropdown</span>
+								</button>
+								<div class="dropdown-menu menu1">
+									<!-- <a class="dropdown-item" href="#" value = "0">請選擇時間</a> -->
+									<a class="dropdown-item days" href="#" id = "0">請選擇時間</a>
+									<a class="dropdown-item days" href="#" id = "3">最近3天</a>
+									<a class="dropdown-item days" href="#" id = "7">最近7天</a>
+									<a class="dropdown-item days" href="#" id = "15">最近15天</a>
+									<a class="dropdown-item days" href="#" id = "30">最近30天</a>
+								</div>
+							</div><br>
+						</div>
 						<!-- <label for="cbox2">近期區間</label>
-						<div class="btn-group">
-							<button type="button" class="btn bg-white border">Action</button>
-							<button type="button" class="btn bg-white dropdown-toggle dropdown-toggle-split border" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	  						<span class="sr-only">Toggle Dropdown</span>
-							</button>
-							<div class="dropdown-menu">
-								<a class="dropdown-item" href="#">Action</a>
-								<a class="dropdown-item" href="#">Another action</a>
-								<a class="dropdown-item" href="#">Something else here</a>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="#">Separated link</a>
-							</div>
-  						</div> -->
-						<label for="cbox2">近期區間</label>
 						<select  class = "recent"  id = "cbox2"> 
 							<option  value = "0">請選擇時間</option>
 							<option  value = "3">最近3天</option>
 							<option  value = "7">最近7天</option>
 							<option  value = "15">最近15天</option>
 							<option  value = "30">最近30天</option>
-						</select><br>
-						<label for="cbox2">單選月份</label>
-						<select  class = "month"  id = "cbox2"> 
+						</select><br> -->
+						<!-- <label for="cbox2">單選月份</label> -->
+						<!-- <select  class = "month"  id = "cbox2"> 
 							<option  value = "0">請選擇月份</option>
 							<option  value = "Jan">2021/1月</option>
 							<option  value = "Feb">2021/2月</option>
@@ -78,7 +83,33 @@
 							<option  value = "Oct">2021/10月</option>
 							<option  value = "Nov">2021/11月</option>
 							<option  value = "Dec">2021/12月</option>
-						</select><br>
+						</select><br> -->
+						<div class="flex">
+							<label for="cbox2" class="label">單選月份</label>
+							<div class="btn-group" id = "cbox2">
+								<button type="button" class="btn2 btn bg-white border month-selected-title">請選擇月份</button>
+								<button type="button" class="btn2 btn bg-white dropdown-toggle dropdown-toggle-split border" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="sr-only">Toggle Dropdown</span>
+								</button>
+								<div class="dropdown-menu menu2">
+									<!-- <a class="dropdown-item" href="#" value = "0">請選擇時間</a> -->
+									<a class="dropdown-item months" href="#" id = "0">請選擇月份</a>
+									<a class="dropdown-item months" href="#" id = "Jan">2021/1月</a>
+									<a class="dropdown-item months" href="#" id = "Feb">2021/2月</a>
+									<!-- <div class="dropdown-divider"></div> -->
+									<a class="dropdown-item months" href="#" id = "Mar">2021/3月</a>
+									<a class="dropdown-item months" href="#" id = "Apr">2021/4月</a>
+									<a class="dropdown-item months" href="#" id = "May">2021/5月</a>
+									<a class="dropdown-item months" href="#" id = "June">2021/6月</a>
+									<a class="dropdown-item months" href="#" id = "July">2021/7月</a>
+									<a class="dropdown-item months" href="#" id = "Aug">2021/8月</a>
+									<a class="dropdown-item months" href="#" id = "Sep">2021/9月</a>
+									<a class="dropdown-item months" href="#" id = "Oct">2021/10月</a>
+									<a class="dropdown-item months" href="#" id = "Nov">2021/11月</a>
+									<a class="dropdown-item months" href="#" id = "Dec">2021/12月</a>
+								</div>
+							</div><br>
+						</div>
 						<label for="cbox2">請選擇起始日期</label>
 						<input type="date" id="cbox2_start" name="cbox2_option5" placeholder="yyyy-mm-dd" min="2021-01-01" max="2021-12-31"><br>
 						<label for="cbox2">請選擇結束日期</label>

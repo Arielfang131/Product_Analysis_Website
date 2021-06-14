@@ -3,12 +3,22 @@ body {
     flex-direction: column;
     background-color: #F2F2F2;
     height:800px;
+    margin: 8px;
 }
 header {
     display: flex;
     flex-direction: row;
     padding:10px;
-    justify-content: space-between;
+    justify-content:     space-between;
+    background-color:#252422;
+    align-items: center;
+}
+
+#header {
+    display: flex;
+    flex-direction: row;
+    padding:10px;
+    justify-content:     space-between;
     background-color:#252422;
     align-items: center;
 }
@@ -49,6 +59,9 @@ header {
     padding-left: 10px;
     padding-right: 10px;
     font-family: 'Noto Sans TC', sans-serif;
+    margin-top: 5px;
+    /* background-color: brown; */
+    /* width: 200px; */
 }
 
 .menu_bar > h2 {

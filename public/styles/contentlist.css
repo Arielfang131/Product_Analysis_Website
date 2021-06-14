@@ -32,7 +32,7 @@
     margin-right: auto;
     border-radius: 8px;
     height:35px;
-    background-color: #555b6e;
+    background-color: #034078;
     border: none;
     color: white;
     text-align: center;
@@ -206,6 +206,12 @@
     align-items: center;
 }
 #noContent{
-    margin-top: 25px;
-    font-weight:bold;
+    margin-top: 35px;
+    font-weight: bold;
+    font-size: 26px;
+}
+#noResult{
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 18px;
 }

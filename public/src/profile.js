@@ -18,9 +18,10 @@ xhr.onreadystatechange = function () {
             name.className = "text";
             emailElement.className = "text";
             adminElement.className = "text";
+            adminElement.id = "admin";
             welcome.innerHTML = `${userName}您好~`;
             name.innerHTML = `暱稱：${userName}`;
-            emailElement.innerHTML = `email:${email}`;
+            emailElement.innerHTML = `E-mail：${email}`;
             adminElement.innerHTML = `是否為管理員：${admin}`;
             parentElement.append(welcome, name, emailElement, adminElement);
             // 登入後取得負評數量

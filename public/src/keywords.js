@@ -5,7 +5,13 @@ function ajax (src, callback, callbackTwo) {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const res = JSON.parse(xhr.responseText);
             if (res.msg === "null") {
-                window.location.href = "member.html";
+                Swal.fire({
+                    icon: "warning",
+                    title: "請先登入會員",
+                    confirmButtonText: "確認"
+                }).then(() => {
+                    window.location.href = "member.html";
+                });
             } else {
                 const newXhr = new XMLHttpRequest();
                 newXhr.onreadystatechange = function () {
@@ -58,12 +64,7 @@ function ajaxKeywords (src, data, callback) {
                         callback(res);
                         const insertN = new XMLHttpRequest();
                         insertN.onreadystatechange = function () {
-                            // console.log("hhh");
-                            // console.log(insertN.readyState);
-                            // console.log(insertN.status);
                             if (insertN.readyState === 4 && insertN.status === 200) {
-                                // const test = this.responseText;
-                                // console.log(test);
                                 // 更新負評數量
                                 const getNeg = new XMLHttpRequest();
                                 getNeg.onreadystatechange = function () {
@@ -73,7 +74,9 @@ function ajaxKeywords (src, data, callback) {
                                         const counts = response.length;
                                         localStorage.setItem("negativeCounts", counts);
                                         const deleteItem = document.querySelector("#alert");
-                                        deleteItem.remove();
+                                        if (deleteItem) {
+                                            deleteItem.remove();
+                                        }
                                         getNegativeCounts();
                                     };
                                 };
@@ -219,13 +222,11 @@ function view (response) {
                         if (xhr.readyState === 4 && xhr.status === 200) {
                             const insertN = new XMLHttpRequest();
                             insertN.onreadystatechange = function () {
-                            // console.log("hhh");
-                            // console.log(insertN.readyState);
-                            // console.log(insertN.status);
+                                console.log(insertN.readyState);
+                                console.log(insertN.status);
                                 if (insertN.readyState === 4 && insertN.status === 200) {
-                                // const test = this.responseText;
-                                // console.log(test);
-                                // 更新負評數量
+                                    console.log("test");
+                                    // 更新負評數量
                                     const getNeg = new XMLHttpRequest();
                                     getNeg.onreadystatechange = function () {
                                         if (getNeg.readyState === 4 && getNeg.status === 200) {
@@ -234,7 +235,9 @@ function view (response) {
                                             const counts = response.length;
                                             localStorage.setItem("negativeCounts", counts);
                                             const deleteItem = document.querySelector("#alert");
-                                            deleteItem.remove();
+                                            if (deleteItem) {
+                                                deleteItem.remove();
+                                            }
                                             getNegativeCounts();
                                         };
                                     };
@@ -588,24 +591,3 @@ function myFunction () {
         box3.style = "display:none";
     }
 }
-
-// // // 滑動icon memeber會變化
-// const iconMember = document.getElementById("icon_profile");
-// iconMember.addEventListener("mouseover", function () {
-//     iconMember.style = "cursor: pointer; display:none";
-//     const menuBar = document.querySelectorAll(".menu_bar");
-//     const logout = document.createElement("a");
-//     logout.id = "logout";
-//     logout.innerHTML = "會員登出";
-//     logout.href = "profile.html";
-//     logout.style = "cursor: pointer; font-weight:bold; font-size:18px";
-//     menuBar[1].append(logout);
-//     console.log(logout);
-//     // positive.style = "color:#d81616";
-// });
-// iconMember.addEventListener("mouseout", function () {
-//     iconMember.style = "cursor: pointer; display:block";
-//     const logout = document.getElementById("logout");
-//     logout.remove();
-//     // logout.style = "display:none";
-// });

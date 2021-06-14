@@ -108,6 +108,7 @@ async function getKeywords (req, res) {
 async function deleteKeywords (req, res) {
     const topicId = req.body.topicId;
     await keywordstModel.deleteTopicAndKeywords(topicId);
+    res.send("finish");
 }
 
 module.exports = {

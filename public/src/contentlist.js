@@ -5,17 +5,11 @@ function ajaxTopic (src, callback) {
             const res = JSON.parse(newXhr.responseText);
             if (res.msg === "null") {
                 Swal.fire({
-                    title: "請先登入會員",
                     icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#3085d6",
-                    cancelButtonColor: "#d33",
-                    confirmButtonText: "確定"
+                    title: "請先登入會員",
+                    confirmButtonText: "確認"
                 }).then(() => {
                     window.location.href = "member.html";
-                    // if (result.isConfirmed) {
-                    //     window.location.href = "member.html";
-                    // }
                 });
             } else {
                 const xhrSec = new XMLHttpRequest();
@@ -72,9 +66,10 @@ function ajax (src, data, callback) {
 function getTopic (data) {
     const parentElement = document.querySelector(".littleBox_topic");
     if (data.length === 0) {
-        const noResult = document.createElement("div");
-        noResult.innerHTML = "無群組，請至「關鍵字設定」設定";
-        noResult.style = "font-weight:bold;";
+        const noResult = document.createElement("a");
+        noResult.id = "noResult";
+        noResult.innerHTML = "請至此設定關鍵字群組";
+        noResult.href = "/keywords.html";
         parentElement.append(noResult);
     }
     for (let i = 0; i < data.length; i++) {
@@ -117,7 +112,7 @@ function render (info) {
     if (info.length === 0) {
         const noContent = document.createElement("div");
         noContent.id = "noContent";
-        noContent.innerHTML = "<h3>沒有符合的內容</h3>";
+        noContent.innerHTML = "沒有符合的內容";
         contents.append(noContent);
     }
     for (const i in info) {

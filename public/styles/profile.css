@@ -1,25 +1,3 @@
-/* .container1{
-    margin-top: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    display:flex;
-    width:95%;
-    justify-content:flex-start;
-    text-align: center;
-}
-.box1{
-    width:100px;
-    display: flex;
-    flex-direction: column;
-}
-.menu_bar{
-    height: 60px;
-    line-height:30px;
-}
-#menu{
-    display: flex;
-    flex-direction: column;
-} */
 .box2{
     flex-grow:1;
     display: flex;
@@ -39,16 +17,14 @@
     border-style:solid;
     line-height: 30px;
     border-radius: 5px;
-    width: 800px;
+    width: 600px;
+}
+#admin{
+    margin-bottom: 15px;
 }
 .text{
     margin-top: 15px;
 }
-
-/* #icon_profile{
-    height: 40px;
-    margin-top: 12px;
-} */
 #button{
     width:90px;
     margin-top: 20px;
@@ -56,7 +32,7 @@
     margin-right: auto;
     border-radius: 8px;
     height:35px;
-    background-color: #555b6e;
+    background-color: #034078;
     border: none;
     color: white;
     text-align: center;

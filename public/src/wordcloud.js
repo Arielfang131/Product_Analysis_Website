@@ -4,7 +4,13 @@ function ajaxTopic (src, callback) {
         if (newXhr.readyState === 4 && newXhr.status === 200) {
             const res = JSON.parse(newXhr.responseText);
             if (res.msg === "null") {
-                window.location.href = "member.html";
+                Swal.fire({
+                    icon: "warning",
+                    title: "請先登入會員",
+                    confirmButtonText: "確認"
+                }).then(() => {
+                    window.location.href = "member.html";
+                });
             } else {
                 const xhrSec = new XMLHttpRequest();
                 xhrSec.onreadystatechange = function () {
@@ -44,8 +50,10 @@ function ajax (src, data, callback) {
 function getTopic (data) {
     const parentElement = document.querySelector(".littleBox_topic");
     if (data.length === 0) {
-        const noResult = document.createElement("div");
-        noResult.innerHTML = "無主題，請先設定主題";
+        const noResult = document.createElement("a");
+        noResult.id = "noResult";
+        noResult.innerHTML = "請至此設定關鍵字群組";
+        noResult.href = "/keywords.html";
         parentElement.append(noResult);
     }
     for (let i = 0; i < data.length; i++) {
@@ -389,7 +397,7 @@ function view (response) {
     if (response.length === 0) {
         const noContent = document.createElement("div");
         noContent.id = "noContent";
-        noContent.innerHTML = "<h3>沒有符合的內容<h3>";
+        noContent.innerHTML = "沒有符合的內容";
         contents.append(noContent);
         return;
     }

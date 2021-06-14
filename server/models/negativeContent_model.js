@@ -101,9 +101,9 @@ const insertAllNegative = async function () {
             if (newArr.length !== 0) {
                 const sqlNegative = "INSERT INTO negative_table (topic_id, text_id) VALUES ?";
                 await query(sqlNegative, [newArr]);
-                const selectQuery = "SELECT user_table.email,company_table.company_number,topic_table.topic_id,negative_table.text_id FROM user_table INNER JOIN company_table ON company_table.company_number = user_table.company_number INNER JOIN topic_table ON topic_table.company_id = company_table.company_id INNER JOIN negative_table ON negative_table.topic_id = topic_table.topic_id;";
-                const selectUserInfo = await query(selectQuery);
-                return selectUserInfo;
+                // const selectQuery = "SELECT user_table.email,company_table.company_number,topic_table.topic_id,negative_table.text_id FROM user_table INNER JOIN company_table ON company_table.company_number = user_table.company_number INNER JOIN topic_table ON topic_table.company_id = company_table.company_id INNER JOIN negative_table ON negative_table.topic_id = topic_table.topic_id;";
+                // const selectUserInfo = await query(selectQuery);
+                // return selectUserInfo;
             }
         } else {
             console.log("no negative");
@@ -135,7 +135,6 @@ const selectNegative = async function (companyNo, deadline) {
 };
 
 module.exports = {
-    // selectTopic,
     insertAllNegative,
     selectNegative
 };

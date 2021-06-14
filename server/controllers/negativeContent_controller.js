@@ -2,9 +2,9 @@ const jwt = require("jsonwebtoken");
 const negativeModel = require("../models/negativeContent_model.js");
 
 async function insertNegative (req, res) {
+    console.log("insertNegative");
     await negativeModel.insertAllNegative();
-    console.log("test");
-    res.status(200).send("test");
+    res.send("finished insertNegative");
 }
 
 async function getNegativeContent (req, res) {
@@ -24,20 +24,6 @@ async function getNegativeContent (req, res) {
     }
     // console.log(deadline);
     const result = await negativeModel.selectNegative(companyNo, deadline);
-    // const topicId = result[0].topic_id;
-    // let deadline;
-    // const date = new Date();
-    // date.setDate(date.getDate() - 10);
-    // const nowDateString = date.getDate().toString();
-    // if (nowDateString.length === 1) {
-    //     const deadlineZero = ("0" + nowDateString);
-    //     deadline = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + deadlineZero;
-    // } else {
-    //     deadline = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
-    // }
-    // const negativeContent = await negativeModel.selectNegative(topicId, deadline);
-    // console.log("++=======");
-    // console.log(result);
     res.send(JSON.stringify(result));
 }
 

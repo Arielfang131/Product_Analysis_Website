@@ -5,15 +5,24 @@
         <link href="./styles/header.css" rel="stylesheet" />
 		<link href="./styles/member.css" rel="stylesheet" />
         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+ 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+ 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 	</head>
 	<body>
-        <header>
-            <div class="menu_bar"><h2>會員註冊/登入</h2></div>
-            <div class="menu_bar"><a href="profile.html"><img id="icon_profile" src="./styles/images/user2.png"></a></div>
-        </header>
+        <!-- <header>
+            <div class="menu_bar">會員註冊/登入</div>
+            <div class="menu_bar"><a href="profile.html"><img id="icon_profile" src="./styles/images/user.png"></a></div>
+        </header> -->
+        <div id = "header">
+            <div class="menu_bar">會員登入/註冊</div>
+            <div class="menu_bar"><a href="profile.html"><img id="icon_profile" src="./styles/images/user.png"></a></div>
+        </div>
   		<div class="container1">
 			<div class="box1">
-				<!-- <div class="menu_bar" style="background-color:#E8FFF5;"><h2>觀測形式</h2></div> -->
+				<!-- <div class="menu_bar" style="background-color:#E8FFF5;">觀測形式</div> -->
 				<div id = "menu">
 					<!-- <style style="text/css">
 						a{text-decoration:none;}
@@ -30,17 +39,22 @@
 			</div>
             <div class="box3" style="display:none"></div>
 			<div class="box2">
-				<!-- <div class="menu_bar" style="background-color:#D2E9FF;"><h2>會員登入/註冊</h2></div> -->
+				<!-- <div class="menu_bar" style="background-color:#D2E9FF;">會員登入/註冊</div> -->
                 <div id="main">
                     <div id="sign_in">
-                        <div><h3>會員登入</h3></div>
+                        <div class="title">會員登入</div>
                         <input type="text" name="sign_in_business_no" id="sign_in_business_no" class="input" placeholder = "公司統編" ><br>
                         <input type="text" name="sign_in_email" id="sign_in_email" class="input" placeholder = "E-mail" ><br>
                         <input type="text" name="sign_in_password" id="sign_in_password" class="input" placeholder = "密碼"><br>
-                        <button id="sign_in_button">登入</button>
+                        <button id="sign_in_button">登入</button><br>
+                        <div id="test">
+                            <div>歡迎使用測試帳號登入</div>
+                            <div>公司統編:11111  E-mail:test1@gmail.com  密碼：test1</div>
+                            <div>公司統編:11112  E-mail:test2@gmail.com  密碼：test2</div>
+                        </div>
                     </div>
                     <div id="register">
-                        <div><h3>會員註冊</h3></div>
+                        <div class="title">會員註冊</div>
                         <input type="text" name="register_business_name" id="register_business_name" class="input" placeholder = "公司名稱" ><br>
                         <input type="text" name="register_business_no" id="register_business_no" class="input" placeholder = "公司統編" ><br>
                         <input type="text" name="register_user_name" id="register_user_name" class="input" placeholder = "用戶暱稱" ><br>
@@ -51,7 +65,7 @@
                             <option value="yes">是</option>
                             <option value="no">否</option>
                         </select><br>
-                        <label id="hint">(建議勾選"是"，才可設定關鍵字)</label><br>
+                        <label id="hint">(建議勾選「是」，才可設定關鍵字)</label><br>
                         <button id="register_button">註冊</button>
                     </div>
                 </div>

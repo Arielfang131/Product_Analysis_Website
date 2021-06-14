@@ -10,20 +10,22 @@
     flex-wrap:wrap;
 }
 #sign_in{
-    width: 380px;
+    margin-top: 40px;
+    width: 400px;
     margin-left:auto;
 }
 #register{
-    width: 380px;
+    margin-top: 40px;
+    width: 400px;
     margin-right:auto;
 }
-#icon_profile{
+/* #icon_profile{
     height: 40px;
     margin-top: 12px;
-}
-input{
-    margin-bottom: 15px;
-    line-height:2em;
+} */
+.input{
+    margin-bottom: 10px;
+    height:30px;
     width:250px;
     border: none;
     border-style: solid;
@@ -43,7 +45,7 @@ select{
     margin-top:20px;
     margin-left: auto;
     margin-right: auto;
-    background-color: #555555;
+    background-color: #034078;
     border: none;
     color: white;
     text-align: center;
@@ -59,7 +61,8 @@ select{
     margin-top:20px;
     margin-left: auto;
     margin-right: auto;
-    background-color: #555555;
+    /* background-color: #004643; */
+    background-color: #034078;
     border: none;
     color: white;
     text-align: center;
@@ -72,5 +75,15 @@ select{
     color:#555555;
     font-size: 16px;
     font-weight: bold;
-    /* margin-bottom: 15px; */
+}
+.title{
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 25px;
+}
+#test{
+    margin-top: 40px;
+    color:#555555;
+    font-size: 16px;
+    font-weight: bold;
 }

@@ -4,7 +4,13 @@ function ajax (src, callback) {
         if (newXhr.readyState === 4 && newXhr.status === 200) {
             const res = JSON.parse(newXhr.responseText);
             if (res.msg === "null") {
-                window.location.href = "member.html";
+                Swal.fire({
+                    icon: "warning",
+                    title: "請先登入會員",
+                    confirmButtonText: "確認"
+                }).then(() => {
+                    window.location.href = "member.html";
+                });
             } else {
                 const xhrSec = new XMLHttpRequest();
                 xhrSec.onreadystatechange = function () {
@@ -35,7 +41,7 @@ async function getNegativeContent (info) {
     if (info.length === 0) {
         const noContent = document.createElement("div");
         noContent.id = "noContent";
-        noContent.innerHTML = "<h3>沒有負評內容</h3>";
+        noContent.innerHTML = "沒有負評內容";
         parentElement.append(noContent);
     }
     for (const i in info) {

@@ -4,7 +4,7 @@ const mysql = require("mysql");
 const mysqlPromise = require("mysql2/promise");
 
 const crawlerModel = require("../server/models/crawler_model");
-const negativeModel = require("../server/models/negativecontent_model");
+const negativeModel = require("../server/models/negative_content_model");
 const googleEmotion = require("../server/controllers/emotion_controller");
 
 const request = require("request");

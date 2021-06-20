@@ -1,5 +1,5 @@
 const nodejieba = require("nodejieba");
-const contentListModel = require("../models/contentlist_model.js");
+const contentListModel = require("../models/content_list_model.js");
 
 // replace link、email and image
 function replaceExtraText (inputText) {

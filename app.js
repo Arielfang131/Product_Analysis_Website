@@ -11,12 +11,12 @@ app.use(express.urlencoded({ extended: true }));
 // API routes
 app.use("/api/" + "1.0",
     [
-        require("./server/routes/contentlist_route"),
+        require("./server/routes/content_list_route"),
         require("./server/routes/keywords_route"),
         require("./server/routes/member_route"),
         require("./server/routes/emotion_route"),
-        require("./server/routes/negativecontent_route"),
-        require("./server/routes/pnvalue_route"),
+        require("./server/routes/negative_content_route"),
+        require("./server/routes/PNValue_route.js"),
         require("./server/routes/wordcloud_route")
     ]
 );

@@ -1,5 +1,5 @@
 const { query } = require("./mysqlcon");
-const contentListModel = require("../models/contentlist_model.js");
+const contentListModel = require("../models/content_list_model.js");
 require("dotenv").config();
 const { EMOTION_NEGATIVE, EMOTION_NEUTRAL, EMOTION_POSITIVE } = process.env;
 

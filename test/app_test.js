@@ -1,6 +1,6 @@
 const assert = require("assert");
 const memberModel = require("../server/models/member_model");
-const contentListModel = require("../server/models/contentlist_model");
+const contentListModel = require("../server/models/content_list_model");
 const keywordsModel = require("../server/models/keywords_model");
 
 describe("signIn test", function () {

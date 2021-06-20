@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const negativeModel = require("../models/negativecontent_model.js");
+const negativeModel = require("../models/negative_content_model.js");
 
 async function insertNegative (req, res) {
     try {

@@ -1,4 +1,4 @@
-const contentListModel = require("../models/contentlist_model.js");
+const contentListModel = require("../models/content_list_model.js");
 const jwt = require("jsonwebtoken");
 
 // Based on user information, submit saved topics

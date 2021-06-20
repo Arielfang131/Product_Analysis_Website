@@ -3,9 +3,9 @@ const router = require("express").Router();
 const {
     getTopicInfo,
     getPNValue
-} = require("../controllers/pnvalue_controller.js");
+} = require("../controllers/PNValue_controller.js");
 
-router.route("/pnValue").get(getTopicInfo);
-router.route("/pnValue").post(getPNValue);
+router.route("/PNValue").get(getTopicInfo);
+router.route("/PNValue").post(getPNValue);
 
 module.exports = router;

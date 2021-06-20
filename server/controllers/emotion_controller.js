@@ -13,7 +13,6 @@ function emotion (text) {
         // Call Cloud Natural Language API sentiment analyzer and console log results
         async function emotionScore () {
             const result = await client.analyzeSentiment({ document: document });
-            // console.log(result[0].documentSentiment.score);
             const score = result[0].documentSentiment.score;
             resolve(score);
         }
@@ -22,7 +21,16 @@ function emotion (text) {
 }
 
 async function modifiedEmotion (req, res) {
-    await emotionModel.sqlModifiedEmotion();
+    try {
+        await emotionModel.sqlModifiedEmotion();
+    } catch (err) {
+        console.log("test38");
+        console.log("error: " + err);
+        const obj = {
+            msg: "wrong"
+        };
+        res.send(obj);
+    }
 }
 
 module.exports = {

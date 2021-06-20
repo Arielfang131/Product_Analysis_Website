@@ -1,3 +1,4 @@
+// ajax to get topic
 function ajaxTopic (src, callback) {
     const newXhr = new XMLHttpRequest();
     newXhr.onreadystatechange = function () {
@@ -34,12 +35,12 @@ function ajaxTopic (src, callback) {
     newXhr.send();
 }
 
+// ajax to send select data
 function ajax (src, data, callback) {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             callback(JSON.parse(xhr.responseText));
-            // console.log(JSON.parse(xhr.responseText));
         }
     };
     xhr.open("POST", src);
@@ -71,7 +72,7 @@ function getTopic (data) {
         parentElement.append(topicFlex);
     }
     const checkboxOne = document.querySelectorAll("#cbox1");
-    // 選項只能單選
+    // The topic options can only be single-selected
     for (let i = 0; i < checkboxOne.length; i++) {
         checkboxOne[i].addEventListener("change", function (event) {
             for (let j = 0; j < checkboxOne.length; j++) {
@@ -87,18 +88,17 @@ function getTopic (data) {
 
 ajaxTopic("/api/1.0/profile", getTopic);
 
-// const checkboxTwo = document.querySelectorAll("#cbox2");
 const checkboxThree = document.querySelectorAll("#cbox3");
 const startDate = document.getElementById("cbox2_start");
 const endDate = document.getElementById("cbox2_end");
 
-let timeSeleted = "0"; // 選擇時間區間回傳值
+let timeSeleted = "0"; // default to time selection to zero
 // FOR SELECT DAYS
 const selectDays = document.querySelectorAll(".days");
 for (let i = 0; i < selectDays.length; i++) {
     selectDays[i].addEventListener("click", (event) => {
         timeSeleted = event.target.id;
-        // 初始化
+        // initialization
         startDate.value = "";
         endDate.value = "";
         document.querySelector(".month-selected-title").innerHTML = "請選擇月份";
@@ -111,29 +111,28 @@ for (let i = 0; i < selectMonth.length; i++) {
     selectMonth[i].addEventListener("click", (event) => {
         timeSeleted = event.target.id;
 
-        // 初始化
+        // initialization
         startDate.value = "";
         endDate.value = "";
         document.querySelector(".day-selected-title").innerHTML = "請選擇時間";
     });
 }
 
-// 自選日期被點選後，前面的點選都回到預設值
 startDate.addEventListener("click", () => {
-    // 初始化
+    // initialization
     timeSeleted = "0";
     document.querySelector(".day-selected-title").innerHTML = "請選擇時間";
     document.querySelector(".month-selected-title").innerHTML = "請選擇月份";
 });
 
 endDate.addEventListener("click", () => {
-    // 初始化
+    // initialization
     timeSeleted = "0";
     document.querySelector(".day-selected-title").innerHTML = "請選擇時間";
     document.querySelector(".month-selected-title").innerHTML = "請選擇月份";
 });
 
-// 頻道點選全選，再點取消全選
+// channel can click to select all, and then click to cancel the select all
 for (let i = 0; i < checkboxThree.length; i++) {
     checkboxThree[i].addEventListener("change", function (event) {
         const isNotChecked = event.target.name === "cbox3_option1" && event.target.checked === true;
@@ -167,10 +166,8 @@ button.addEventListener("click", function (event) {
         let topicId = "";
         const timeValue = timeSeleted;
         const channel = [];
-        // const emotion = [];
         let selectTopic = 0;
         let selectChannel = 0;
-        // let selectEmotion = 0;
         for (let i = 0; i < checkboxOne.length; i++) {
             if (checkboxOne[i].checked === true) {
                 topicId = checkboxOne[i].value;
@@ -178,19 +175,16 @@ button.addEventListener("click", function (event) {
             }
         }
         if (selectTopic === 0) {
-            // alert("請選擇群組");
             Swal.fire("請選擇群組");
             count = 0;
             return;
         }
         if (startDate.value !== "" && endDate.value === "") {
-            // alert("請選擇結束日期");
             Swal.fire("請選擇結束日期");
             count = 0;
             return;
         }
         if (startDate.value === "" && endDate.value !== "") {
-            // alert("請選擇起始日期");
             Swal.fire("請選擇起始日期");
             count = 0;
             return;
@@ -203,15 +197,14 @@ button.addEventListener("click", function (event) {
         }
 
         if (Date.parse(startDate.value).valueOf() > Date.parse(endDate.value).valueOf()) {
-            // alert("起始日期不可大於結束日期");
             Swal.fire("起始日期不可大於結束日期");
             count = 0;
             return;
         }
 
-        // 定義當日
+        // define today
         const date = new Date();
-        let dateInfo = ""; // 今天日期
+        let dateInfo = ""; // today
         const dateString = date.getDate().toString();
         if (dateString.length === 1) {
             const dateZero = ("0" + dateString);
@@ -220,31 +213,22 @@ button.addEventListener("click", function (event) {
             dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
         }
         if (Date.parse(startDate.value).valueOf() > Date.parse(dateInfo).valueOf()) {
-            // alert("起始日期不可大於今天");
             Swal.fire("起始日期不可大於今天");
             count = 0;
             return;
         }
 
-        // if (Date.parse(endDate.value).valueOf() > Date.parse(dateInfo).valueOf()) {
-        //     // alert("起始日期不可大於今天");
-        //     Swal.fire("結束日期不可大於今天");
-        //     count = 0;
-        //     return;
-        // }
-
-        // 建議日期不要小於15日
+        // date should not be less than 15 days
         const beginDay = new Date(startDate.value);
         const finishDay = new Date(endDate.value);
         const difference = finishDay.getTime() - beginDay.getTime();
         if ((difference / (1000 * 3600 * 24)) < 15) {
-            // alert("建議日期不要小於15日");
             Swal.fire("建議日期不要小於15日");
             count = 0;
             return;
         }
 
-        if (timeSeleted.length > 1) { // 月份字數必定大於1
+        if (timeSeleted.length > 1) { // month length must larger than oneu
             function getMonthFromString (mon) {
                 return new Date(Date.parse(mon + " 1, 2021")).getMonth() + 1;
             }
@@ -265,12 +249,10 @@ button.addEventListener("click", function (event) {
             }
         }
         if (selectChannel === 0) {
-            // alert("請選擇來源");
             Swal.fire("請選擇來源");
             count = 0;
             return;
         }
-        // alert("查詢中，請稍等");
 
         let deadline = "";
         if (timeValue === "3") {
@@ -297,7 +279,6 @@ button.addEventListener("click", function (event) {
             const nowDate = new Date();
             nowDate.setDate(date.getDate() - 15);
             const nowDateString = nowDate.getDate().toString();
-            console.log(nowDateString);
             if (nowDateString.length === 1) {
                 const deadlineZero = ("0" + nowDateString);
                 deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
@@ -307,9 +288,7 @@ button.addEventListener("click", function (event) {
         } else if (timeValue === "30") {
             const nowDate = new Date();
             nowDate.setDate(date.getDate() - 30);
-            // console.log(nowDate.setDate(date.getDate() - 30));
             const nowDateString = nowDate.getDate().toString();
-            console.log(nowDateString);
             if (nowDateString.length === 1) {
                 const deadlineZero = ("0" + nowDateString);
                 deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
@@ -356,15 +335,11 @@ button.addEventListener("click", function (event) {
             const monthAfter = endDate.value.split("-")[1];
             const monthBefore = startDate.value.split("-")[1];
             const monthEnd = monthAfter.replace(/^[0]/g, "");
-            console.log(monthEnd);
             const monthStart = monthBefore.replace(/^[0]/g, "");
-            console.log(monthStart);
             dateInfo = endDate.value.split("-")[0] + "-" + monthEnd + "-" + endDate.value.split("-")[2];
             deadline = startDate.value.split("-")[0] + "-" + monthStart + "-" + startDate.value.split("-")[2];
         }
-        // const timeDetail = date.toString().split(" ")[4];
-        // const timeInfo = timeDetail.split(":").slice(0, 2).join(":");
-        // const time = dateInfo + " " + timeInfo;
+
         const data = {
             topicId: topicId,
             timeValue: timeValue,
@@ -372,14 +347,14 @@ button.addEventListener("click", function (event) {
             deadline: deadline,
             channel: channel
         };
-        console.log(data);
+
         const loading = document.getElementById("loading");
         loading.style = "display:block";
-        ajax("/api/1.0/wordcloud", data, view);
+        ajax("/api/1.0/wordcloud", data, getWordCloud);
     }
 });
 
-// 取得負評數量
+// update negative counts
 const negativeCounts = localStorage.getItem("negativeCounts");
 if (parseInt(negativeCounts) > 0) {
     const alertElement = document.createElement("div");
@@ -389,7 +364,7 @@ if (parseInt(negativeCounts) > 0) {
     parentElement.append(alertElement);
 }
 
-function view (response) {
+function getWordCloud (response) {
     count = 0;
     const loading = document.getElementById("loading");
     loading.style = "display:none";
@@ -405,20 +380,19 @@ function view (response) {
     content.id = "content";
     contents.append(content);
     const options = eval({
-        list: response, // 或者[['各位觀衆',45],['詞雲', 21],['來啦!!!',13]],只要格式滿足這樣都可以
-        gridSize: 9, // 密集程度 數字越小越密集
-        weightFactor: 1, // 字體大小=原始大小*weightFactor
-        maxFontSize: 15, // 最大字號
-        minFontSize: 4, // 最小字號
-        fontWeight: "normal", // 字體粗細
-        fontFamily: "Times, serif", // 字體
-        color: "random-light" // 字體顏色 'random-dark' 或者 'random-light'
+        list: response,
+        gridSize: 9,
+        weightFactor: 1,
+        maxFontSize: 15,
+        minFontSize: 4,
+        fontWeight: "normal",
+        fontFamily: "Times, serif",
+        color: "random-light"
     });
     WordCloud(content, options);
 }
 
-// ajax("api/1.0/wordcloud", view);
-
+// sticky sidebar
 // When the user scrolls the page, execute myFunction
 window.onscroll = function () { myFunction(); };
 

@@ -1,4 +1,3 @@
-// 載入 jsonwebtoken
 const jwt = require("jsonwebtoken");
 const keywordstModel = require("../models/keywords_model.js");
 
@@ -20,6 +19,7 @@ async function viewKeywords (req, res) {
             result.push(obj);
         }
         res.send(result);
+        return;
     } catch (err) {
         console.log("test5");
         console.log("error: " + err);
@@ -39,7 +39,6 @@ async function getKeywords (req, res) {
         const topicData = [];
         let obj = {};
         let topicObj = {};
-        // verifyUnescape();
         for (let i = 0; i < req.body.length; i++) {
             const topicName = req.body[i].topic;
             const regex = new RegExp("[!@#$%^&*(),.?\":{}|<>]");
@@ -47,7 +46,7 @@ async function getKeywords (req, res) {
                 res.status(400).send("error");
                 return;
             }
-            // 若topicName是空且大於50字，就不放
+            // if topicName is empty and length is larger than 50,skip
             if (topicName !== "" && topicName.length <= 50) {
                 obj = {
                     topicNumber: req.body[i].topicNumber,
@@ -62,7 +61,7 @@ async function getKeywords (req, res) {
                             return;
                         }
                         if (regex.test(keywordsArr[j][k])) {
-                            res.status(404).send("請勿包含特殊字元");
+                            res.status(401).send("請勿包含特殊字元");
                             return;
                         }
                     }
@@ -84,8 +83,8 @@ async function getKeywords (req, res) {
             res.status(400).send("error");
             return;
         }
-        await keywordstModel.createKeywords(data);
         await keywordstModel.createTopic(topicData);
+        await keywordstModel.createKeywords(data);
         const sqlResult = await keywordstModel.selectAllTopics(companyNo);
         const result = [];
         for (const i in sqlResult) {
@@ -98,6 +97,7 @@ async function getKeywords (req, res) {
             result.push(obj);
         }
         res.send(result);
+        return;
     } catch (err) {
         console.log("test6");
         console.log("error: " + err);
@@ -106,9 +106,16 @@ async function getKeywords (req, res) {
 }
 
 async function deleteKeywords (req, res) {
-    const topicId = req.body.topicId;
-    await keywordstModel.deleteTopicAndKeywords(topicId);
-    res.send("finish");
+    try {
+        const topicId = req.body.topicId;
+        await keywordstModel.deleteTopicAndKeywords(topicId);
+        res.send("finish");
+        return;
+    } catch (err) {
+        console.log("test35");
+        console.log("error: " + err);
+        res.send("wrong");
+    }
 }
 
 module.exports = {

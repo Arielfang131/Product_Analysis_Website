@@ -49,14 +49,12 @@ async function getNegativeContent (info) {
         bigBox.className = "big_box";
         const content = document.createElement("div");
         content.className = "content";
-        // const contentTitle = document.createElement("div");
         const link = document.createElement("a");
         link.className = "content_title";
         link.innerHTML = `${info[i].title}`;
         link.href = `${info[i].link}`;
         link.target = "_blank";
         content.append(link);
-        // contentTitle.innerHTML = `${info[i].title} <a href = ${info[i].link}>`;
         const timeAndChannel = document.createElement("div");
         timeAndChannel.className = "timeAndChannel";
         const time = document.createElement("div");
@@ -96,13 +94,6 @@ async function getNegativeContent (info) {
             push.innerHTML = "<img class=\"icon_comment\" src=\"./styles/images/comment.png\">";
             push.innerHTML += ` ${info[i].push_number}`;
         }
-        // const likes = document.createElement("div");
-        // likes.className = "likes";
-        // if (info[i].likes_number === null) {
-        //     likes.innerHTML = "共0個讚";
-        // } else {
-        //     likes.innerHTML = `共${info[i].likes_number}個讚`;
-        // }
         const author = document.createElement("div");
         author.className = "author";
         author.innerHTML = `作者：${info[i].author}`;
@@ -120,27 +111,15 @@ async function getNegativeContent (info) {
         } else {
             emotion.innerHTML = "情緒：舊資料";
         }
-        // const flexBox = document.createElement("div");
-        // flexBox.className = "flex_box";
-        // const checkBox1 = document.createElement("input");
-        // checkBox1.type = "checkbox";
-        // const label1 = document.createElement("label");
-        // label1.innerHTML = "已處理";
-        // const checkBox2 = document.createElement("input");
-        // checkBox2.type = "checkbox";
-        // const label2 = document.createElement("label");
-        // label2.innerHTML = "移除負評";
         information.append(author, emotion, push);
-        // flexBox.append(checkBox1, label1, checkBox2, label2);
         content.append(paragraph, information);
-        // bigBox.append(content);
         parentElement.append(content);
     }
 }
 
 ajax("api/1.0/profile", getNegativeContent);
 
-// 取得負評數量
+// update negative counts
 const negativeCounts = localStorage.getItem("negativeCounts");
 if (parseInt(negativeCounts) > 0) {
     const alertElement = document.createElement("div");
@@ -150,6 +129,7 @@ if (parseInt(negativeCounts) > 0) {
     parentElement.append(alertElement);
 }
 
+// sticky sidebar
 // When the user scrolls the page, execute myFunction
 window.onscroll = function () { myFunction(); };
 

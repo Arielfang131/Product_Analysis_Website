@@ -4,21 +4,16 @@ function ajax (src, data) {
         if (xhr.readyState === 4 && xhr.status === 200) {
             const obj = JSON.parse(xhr.responseText);
             if (obj.msg === "此email已經有註冊") {
-                //  alert("email已經有註冊");
                 Swal.fire("email已經有註冊");
                 return;
             } else if (obj.msg === "註冊成功") {
-                // alert("註冊成功");
                 Swal.fire("註冊成功");
             } else if (obj.msg === "查無此會員，請先註冊") {
-                // alert("查無此會員，請先註冊");
                 Swal.fire("查無此會員，請先註冊");
                 return;
             } else if (obj.msg === "登入成功") {
-                // alert("登入成功");
                 Swal.fire("登入成功");
             } else if (obj.msg === "密碼錯誤") {
-                // alert("密碼錯誤");
                 Swal.fire("密碼錯誤");
                 return;
             } else if (obj.msg === "email格式不符") {
@@ -33,16 +28,14 @@ function ajax (src, data) {
             newXhr.onreadystatechange = function () {
                 if (newXhr.readyState === 4 && newXhr.status === 200) {
                     const res = JSON.parse(newXhr.responseText);
-                    console.log(res);
                     if (res.msg === "null") {
                         window.location.href = "member.html";
                     } else {
-                        // 登入後取得負評數量
+                        // update negative counts after sign-in
                         const getNeg = new XMLHttpRequest();
                         getNeg.onreadystatechange = function () {
                             if (getNeg.readyState === 4 && getNeg.status === 200) {
                                 const response = JSON.parse(getNeg.responseText);
-                                console.log(response);
                                 const counts = response.length;
                                 localStorage.setItem("negativeCounts", counts);
                                 window.location.href = "contentlist.html";
@@ -61,7 +54,7 @@ function ajax (src, data) {
             const accessToken = localStorage.getItem("access_token");
             newXhr.setRequestHeader("Authorization", "bearer " + accessToken);
             newXhr.send();
-        } else if (xhr.readyState === 4 && xhr.status === 404) {
+        } else if (xhr.readyState === 4 && xhr.status === 401) {
             Swal.fire("請勿包含特殊字元");
         }
     };
@@ -86,7 +79,7 @@ const accessToken = localStorage.getItem("access_token");
 newXhr.setRequestHeader("Authorization", "bearer " + accessToken);
 newXhr.send();
 
-// 取得負評數量
+// update negative counts
 const negativeCounts = localStorage.getItem("negativeCounts");
 if (parseInt(negativeCounts) > 0) {
     const alertElement = document.createElement("div");
@@ -102,7 +95,6 @@ signInButton.addEventListener("click", function () {
     const signInEmail = document.getElementById("sign_in_email");
     const signInPass = document.getElementById("sign_in_password");
     if (signInCompany.value === "" || signInEmail.value === "" || signInPass.value === "") {
-        // alert("每一項皆須填寫");
         Swal.fire("每一項皆須填寫");
         return;
     }
@@ -123,7 +115,12 @@ registerButton.addEventListener("click", function () {
     const registerPassword = document.getElementById("register_password");
     const admin = document.getElementById("admin");
 
-    // Regular expression Testing
+    if (registerCompanyName.value === "" || registerCompanyNo.value === "" || userName.value === "" || registerEmail.value === "" || registerPassword.vale === "" || admin.value === "") {
+        Swal.fire("每一項皆須填寫");
+        return;
+    }
+
+    // Verify email format
     const emailRule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
     // validate email is ok or not
     if (registerEmail.value.search(emailRule) === -1) {
@@ -136,11 +133,6 @@ registerButton.addEventListener("click", function () {
         return;
     };
 
-    if (registerCompanyName.value === "" || registerCompanyNo.value === "" || userName.value === "" || registerEmail.value === "" || registerPassword.vale === "" || admin.value === "") {
-        // alert("每一項皆須填寫");
-        Swal.fire("每一項皆須填寫");
-        return;
-    }
     if (registerCompanyName.value.length > 50) {
         Swal.fire("公司名稱不可超過50字");
         return;
@@ -173,6 +165,7 @@ registerButton.addEventListener("click", function () {
     ajax("/api/1.0/register", data);
 });
 
+// sticky sidebar
 // When the user scrolls the page, execute myFunction
 window.onscroll = function () { myFunction(); };
 

@@ -2,8 +2,8 @@
 <html>
 	<head>
    		<title>熱門關鍵字</title>
-		<link href="./styles/header.css" rel="stylesheet" />
-		<link href="./styles/wordcloud.css" rel="stylesheet" />
+		<link href="./styles/header.css" rel="stylesheet"/>
+		<link href="./styles/wordcloud.css" rel="stylesheet"/>
 		<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
   		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -12,10 +12,6 @@
  		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 	</head>
 	<body>
-		<!-- <header>
-            <div class="menu_bar">文章列表</div>
-            <div class="menu_bar"><a href="profile.html"><img id="icon_profile" src="./styles/images/user.png"></a></div>
-        </header> -->
 		<div id = "header">
             <div class="menu_bar">熱門關鍵字</div>
             <div class="menu_bar"><a href="profile.html"><img id="icon_profile" src="./styles/images/user.png"></a></div>
@@ -23,17 +19,13 @@
   		<div class="container1">
 			<div class="box1">
 				<div id = "menu">
-					<!-- <style style="text/css">
-						a{text-decoration:none;}
-						a:hover{text-decoration:underline;}
-					</style> -->
 					<div><a href="keywords.html">關鍵字設定</a></div><br>
 					<div><a href="contentlist.html">文章列表</a></div><br>
 					<div id="little_menu">
                         <div id = "negative"><a href="negative.html">負評告警</a></div>
                     </div><br>
 					<div><a href="wordcloud.html">熱門關鍵字</a></div><br>
-					<div><a href="PNValue.html">正負PN值</a></div><br>
+					<div><a href="pnvalue.html">正負PN值</a></div><br>
 				</div>
 			</div>
 			<div class="box3" style="display:none"></div>
@@ -54,7 +46,6 @@
 								<div class="dropdown-menu menu1">
 									<a class="dropdown-item days" href="#" id = "0">請選擇時間</a>
 									<a class="dropdown-item days" href="#" id = "15">最近15天</a>
-									<!-- <div class="dropdown-divider"></div> -->
 									<a class="dropdown-item days" href="#" id = "30">最近30天</a>
 								</div>
 							</div><br>
@@ -67,11 +58,9 @@
 								<span class="sr-only">Toggle Dropdown</span>
 								</button>
 								<div class="dropdown-menu menu2">
-									<!-- <a class="dropdown-item" href="#" value = "0">請選擇時間</a> -->
 									<a class="dropdown-item months" href="#" id = "0">請選擇月份</a>
 									<a class="dropdown-item months" href="#" id = "Jan">2021/1月</a>
 									<a class="dropdown-item months" href="#" id = "Feb">2021/2月</a>
-									<!-- <div class="dropdown-divider"></div> -->
 									<a class="dropdown-item months" href="#" id = "Mar">2021/3月</a>
 									<a class="dropdown-item months" href="#" id = "Apr">2021/4月</a>
 									<a class="dropdown-item months" href="#" id = "May">2021/5月</a>
@@ -85,28 +74,6 @@
 								</div>
 							</div><br>
 						</div>
-						<!-- <label for="cbox2">近期區間</label>
-						<select  class = "recent"  id = "cbox2"> 
-							<option  value = "0">請選擇時間</option>
-							<option  value = "15">最近15天</option>
-							<option  value = "30">最近30天</option>
-						</select><br>
-						<label for="cbox2">單選月份</label>
-						<select  class = "month"  id = "cbox2"> 
-							<option  value = "0">請選擇月份</option>
-							<option  value = "Jan">2021/1月</option>
-							<option  value = "Feb">2021/2月</option>
-							<option  value = "Mar">2021/3月</option>
-							<option  value = "Apr">2021/4月</option>
-							<option  value = "May">2021/5月</option>
-							<option  value = "June">2021/6月</option>
-							<option  value = "July">2021/7月</option>
-							<option  value = "Aug">2021/8月</option>
-							<option  value = "Sep">2021/9月</option>
-							<option  value = "Oct">2021/10月</option>
-							<option  value = "Nov">2021/11月</option>
-							<option  value = "Dec">2021/12月</option>
-						</select><br> -->
 						<label for="cbox2">請選擇起始日期</label>
 						<input type="date" id="cbox2_start" name="cbox2_option5" placeholder="yyyy-mm-dd" min="2021-01-01" max="2021-12-31"><br>
 						<label for="cbox2">請選擇結束日期</label>
@@ -121,17 +88,6 @@
 						<input type="checkbox" id="cbox3" name="cbox3_option3" value="Ptt > BeautySalon">
 						<label for="cbox3">Ptt > BeautySalon</label><br>
 					</div>
-					<!-- <div class="littleBox">
-						<div style="font-size:20px;">情緒</div> 
-						<input type="checkbox" id="cbox4" name="cbox4_option1" value="all">
-						<label for="cbox4">全選</label><br>
-						<input type="checkbox" id="cbox4" name="cbox4_option2" value="positive">
-						<label for="cbox3">正面</label><br>
-						<input type="checkbox" id="cbox4" name="cbox4_option2" value="neutral">
-						<label for="cbox3">中立</label><br>
-						<input type="checkbox" id="cbox4" name="cbox4_option2" value="negative">
-						<label for="cbox3">負面</label><br>
-					</div> -->
 				</div>
 				<button id="button" >查詢</button>
 				<div id="loading" style="display:none"> <img src="./styles/images/Spinner-1s-200px.gif" class="img-responsive"></div>

@@ -5,15 +5,6 @@ body {
     height:800px;
     margin: 8px;
 }
-/* header {
-    display: flex;
-    flex-direction: row;
-    padding:10px;
-    justify-content:     space-between;
-    background-color:#252422;
-    align-items: center;
-} */
-
 #header {
     display: flex;
     flex-direction: row;
@@ -52,21 +43,15 @@ body {
     height:100%;
 }
 .menu_bar{
-    /* height: 60px; */
-    /* line-height: 30px; */
-    /* background-color: #495057; */
     color:#0b3954;
     font-weight: bold;
     font-size: 30px;
     padding-left: 10px;
     padding-right: 10px;
     font-family: 'Noto Sans TC', sans-serif;
-    /* background-color: brown; */
-    /* width: 200px; */
 }
 
 .menu_bar > h2 {
-    /* margin: auto; */
     align-items: center;
 }
 #menu{
@@ -83,7 +68,6 @@ body {
 }
 #icon_profile{
     height: 40px;
-    /* margin-top: 12px; */
 }
 
 #little_menu{

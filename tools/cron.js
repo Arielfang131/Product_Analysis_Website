@@ -1,10 +1,10 @@
 const cron = require("node-cron");
 require("dotenv").config();
 const mysql = require("mysql");
-const mysql2 = require("mysql2/promise");
+const mysqlPromise = require("mysql2/promise");
 
 const crawlerModel = require("../server/models/crawler_model");
-const negativeModel = require("../server/models/negativeContent_model");
+const negativeModel = require("../server/models/negativecontent_model");
 const googleEmotion = require("../server/controllers/emotion_controller");
 
 const request = require("request");
@@ -19,8 +19,8 @@ const db = mysql.createPool({
     connectionLimit: 20
 });
 
-// create mysql2 connection
-const pool = mysql2.createPool({
+// create mysqlPromise connection
+const pool = mysqlPromise.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PWD,
@@ -39,13 +39,12 @@ db.getConnection(function (err, connection) {
         throw err;
     } else {
         console.log("MySqlpool Connected...in cron");
-        // 釋放連線
         connection.release();
-        // 不要再使用釋放過後的連線了，這個連線會被放到連線池中，供下一個使用者使用
         if (err) throw err;
     }
 });
 
+// get month from string to number
 function getMonthFromString (mon) {
     return new Date(Date.parse(mon + " 1, 2021")).getMonth() + 1;
 }
@@ -57,9 +56,8 @@ function delay () {
         }, 1500);
     });
 }
-// const specialWords = ["好燒", "燒到", "生火"];
-let googleCounts = 0;
-// 爬取PTT文章列表，取得文章連結和上頁連結
+
+// Crawl the list of PTT articles, get links and links to the previous page
 function pttCrawler (url) {
     return new Promise((resolve, reject) => {
         const crawler = () => {
@@ -70,21 +68,17 @@ function pttCrawler (url) {
                 if (err || !body) {
                     return;
                 }
-                const $ = cheerio.load(body); // 載入 body
+                const $ = cheerio.load(body);
                 const lastPage = $(".wide");
                 const lastURL = "https://www.ptt.cc/" + lastPage.eq(1).attr("href");
                 const list = $(".r-list-container .r-ent");
                 const ans = { lastURL: lastURL };
-                // ans.linkArr = [];
                 ans.info = [];
                 for (let i = 0; i < list.length; i++) {
                     const title = list.eq(i).find(".title a").text();
-                    // const author = list.eq(i).find(".meta .author").text();
-                    // const date = list.eq(i).find(".meta .date").text();
                     const pushNumber = list.eq(i).find(".nrec").text();
                     const link = list.eq(i).find(".title a").attr("href");
                     if (link !== undefined) {
-                        // ans.linkArr.push(link);
                         const data = {
                             title: title,
                             push: pushNumber,
@@ -93,7 +87,6 @@ function pttCrawler (url) {
                         ans.info.push(data);
                     }
                 }
-                // console.log(ans);
                 resolve(ans);
             });
         };
@@ -101,7 +94,7 @@ function pttCrawler (url) {
     });
 }
 
-// 進入PTT內頁，爬取主文內容
+// Enter the PTT inside page and crawl the content of the main article
 function pttCrawlerContent (url) {
     return new Promise((resolve, reject) => {
         const crawler = () => {
@@ -112,7 +105,7 @@ function pttCrawlerContent (url) {
                 if (err || !body) {
                     return;
                 }
-                const $ = cheerio.load(body); // 載入 body
+                const $ = cheerio.load(body);
                 const list = $(".bbs-screen .article-metaline");
                 const arr = [];
                 for (let i = 0; i < list.length; i++) {
@@ -126,7 +119,6 @@ function pttCrawlerContent (url) {
                 const article = lastArticle.join("\n");
                 const content = { article: article };
                 arr.push(content);
-                // console.log(arr);
                 resolve(arr);
             });
         };
@@ -134,7 +126,7 @@ function pttCrawlerContent (url) {
     });
 }
 
-// 進入PTT內頁，爬取留言
+// Enter the PTT inside page, crawl the comments
 async function pttCrawlerPush (url) {
     return new Promise((resolve, reject) => {
         const crawler = () => {
@@ -145,7 +137,7 @@ async function pttCrawlerPush (url) {
                 if (err || !body) {
                     return;
                 }
-                const $ = cheerio.load(body); // 載入 body
+                const $ = cheerio.load(body);
                 const list = $(".bbs-screen .article-metaline");
                 const dateandTime = list.eq(2).find(".article-meta-value").text();
                 let year = "";
@@ -155,7 +147,6 @@ async function pttCrawlerPush (url) {
                     year = dateandTime.split(" ")[4];
                 }
                 const comments = $(".push");
-                // for (const i in comments) {
                 const ans = [];
                 for (let i = 0; i < comments.length; i++) {
                     const commentAuthor = comments.eq(i).find(".push-userid").text();
@@ -169,16 +160,6 @@ async function pttCrawlerPush (url) {
                     const time = year + "-" + timeZero.replace(/^[0]/g, "");
                     await delay();
                     const commentEmotion = await googleEmotion.emotion(comment);
-                    // for (const j in specialWords) {
-                    //     const specialWord = new RegExp(specialWords[j]);
-                    //     if (specialWord.test(comment) === true) {
-                    //         commentEmotion = 0.3;
-                    //     }
-                    // }
-                    googleCounts = googleCounts + 1;
-                    console.log(`Count: ${googleCounts}`);
-                    const googleTime = new Date();
-                    console.log(`Time: ${googleTime}`);
                     const data = {
                         commentAuthor: commentAuthor,
                         comment: comment,
@@ -197,37 +178,30 @@ async function pttCrawlerPush (url) {
 async function getPtt () {
     try {
         const arrUrl = [{ url: "https://www.ptt.cc/bbs/MakeUp/index.html", page: 3 }, { url: "https://www.ptt.cc/bbs/BeautySalon/index.html", page: 3 }];
-        // const arrUrl = [{ url: "https://www.ptt.cc/bbs/BeautySalon/index2958.html", page: 30 }];
-        // const crawlerInfos = [];
         for (const k in arrUrl) {
             const mainUrl = arrUrl[k].url;
             const letters = mainUrl.split("/");
             let channel = "";
             if (letters.includes("BeautySalon")) {
                 channel = "Ptt > BeautySalon";
-                // channel = arrUrl[i];
             } else {
                 channel = "Ptt > Makeup";
-                // channel = arrUrl[i];
             }
 
-            // for迴圈爬取多頁的文章列表和上一頁的URL
+            // for loop to crawl article list and the URL of the previous page
             let pageURL = arrUrl[k].url;
             for (let i = 0; i < arrUrl[k].page; i++) {
                 console.log("page: " + i + " in " + arrUrl[k].page);
-                // await delay();
                 const result = await pttCrawler(pageURL);
-                // const lastPageUrl = result.lastURL;
                 pageURL = result.lastURL;
-                // for迴圈爬取每頁的作者、標題、時間、內容
+                // for loop to crawl the author, title, time, and content of each page
                 for (const j in result.info) {
-                    // await delay();
-                    // for (let j = 0; j < 3; j++) {
                     const crawlerInfo = [];
                     const link = result.info[j].link;
-                    // console.log(link);
+                    console.log(link);
                     const push = result.info[j].push;
                     const detail = await pttCrawlerContent(`https://www.ptt.cc${link}`);
+                    console.log(`title: ${detail[1]}`);
                     const commentsInfo = await pttCrawlerPush(`https://www.ptt.cc${link}`);
                     if (detail.length === 4) {
                         let year = "";
@@ -251,16 +225,6 @@ async function getPtt () {
                         const time = year + "-" + month + "-" + day + " " + (timeSeg.slice(0, 2).join(":"));
                         await delay();
                         const emotion = await googleEmotion.emotion(detail[3].article);
-                        // for (const j in specialWords) {
-                        //     const specialWord = new RegExp(specialWords[j]);
-                        //     if (specialWord.test(detail[3].article) === true) {
-                        //         emotion = 0.3;
-                        //     }
-                        // }
-                        googleCounts = googleCounts + 1;
-                        console.log(`Count: ${googleCounts}`);
-                        const googleTime = new Date();
-                        console.log(`Time: ${googleTime}`);
                         const obj = {
                             author: detail[0],
                             title: detail[1],
@@ -273,31 +237,21 @@ async function getPtt () {
                             comments: commentsInfo
                         };
                         crawlerInfo.push(obj);
-                    }
-                    const checkResult = await crawlerModel.checkCrawlerInfo(`https://www.ptt.cc${link}`);
-                    // console.log(checkResult.length);
-                    if (checkResult.length === 0) {
-                        // console.log("add");
-                        const sqlResult = await crawlerModel.createCrawlerInfo(crawlerInfo);
-                        // console.log(sqlResult);
-                    } else {
-                        // console.log("delete");
-                        // const sqldelete = await crawlerModel.deleteCrawlerInfo(`https://www.ptt.cc${link}`);
-                        const sqlResult = await crawlerModel.updateCrawlerInfo(crawlerInfo, `https://www.ptt.cc${link}`);
-                        // console.log(sqlResult);
+                        const checkResult = await crawlerModel.checkCrawlerInfo(`https://www.ptt.cc${link}`);
+                        if (checkResult.length === 0) {
+                            await crawlerModel.createCrawlerInfo(crawlerInfo);
+                        } else {
+                            await crawlerModel.updateCrawlerInfo(crawlerInfo, `https://www.ptt.cc${link}`);
+                        }
                     }
                 }
             }
-            console.log("finised");
-
-            // crawlerInfos.push(crawlerInfo);
+            console.log("finished");
         }
     } catch (err) {
         console.log("test21");
         console.log(err);
     }
-
-    // console.log(crawlerInfos);s
 }
 
 async function alterEmotion () {
@@ -311,8 +265,6 @@ async function getNegativeInfo () {
 }
 
 cron.schedule("00 12 * * *", async () => {
-    console.log("testEveryOneHour");
-    console.log("========================================");
     await getPtt();
     await alterEmotion();
     await getNegativeInfo();

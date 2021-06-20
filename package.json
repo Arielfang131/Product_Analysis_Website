@@ -4,20 +4,23 @@
   "description": "my project",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "Ariel",
   "license": "ISC",
   "dependencies": {
     "@google-cloud/language": "^4.2.3",
     "bcrypt": "^5.0.1",
+    "chai": "^4.3.4",
     "cheerio": "^1.0.0-rc.9",
     "cron": "^1.8.2",
     "dotenv": "^9.0.2",
+    "expect": "^27.0.2",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
     "jquery": "^3.6.0",
     "jsonwebtoken": "^8.5.1",
+    "mocha": "^9.0.1",
     "mysql": "^2.18.1",
     "mysql2": "^2.2.5",
     "node-cron": "^3.0.0",

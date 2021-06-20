@@ -1,11 +1,10 @@
 const { query } = require("./mysqlcon");
-const {pool} = require("./mysqlcon");
+const { pool } = require("./mysqlcon");
 
 const checkCrawlerInfo = async (link) => {
     try {
         const sql = "SELECT title FROM text_table WHERE link = ?;";
         const result = await query(sql, link);
-        console.log(result);
         return result;
     } catch (err) {
         console.log("test18");
@@ -32,23 +31,17 @@ const createCrawlerInfo = async (crawlerInfo) => {
             for (const j in crawlerInfo[i].comments) {
                 const dataComments = [];
                 const author = crawlerInfo[i].comments[j].commentAuthor;
-                // const title = crawlerInfo[i].title;
                 const time = crawlerInfo[i].comments[j].commentTime;
                 const push = null;
                 const likes = crawlerInfo[i].comments[j].commentLikeCount;
                 const commentEmotion = crawlerInfo[i].comments[j].emotion;
-                // const likes = "test";
-                // const channel = crawlerInfo[i].channel;
-                // const link = crawlerInfo[i].link;
                 const content = crawlerInfo[i].comments[j].comment;
                 dataComments.push(title, content, "留言", channel, link, time, push, likes, author, commentEmotion);
                 dataArr.push(dataComments);
             }
         }
-        // console.log(dataArr);
         const sql = "INSERT INTO text_table (title, content, body_textORcomment, channel, link, time, push_number, likes_number, author, emotion) VALUES ?";
         const result = await query(sql, [dataArr]);
-        console.log(result);
         return result;
     } catch (err) {
         console.log("test20");
@@ -79,24 +72,17 @@ const updateCrawlerInfo = async (crawlerInfo, link) => {
             for (const j in crawlerInfo[i].comments) {
                 const dataComments = [];
                 const author = crawlerInfo[i].comments[j].commentAuthor;
-                // const title = crawlerInfo[i].title;
                 const time = crawlerInfo[i].comments[j].commentTime;
                 const push = null;
                 const likes = crawlerInfo[i].comments[j].commentLikeCount;
                 const commentEmotion = crawlerInfo[i].comments[j].emotion;
-                // const likes = "test";
-                // const channel = crawlerInfo[i].channel;
-                // const link = crawlerInfo[i].link;
                 const content = crawlerInfo[i].comments[j].comment;
                 dataComments.push(title, content, "留言", channel, link, time, push, likes, author, commentEmotion);
                 dataArr.push(dataComments);
             }
         }
-        // console.log(dataArr);
         const update = "INSERT INTO text_table (title, content, body_textORcomment, channel, link, time, push_number, likes_number, author, emotion) VALUES ?";
         const result = await conn.query(update, [dataArr]);
-        console.log(result);
-        console.log("update crawler")
         await conn.query("COMMIT");
         return result;
     } catch (err) {
@@ -104,13 +90,12 @@ const updateCrawlerInfo = async (crawlerInfo, link) => {
         console.log(err);
         await conn.query("ROLLBACK");
         return false;
-    }finally {
+    } finally {
         await conn.release();
     }
 };
 
 module.exports = {
-    // deleteCrawlerInfo,
     checkCrawlerInfo,
     createCrawlerInfo,
     updateCrawlerInfo

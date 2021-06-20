@@ -1,6 +1,6 @@
 require("dotenv").config();
 const mysql = require("mysql");
-const mysql2 = require("mysql2/promise");
+const mysqlPromise = require("mysql2/promise");
 
 // create connection
 const db = mysql.createPool({
@@ -12,8 +12,8 @@ const db = mysql.createPool({
     connectionLimit: 20
 });
 
-// create mysql2 connection
-const pool = mysql2.createPool({
+// create mysqlPromise connection
+const pool = mysqlPromise.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PWD,
@@ -27,9 +27,7 @@ db.getConnection(function (err, connection) {
         throw err;
     } else {
         console.log("MySqlpool Connected....");
-        // 釋放連線
         connection.release();
-        // 不要再使用釋放過後的連線了，這個連線會被放到連線池中，供下一個使用者使用
         if (err) throw err;
     }
 });
@@ -43,15 +41,12 @@ pool.getConnection((err) => {
 function dbsql (sql, value) {
     const result = new Promise((resolve, reject) => {
         db.query(sql, value, (err, result) => {
-            // if (err) throw err;
             if (err) reject(err);
             resolve(result);
         });
     });
     return result;
 }
-
-
 
 module.exports = {
     core: mysql,

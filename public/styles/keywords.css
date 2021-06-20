@@ -42,7 +42,6 @@
     width:920px;
 }
 #keywords_title{
-    /* display: flex; */
     margin-top: 10px;
     text-align: center;
     margin-left: 10px;
@@ -102,7 +101,6 @@ select{
     line-height:32.67px;
 }
 #symbol{
-    /* margin-right: 5px; */
     margin-left: 5px;
 }
 #symbol2{
@@ -142,7 +140,6 @@ select{
 .keyword_list{
     background-color: white;
     margin-right: 10px;
-    /* flex-grow: 1; */
     height:30px;
     border-color:#D9D9D9;
     border-width:2px;
@@ -200,7 +197,6 @@ select{
 #example_keywords{
     background-color:white;
     margin-top: 5px;
-    /* flex-grow: 1; */
     width:700px;
     font-size:16px;
     color:#5C677D;

@@ -1,5 +1,6 @@
-const { query } = require("./mysqlcon");
-const {pool} = require("./mysqlcon");
+// const { query } = require("./mysqlcon");
+const { pool } = require("./mysqlcon");
+const specialWords = ["好燒", "燒到", "生火", "被燒"];
 
 const sqlModifiedEmotion = async function () {
     const conn = await pool.getConnection();
@@ -11,7 +12,6 @@ const sqlModifiedEmotion = async function () {
         await conn.query(deleteSql);
         const sql = "SELECT * FROM text_table";
         const result = await conn.query(sql);
-        const specialWords = ["好燒", "燒到", "生火", "被燒"];
         const newResult = [];
         for (const i in result[0]) {
             for (const j in specialWords) {
@@ -49,7 +49,7 @@ const sqlModifiedEmotion = async function () {
         console.log(err);
         await conn.query("ROLLBACK");
         return false;
-    }finally {
+    } finally {
         await conn.release();
     }
 };

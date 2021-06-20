@@ -1,8 +1,12 @@
 const { query } = require("./mysqlcon");
+const contentListModel = require("../models/contentlist_model.js");
+require("dotenv").config();
+const { EMOTION_NEGATIVE, EMOTION_NEUTRAL, EMOTION_POSITIVE } = process.env;
 
-const sqlPositiveCount = async function (contentQuery, titleQuery, channel, nowTime, deadline) {
+const sqlPositiveCount = async function (sqlResult, channels, nowTime, deadline) {
     try {
-        const sql = `SELECT COUNT(*) FROM text_table_modified WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion > 0.25;`;
+        const queryInfo = await contentListModel.getSQLSyntax(sqlResult, channels);
+        const sql = `SELECT COUNT(*) FROM text_table_modified WHERE (${queryInfo.contentQuery} OR ${queryInfo.titleQuery}) AND (${queryInfo.channelQuery}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion ${EMOTION_POSITIVE};`;
         const result = await query(sql);
         return result;
     } catch (err) {
@@ -12,9 +16,10 @@ const sqlPositiveCount = async function (contentQuery, titleQuery, channel, nowT
     }
 };
 
-const sqlNeutralCount = async function (contentQuery, titleQuery, channel, nowTime, deadline) {
+const sqlNeutralCount = async function (sqlResult, channels, nowTime, deadline) {
     try {
-        const sql = `SELECT COUNT(*) FROM text_table_modified WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion BETWEEN '-0.25' AND '0.25';`;
+        const queryInfo = await contentListModel.getSQLSyntax(sqlResult, channels);
+        const sql = `SELECT COUNT(*) FROM text_table_modified WHERE (${queryInfo.contentQuery} OR ${queryInfo.titleQuery}) AND (${queryInfo.channelQuery}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion ${EMOTION_NEUTRAL};`;
         const result = await query(sql);
         return result;
     } catch (err) {
@@ -24,9 +29,10 @@ const sqlNeutralCount = async function (contentQuery, titleQuery, channel, nowTi
     }
 };
 
-const sqlNegativeCount = async function (contentQuery, titleQuery, channel, nowTime, deadline) {
+const sqlNegativeCount = async function (sqlResult, channels, nowTime, deadline) {
     try {
-        const sql = `SELECT COUNT(*) FROM text_table_modified WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion < -0.25;`;
+        const queryInfo = await contentListModel.getSQLSyntax(sqlResult, channels);
+        const sql = `SELECT COUNT(*) FROM text_table_modified WHERE (${queryInfo.contentQuery} OR ${queryInfo.titleQuery}) AND (${queryInfo.channelQuery}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion ${EMOTION_NEGATIVE};`;
         const result = await query(sql);
         return result;
     } catch (err) {
@@ -36,9 +42,10 @@ const sqlNegativeCount = async function (contentQuery, titleQuery, channel, nowT
     }
 };
 
-const sqlPositive = async function (contentQuery, titleQuery, channel, nowTime, deadline) {
+const sqlPositive = async function (sqlResult, channels, nowTime, deadline) {
     try {
-        const sql = `SELECT * FROM text_table_modified WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion > 0.25 order by time DESC;`;
+        const queryInfo = await contentListModel.getSQLSyntax(sqlResult, channels);
+        const sql = `SELECT * FROM text_table_modified WHERE (${queryInfo.contentQuery} OR ${queryInfo.titleQuery}) AND (${queryInfo.channelQuery}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion ${EMOTION_POSITIVE} order by time DESC;`;
         const result = await query(sql);
         return result;
     } catch (err) {
@@ -48,9 +55,10 @@ const sqlPositive = async function (contentQuery, titleQuery, channel, nowTime, 
     }
 };
 
-const sqlNeutral = async function (contentQuery, titleQuery, channel, nowTime, deadline) {
+const sqlNeutral = async function (sqlResult, channels, nowTime, deadline) {
     try {
-        const sql = `SELECT * FROM text_table_modified WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion BETWEEN '-0.25' AND 0.25 order by time DESC;`;
+        const queryInfo = await contentListModel.getSQLSyntax(sqlResult, channels);
+        const sql = `SELECT * FROM text_table_modified WHERE (${queryInfo.contentQuery} OR ${queryInfo.titleQuery}) AND (${queryInfo.channelQuery}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion ${EMOTION_NEUTRAL} order by time DESC;`;
         const result = await query(sql);
         return result;
     } catch (err) {
@@ -60,9 +68,10 @@ const sqlNeutral = async function (contentQuery, titleQuery, channel, nowTime, d
     }
 };
 
-const sqlNegative = async function (contentQuery, titleQuery, channel, nowTime, deadline) {
+const sqlNegative = async function (sqlResult, channels, nowTime, deadline) {
     try {
-        const sql = `SELECT * FROM text_table_modified WHERE (${contentQuery} OR ${titleQuery}) AND (${channel}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion < -0.25 order by time DESC;`;
+        const queryInfo = await contentListModel.getSQLSyntax(sqlResult, channels);
+        const sql = `SELECT * FROM text_table_modified WHERE (${queryInfo.contentQuery} OR ${queryInfo.titleQuery}) AND (${queryInfo.channelQuery}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND emotion ${EMOTION_NEGATIVE} order by time DESC;`;
         const result = await query(sql);
         return result;
     } catch (err) {

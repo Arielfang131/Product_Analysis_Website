@@ -1,3 +1,4 @@
+// ajax to get saved keywords
 let admin = "";
 function ajax (src, callback, callbackTwo) {
     const xhr = new XMLHttpRequest();
@@ -41,6 +42,7 @@ function ajax (src, callback, callbackTwo) {
     xhr.send();
 }
 
+// ajax to send keywords
 function ajaxKeywords (src, data, callback) {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
@@ -65,12 +67,11 @@ function ajaxKeywords (src, data, callback) {
                         const insertN = new XMLHttpRequest();
                         insertN.onreadystatechange = function () {
                             if (insertN.readyState === 4 && insertN.status === 200) {
-                                // 更新負評數量
+                                // update negative counts
                                 const getNeg = new XMLHttpRequest();
                                 getNeg.onreadystatechange = function () {
                                     if (getNeg.readyState === 4 && getNeg.status === 200) {
                                         const response = JSON.parse(getNeg.responseText);
-                                        console.log(response);
                                         const counts = response.length;
                                         localStorage.setItem("negativeCounts", counts);
                                         const deleteItem = document.querySelector("#alert");
@@ -92,11 +93,11 @@ function ajaxKeywords (src, data, callback) {
                         insertN.send();
                     } else if (newXhr.readyState === 4 && newXhr.status === 400) {
                         Swal.fire("error");
-                    } else if (newXhr.readyState === 4 && newXhr.status === 404) {
+                    } else if (newXhr.readyState === 4 && newXhr.status === 401) {
                         Swal.fire("請勿包含特殊字元");
                     } else if (newXhr.readyState === 4 && newXhr.status === 403) {
                         Swal.fire("驗證過期，請重新登入");
-                    } else if (newXhr.readyState === 4 && newXhr.status === 401) {
+                    } else if (newXhr.readyState === 4 && newXhr.status === 401.1) {
                         Swal.fire("Unauthorized");
                     }
                 };
@@ -115,10 +116,8 @@ function ajaxKeywords (src, data, callback) {
     xhr.send(JSON.stringify(data));
 }
 
-// DOM
-let oldKeywordsCounts = 0;
-function view (response) {
-    console.log(response);
+// DOM to get saved keywords
+function getSavedKeywords (response) {
     const keywordsBox = document.getElementById("view_keywords");
     if (response.length === 0) {
         const noResult = document.createElement("div");
@@ -141,18 +140,10 @@ function view (response) {
         const firstArr = (keywords.split("+")[0]).split(",");
         const secondArr = (keywords.split("+")[1]).split(",");
 
-        // let firstString = "( ";
-        // for (const j in firstArr) {
-        //     if (parseInt(j) === (firstArr.length - 1)) {
-        //         firstString += `${firstArr[j]} `;
-        //         firstString += ") ";
-        //         firstString += `${symbolsArr.shift()} `;
-        //         continue;
-        //     }
         let firstString = `${firstArr[0]} `;
         firstString += `${symbolsArr.shift()} `;
-        // }
-        // 若secondArr是空的，就不需要顯示在前端
+
+        // If secondArr is empty, it does not need to be displayed
         if (secondArr[0] !== "") {
             let secondString = "";
             if (secondArr.length === 1) {
@@ -182,12 +173,8 @@ function view (response) {
             keywordBox.append(topicBox, keywordList);
         }
         keywordsBox.append(keywordBox);
-        // const totalBoxes = document.querySelectorAll(".keywords_box");
-        const oldKeywordsBox = document.querySelectorAll(".view_keyword");
-        // console.log(totalBoxes.length);
-        oldKeywordsCounts = oldKeywordsBox.length;
     }
-    // 刪除按鈕
+    // delete keywords button
     const trash = document.querySelectorAll(".icon_trash");
     for (let i = 0; i < trash.length; i++) {
         trash[i].addEventListener("click", function (event) {
@@ -212,7 +199,6 @@ function view (response) {
                             data = {
                                 topicId: event.target.id
                             };
-
                             parentElement[j].remove();
                         }
                     }
@@ -222,16 +208,12 @@ function view (response) {
                         if (xhr.readyState === 4 && xhr.status === 200) {
                             const insertN = new XMLHttpRequest();
                             insertN.onreadystatechange = function () {
-                                console.log(insertN.readyState);
-                                console.log(insertN.status);
                                 if (insertN.readyState === 4 && insertN.status === 200) {
-                                    console.log("test");
-                                    // 更新負評數量
+                                    // update negative counts
                                     const getNeg = new XMLHttpRequest();
                                     getNeg.onreadystatechange = function () {
                                         if (getNeg.readyState === 4 && getNeg.status === 200) {
                                             const response = JSON.parse(getNeg.responseText);
-                                            console.log(response);
                                             const counts = response.length;
                                             localStorage.setItem("negativeCounts", counts);
                                             const deleteItem = document.querySelector("#alert");
@@ -269,23 +251,17 @@ function view (response) {
     }
 }
 
-ajax("api/1.0/profile", view, modifiedKeywords);
+ajax("api/1.0/profile", getSavedKeywords, modifiedKeywords);
 
 function calculateNumber () {
-    // console.log(index);
-    // const inputBoxes = document.querySelectorAll(".keywords_box");
     const viewBoxes = document.querySelectorAll(".view_keyword");
     const topic = document.querySelectorAll(".topic");
     for (let i = 0; i < topic.length; i++) {
-        // if (index < i) {
-        //     topic[i].value = `群組${(inputBoxes.length + viewBoxes.length + 1)}`;
-        // } else {
         topic[i].value = `群組${(viewBoxes.length + i + 1)}`;
-        // }
     }
 }
 
-// 新增輸入keywords欄位
+// Add input keywords field
 function inputKeywords () {
     const ajaxBox = document.getElementById("ajax");
     const inputBoxes = document.querySelectorAll(".keywords_box");
@@ -365,13 +341,12 @@ function inputKeywords () {
     deleteItem.addEventListener("click", function (event) {
         const allDeleteItems = document.querySelectorAll(".delete");
         if (allDeleteItems.length === 1) {
-            // alert("無法刪除最後一項");
             Swal.fire("無法刪除最後一項");
         } else {
             const parentElement = deleteItem.parentElement;
             const allElements = document.querySelectorAll(".keywords_box");
             const modifiedLength = allElements.length - parseInt(parentElement.id);
-            // 改className名稱
+            // modified calssName name
             for (let i = 0; i < modifiedLength; i++) {
                 const startDiv = document.getElementById(`${parseInt(parentElement.id) + i + 1}`);
                 const modifiedKeyword = startDiv.querySelectorAll(`:scope >.keyword${parseInt(parentElement.id) + i + 1}`);
@@ -383,7 +358,7 @@ function inputKeywords () {
                     }
                 }
             }
-            // 改id名稱
+            // modified id name
             keywordsBox.remove();
             const update = document.querySelectorAll(".keywords_box");
             for (let i = 0; i < update.length; i++) {
@@ -403,10 +378,10 @@ function addButton () {
     button.className = "btn btn-secondary";
     button.innerHTML = "儲存";
     ajaxBox.append(button);
-    // 點選按鈕，新增關鍵字
+    // click button to add keywords
     button.addEventListener("click", function () {
         const topicEl = document.querySelectorAll(".topic");
-        // 確認群組數量和全部關鍵字的數量
+        // Confirm the number of groups and the number of all keywords
         let topicCount = 0;
         let totalKeywordsCount = 0;
         const data = [];
@@ -422,7 +397,7 @@ function addButton () {
             }
             const keywordsEl = document.querySelectorAll(`.keyword${i + 1}`);
             const keywords = [];
-            // 每一個主題的關鍵字
+            // every keyword
             for (let j = 0; j < keywordsEl.length; j++) {
                 const keyword = keywordsEl[j].value;
                 if (keyword.length >= 50) {
@@ -431,94 +406,72 @@ function addButton () {
                 }
                 keywords.push(keyword);
             }
-            // console.log(keywords);
-            // 每一個主題的符號=u
+            // every symbol
             const symbolsEl = document.querySelectorAll(`.symbol${i + 1}`);
             const symbols = [];
             for (let k = 0; k < symbolsEl.length; k++) {
                 const symbol = symbolsEl[k].value;
                 symbols.push(symbol);
             }
-            // console.log(symbols);
             const firstArr = [keywords[0]];
             const secondArr = [keywords[1], keywords[2], keywords[3]];
-            // 有填主題，但第一個關鍵字是空的
+            // group name is filled, but the first keyword is empty
             if (topic !== "" && keywords[0] === "") {
-                // console.log(topic);
-                // console.log(keywords[0]);
                 Swal.fire("若需設定群組，請於第一個空格內填入一個關鍵字");
-                // alert("若需設定主題，請於第一個空格內填入一個關鍵字");
                 return;
             }
             const newFirst = [];
             const newSecond = [];
             const newSymbols = [];
-            // 檢查第一個Array有沒有空的
-            // for (let a = 0; a < firstArr.length; a++) {
-            // 若關鍵字是空的，跳過
-            // if (firstArr[0] === "") {
-            //     continue;
-            // }
             keywordsCount += 1;
             totalKeywordsCount += 1;
-            // 關鍵字放到新的array
+            // Put the keywords in the new array
             newFirst.push(firstArr[0]);
-            // 若後面有關鍵字，前面的符號才需要放進去
-            // if (a >= 1) {
-            //     newSymbols.push(symbols[a - 1]);
-            // }
-            // }
-            // 若第二個Array全部是空的，中間的符號不要放
+            // If the second Array is all empty, don’t put the symbol in the middle
             if (keywords[1] !== "" || keywords[2] !== "" || keywords[3] !== "") {
                 newSymbols.push(symbols[0]);
             }
-            // 檢查第二個array
+            // check second array
             for (let b = 0; b < secondArr.length; b++) {
-                // 若關鍵字是空的，跳過
+                // if keyword is empty,skip
                 if (secondArr[b] === "") {
                     continue;
                 }
                 keywordsCount += 1;
                 totalKeywordsCount += 1;
-                // 判斷符號要不要放進去
+                // Determine whether to put the symbol in
                 newSecond.push(secondArr[b]);
-                // if (b < secondArr.length - 1) {
                 if (b !== 0) {
                     newSymbols.push(symbols[b]);
                 }
             }
             if (topic === "" && keywordsCount !== 0) {
                 Swal.fire("若需設定群組，請填入群組名稱");
-                // alert("若需設定主題，請填入主題名稱");
                 return;
             }
 
             const finalArr = [];
             finalArr.push(newFirst, newSecond);
             const obj = { topicNumber: (i + 1), topic: topic, keywords: finalArr, symbols: newSymbols };
-            console.log(obj);
             data.push(obj);
         }
         if (topicCount === 0 & totalKeywordsCount === 0) {
             Swal.fire("請輸入至少一組群組");
-            // alert("請輸入至少一組主題");
             return;
         }
         const oldKeywords = document.querySelectorAll(".view_keyword");
         const newKeywords = document.querySelectorAll(".keywords_box");
         if ((oldKeywords.length + newKeywords.length) > 6) {
             Swal.fire("最多只能有六個群組，請刪減");
-            // alert("最多只能有六個群組，請刪減");
             return;
         }
         Swal.fire("已儲存，請至文章列表搜尋內容");
-        ajaxKeywords("/api/1.0/profile", data, view);
+        ajaxKeywords("/api/1.0/profile", data, getSavedKeywords);
         const items = document.querySelectorAll(".keywords_box");
         const viewBoxes = document.querySelectorAll(".view_keyword");
         if (items) {
             const keyword1 = document.querySelectorAll(".keyword1");
             const topic = document.querySelectorAll(".topic");
-            // console.log(keyword1);
             for (let i = 0; i < keyword1.length; i++) {
                 if (topic[i]) {
                     topic[i].value = `群組${viewBoxes.length + items.length + 1}`;
@@ -534,8 +487,6 @@ function addButton () {
 
 function modifiedKeywords () {
     const ajaxBox = document.getElementById("ajax");
-    // const modifiedBox = document.createElement("div");
-    // modifiedBox.id = "modified_box";
     const text = document.createElement("div");
     text.className = "text";
     text.innerHTML = "新增/修改關鍵字：最多六組";
@@ -544,7 +495,7 @@ function modifiedKeywords () {
     addButton();
 }
 
-// 規則預設為隱藏，點選才開啟
+// The rule is hidden by default, click to open
 const ruleDetails = document.getElementById("rule_details");
 ruleDetails.style.display = "none";
 const question = document.getElementById("icon_question");
@@ -556,12 +507,10 @@ question.addEventListener("click", () => {
     }
 });
 
-// 取得負評數量
+// get negative counts
 function getNegativeCounts () {
     const negativeCounts = localStorage.getItem("negativeCounts");
     if (parseInt(negativeCounts) > 0) {
-        // const deleteItem = document.querySelector("#alert");
-        // deleteItem.remove();
         const alertElement = document.createElement("div");
         alertElement.id = "alert";
         alertElement.innerHTML = negativeCounts;
@@ -571,6 +520,7 @@ function getNegativeCounts () {
 }
 getNegativeCounts();
 
+// sticky sidebar
 // When the user scrolls the page, execute myFunction
 window.onscroll = function () { myFunction(); };
 

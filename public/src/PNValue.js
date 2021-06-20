@@ -19,7 +19,7 @@ function ajaxTopic (src, callback) {
                         callback(response);
                     }
                 };
-                xhrSec.open("GET", "api/1.0/PNValue");
+                xhrSec.open("GET", "api/1.0/pnValue");
                 xhrSec.setRequestHeader("Content-Type", "application/json");
                 const accessToken = localStorage.getItem("access_token");
                 xhrSec.setRequestHeader("Authorization", "bearer " + accessToken);
@@ -34,13 +34,12 @@ function ajaxTopic (src, callback) {
     newXhr.send();
 }
 
-// 點選篩選條件，取得正負評、中立數量
+// Click on the filter to obtain positive、negative and neutral numbers
 function ajax (src, data, callback) {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             callback(JSON.parse(xhr.responseText));
-            // console.log(JSON.parse(xhr.responseText));
         }
     };
     xhr.open("POST", src);
@@ -72,7 +71,7 @@ function getTopic (data) {
         parentElement.append(topicFlex);
     }
     const checkboxOne = document.querySelectorAll("#cbox1");
-    // 選項只能單選
+    // The topic options can only be single-selected
     for (let i = 0; i < checkboxOne.length; i++) {
         checkboxOne[i].addEventListener("change", function (event) {
             for (let j = 0; j < checkboxOne.length; j++) {
@@ -86,8 +85,8 @@ function getTopic (data) {
     }
 }
 
-// 正、負、中立文章列表DOM
-function contentInfo (info) {
+// positvie、negative、neutral content DOM
+function getContentInfo (info) {
     const details = document.getElementById("details");
 
     if (info.length === 0) {
@@ -142,13 +141,6 @@ function contentInfo (info) {
         } else {
             push.innerHTML = `共${info[i].push_number}則推文`;
         }
-        // const likes = document.createElement("div");
-        // likes.className = "likes";
-        // if (info[i].likes_number === null) {
-        //     likes.innerHTML = "共0個讚";
-        // } else {
-        //     likes.innerHTML = `共${info[i].likes_number}個讚`;
-        // }
         const author = document.createElement("div");
         author.className = "author";
         author.innerHTML = `作者：${info[i].author}`;
@@ -172,10 +164,9 @@ function contentInfo (info) {
     }
 }
 let count = 0; // counter of button
-// 取得正負評數字
+// get positive and negative number to calculate PN value
 function getPNValue (info) {
     count = 0;
-    console.log(count);
     const loading = document.getElementById("loading");
     loading.style = "display:none";
     const content = document.getElementById("content");
@@ -187,9 +178,6 @@ function getPNValue (info) {
 
     const negative = document.createElement("div");
     negative.className = "emotion";
-    // positive.innerHTML = `<a><span>正評：${info.positive}</span>閱讀正面文章</a>`;
-    // positive.innerHTML = `<span showhints="閱讀正面文章">正評：${info.positive}</span>`;
-    // positive.innerHTML = `<span>正評：${info.positive}<span class="hint">閱讀正面文章</span></span>`;
     positive.innerHTML = `正評：${info.positive}`;
     neutral.innerHTML = `中立：${info.neutral}`;
     negative.innerHTML = `負評：${info.negative}`;
@@ -210,18 +198,17 @@ function getPNValue (info) {
     positive.append(hover1);
     neutral.append(hover2);
     negative.append(hover3);
-    const PNValue = (parseInt(info.positive) / parseInt(info.negative)).toFixed(2);
-    if (isNaN(PNValue)) {
+    const pnValue = (parseInt(info.positive) / parseInt(info.negative)).toFixed(2);
+    if (isNaN(pnValue)) {
         valueElement.innerHTML = "正負PN值：0";
     } else if (parseInt(info.positive) >= 1 && parseInt(info.negative) === 0) {
         valueElement.innerHTML = "正負PN值：沒有負評";
     } else {
-        valueElement.innerHTML = `正負PN值：${PNValue}`;
+        valueElement.innerHTML = `正負PN值：${pnValue}`;
     }
     content.append(positive, neutral, negative, valueElement);
     positive.addEventListener("mouseover", function () {
         positive.innerHTML = "點選閱讀正評文章";
-        // positive.style = "color:#d81616";
         positive.style = "cursor: pointer; color:#FFFFFF";
     });
     positive.addEventListener("mouseout", function () {
@@ -230,7 +217,6 @@ function getPNValue (info) {
     });
     neutral.addEventListener("mouseover", function () {
         neutral.innerHTML = "點選閱讀中立文章";
-        // neutral.style = "color:#d81616";
         neutral.style = "cursor: pointer;color:#FFFFFF";
     });
     neutral.addEventListener("mouseout", function () {
@@ -239,20 +225,15 @@ function getPNValue (info) {
     });
     negative.addEventListener("mouseover", function () {
         negative.innerHTML = "點選閱讀負評文章";
-        // negative.style = "color:#d81616";
         negative.style = "cursor: pointer;color:#FFFFFF";
     });
     negative.addEventListener("mouseout", function () {
         negative.innerHTML = `負評：${info.negative}`;
         negative.style = "color:#FFFFFF";
     });
-    // neutral.addEventListener("mouseover", change);
-    // neutral.addEventListener("mouseout", restore);
-    // negative.addEventListener("mouseover", change);
-    // negative.addEventListener("mouseout", restore);
 
-    // 點選正評、中立、負評出現文章列表
-    // 正評Button
+    // click buttons to show content
+    // positvie Button
     positive.addEventListener("click", function () {
         const removeDetails = document.querySelectorAll(".detail");
         const noContent = document.getElementById("noContent");
@@ -262,9 +243,9 @@ function getPNValue (info) {
         for (let i = 0; i < removeDetails.length; i++) {
             removeDetails[i].remove();
         }
-        contentInfo(info.positiveInfo);
+        getContentInfo(info.positiveInfo);
     });
-    // 中立Button
+    // neutral Button
     neutral.addEventListener("click", function () {
         const noContent = document.getElementById("noContent");
         if (noContent) {
@@ -274,9 +255,9 @@ function getPNValue (info) {
         for (let i = 0; i < removeDetails.length; i++) {
             removeDetails[i].remove();
         }
-        contentInfo(info.neutralInfo);
+        getContentInfo(info.neutralInfo);
     });
-    // 負面Button
+    // negative Button
     negative.addEventListener("click", function () {
         const noContent = document.getElementById("noContent");
         if (noContent) {
@@ -286,7 +267,7 @@ function getPNValue (info) {
         for (let i = 0; i < removeDetails.length; i++) {
             removeDetails[i].remove();
         }
-        contentInfo(info.negativeInfo);
+        getContentInfo(info.negativeInfo);
     });
 }
 
@@ -295,17 +276,15 @@ ajaxTopic("/api/1.0/profile", getTopic);
 const checkboxThree = document.querySelectorAll("#cbox3");
 const startDate = document.getElementById("cbox2_start");
 const endDate = document.getElementById("cbox2_end");
-let timeSeleted = "0"; // 選擇時間區間回傳值
+let timeSeleted = "0"; // default to time selection to zero
 
 // FOR SELECT DAYS
 const selectDays = document.querySelectorAll(".days");
 for (let i = 0; i < selectDays.length; i++) {
     selectDays[i].addEventListener("click", (event) => {
         timeSeleted = event.target.id;
-        console.log(timeSeleted);
-        console.log(typeof (timeSeleted));
 
-        // 初始化
+        // initialization
         startDate.value = "";
         endDate.value = "";
         document.querySelector(".month-selected-title").innerHTML = "請選擇月份";
@@ -318,62 +297,28 @@ for (let i = 0; i < selectMonth.length; i++) {
     selectMonth[i].addEventListener("click", (event) => {
         timeSeleted = event.target.id;
 
-        // 初始化
+        // initialization
         startDate.value = "";
         endDate.value = "";
         document.querySelector(".day-selected-title").innerHTML = "請選擇時間";
     });
 }
 
-// 時間只能單選
-// for (let i = 0; i < checkboxTwo.length; i++) {
-//     checkboxTwo[i].addEventListener("change", function (event) {
-//         for (let j = 0; j < checkboxTwo.length; j++) {
-//             if (checkboxTwo[j].name === event.target.name) {
-//                 checkboxTwo[j].checked = true;
-//             } else {
-//                 checkboxTwo[j].checked = false;
-//             }
-//         }
-//     });
-// }
-
-// checkboxTwo[0].addEventListener("click", function (event) {
-//     if (checkboxTwo[0].value === event.target.value) {
-//         // console.log(checkboxTwo[0].value);
-//         // checkboxTwo[0].checked = true;
-//         checkboxTwo[1].selectedIndex = 0;
-//         startDate.value = "";
-//         endDate.value = "";
-//     }
-// });
-
-// checkboxTwo[1].addEventListener("click", function (event) {
-//     if (checkboxTwo[1].value === event.target.value) {
-//         // console.log(checkboxTwo[1].value);
-//         // checkboxTwo[1].checked = true;
-//         checkboxTwo[0].selectedIndex = 0;
-//         startDate.value = "";
-//         endDate.value = "";
-//     }
-// });
-
-// 自選日期被點選後，前面的點選都回到預設值
 startDate.addEventListener("click", () => {
-    // 初始化
+    // initialization
     timeSeleted = 0;
     document.querySelector(".day-selected-title").innerHTML = "請選擇時間";
     document.querySelector(".month-selected-title").innerHTML = "請選擇月份";
 });
 
 endDate.addEventListener("click", () => {
-    // 初始化
+    // initialization
     timeSeleted = 0;
     document.querySelector(".day-selected-title").innerHTML = "請選擇時間";
     document.querySelector(".month-selected-title").innerHTML = "請選擇月份";
 });
 
-// 頻道點選全選，再點取消全選
+// channel can click to select all, and then click to cancel the select all
 for (let i = 0; i < checkboxThree.length; i++) {
     checkboxThree[i].addEventListener("change", function (event) {
         const isNotChecked = event.target.name === "cbox3_option1" && event.target.checked === true;
@@ -390,6 +335,7 @@ for (let i = 0; i < checkboxThree.length; i++) {
     });
 }
 
+// click button to filter condition
 const button = document.getElementById("button");
 button.addEventListener("click", function (event) {
     count += 1;
@@ -415,7 +361,6 @@ button.addEventListener("click", function (event) {
         const timeValue = timeSeleted;
         const channel = [];
         let selectTopic = 0;
-        const selectTime = 0;
         let selectChannel = 0;
         for (let i = 0; i < checkboxOne.length; i++) {
             if (checkboxOne[i].checked === true) {
@@ -424,44 +369,33 @@ button.addEventListener("click", function (event) {
             }
         }
         if (selectTopic === 0) {
-            // alert("請選擇群組");
             Swal.fire("請選擇群組");
             count = 0;
             return;
         }
         if (startDate.value !== "" && endDate.value === "") {
-            // alert("請選擇結束日期");
             Swal.fire("請選擇結束日期");
             count = 0;
             return;
         }
         if (startDate.value === "" && endDate.value !== "") {
-            // alert("請選擇起始日期");
             Swal.fire("請選擇起始日期");
             count = 0;
             return;
         }
-        // for (let i = 0; i < checkboxTwo.length; i++) {
-        //     if (checkboxTwo[i].checked === true && checkboxTwo[i].value !== "0") {
-        //         timeValue = checkboxTwo[i].value;
-        //         console.log(timeValue);
-        //         selectTime += 1;
-        //     }
-        // }
         if (timeSeleted === "0" && startDate.value === "" && endDate.value === "") {
             Swal.fire("請選擇期間");
             count = 0;
             return;
         }
         if (Date.parse(startDate.value).valueOf() > Date.parse(endDate.value).valueOf()) {
-            // alert("起始日期不可大於結束日期");
             Swal.fire("起始日期不可大於結束日期");
             count = 0;
             return;
         }
-        // 定義當日
+        // define today
         const date = new Date();
-        let dateInfo = "";
+        let dateInfo = ""; // today
         const dateString = date.getDate().toString();
         if (dateString.length === 1) {
             const dateZero = ("0" + dateString);
@@ -470,32 +404,12 @@ button.addEventListener("click", function (event) {
             dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
         }
         if (Date.parse(startDate.value).valueOf() > Date.parse(dateInfo).valueOf()) {
-            // alert("起始日期不可大於今天");
             Swal.fire("起始日期不可大於今天");
             count = 0;
             return;
         }
-        // if (Date.parse(endDate.value).valueOf() > Date.parse(dateInfo).valueOf()) {
-        //     // alert("起始日期不可大於今天");
-        //     Swal.fire("結束日期不可大於今天");
-        //     count = 0;
-        //     return;
-        // }
 
-        // const monthElement = document.querySelector(".month");
-        // const month = monthElement.value;
-        // function getMonthFromString (mon) {
-        //     return new Date(Date.parse(mon + " 1, 2021")).getMonth() + 1;
-        // }
-        // const nowMonth = (new Date().getMonth() + 1);
-        // if (getMonthFromString(month) > nowMonth) {
-        //     // alert("月份不可大於當月");
-        //     Swal.fire("月份不可大於當月");
-        //     count = 0;
-        //     return;
-        // }
-
-        if (timeSeleted.length > 1) { // 月份字數必定大於1
+        if (timeSeleted.length > 1) { // month length must larger than one
             function getMonthFromString (mon) {
                 return new Date(Date.parse(mon + " 1, 2021")).getMonth() + 1;
             }
@@ -516,13 +430,10 @@ button.addEventListener("click", function (event) {
             }
         }
         if (selectChannel === 0) {
-            // alert("請選擇來源");
             Swal.fire("請選擇來源");
             count = 0;
             return;
         }
-
-        // alert("查詢中，請稍等");
 
         let deadline = "";
         if (timeValue === "3") {
@@ -617,14 +528,13 @@ button.addEventListener("click", function (event) {
             deadline: deadline,
             channel: channel
         };
-        console.log(data);
         const loading = document.getElementById("loading");
         loading.style = "display:block";
-        ajax("/api/1.0/PNValue", data, getPNValue);
+        ajax("/api/1.0/pnValue", data, getPNValue);
     }
 });
 
-// 取得負評數量
+// update negative counts
 const negativeCounts = localStorage.getItem("negativeCounts");
 if (parseInt(negativeCounts) > 0) {
     const alertElement = document.createElement("div");
@@ -634,6 +544,7 @@ if (parseInt(negativeCounts) > 0) {
     parentElement.append(alertElement);
 }
 
+// sticky sidebar
 // When the user scrolls the page, execute myFunction
 window.onscroll = function () { myFunction(); };
 

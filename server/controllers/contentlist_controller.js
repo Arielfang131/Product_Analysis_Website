@@ -1,8 +1,7 @@
 const contentListModel = require("../models/contentlist_model.js");
-// 載入 jsonwebtoken
 const jwt = require("jsonwebtoken");
 
-// 依據使用者資訊，送出儲存過的主題
+// Based on user information, submit saved topics
 async function getTopicList (req, res) {
     try {
         const tokenInfo = req.headers.authorization;
@@ -18,7 +17,6 @@ async function getTopicList (req, res) {
             };
             data.push(ans);
         }
-        console.log(data);
         res.send(JSON.stringify(data));
         return;
     } catch (err) {
@@ -37,102 +35,17 @@ async function getContentList (req, res) {
         const channels = req.body.channel;
         const emotions = req.body.emotion;
         const nowTime = req.body.nowTime;
-        // const timeValue = req.body.timeValue;
         const deadline = req.body.deadline;
         const sqlResult = await contentListModel.getKeywords(topicId);
-        const symbols = sqlResult[0].symbols.split(",");
-        const symbols2 = symbols.map((element) => {
-            return element;
-        });
-        const firstKeywordsArr = sqlResult[0].keywords.split("+")[0].split(",");
-        // if (sqlResult[0].keywords.split("+")[1].length !== 0) {
-        //     const secondKeywordsArr = sqlResult[0].keywords.split("+")[1].split(",");
-        // }
-        let strFirst = "(";
-        let strSecond = "(";
-        let titleFirst = "(";
-        let titleSecond = "(";
-        let contentQuery = "";
-        let titleQuery = "";
-        for (let i = 0; i < firstKeywordsArr.length; i++) {
-            if (i === (firstKeywordsArr.length - 1)) {
-                strFirst += `content LIKE "%${firstKeywordsArr[i]}%" `;
-                strFirst += ") ";
-                strFirst += `${symbols.shift()} `;
-                titleFirst += `title LIKE "%${firstKeywordsArr[i]}%" `;
-                titleFirst += ") ";
-                titleFirst += `${symbols2.shift()} `;
-                contentQuery = strFirst;
-                titleQuery = titleFirst;
-                continue;
-            }
-            strFirst += `content LIKE "%${firstKeywordsArr[i]}%" `;
-            strFirst += `${symbols.shift()} `;
-            titleFirst += `title LIKE "%${firstKeywordsArr[i]}%" `;
-            titleFirst += `${symbols2.shift()} `;
-        }
-
-        if (sqlResult[0].keywords.split("+")[1].length !== 0) {
-            const secondKeywordsArr = sqlResult[0].keywords.split("+")[1].split(",");
-            for (let j = 0; j < secondKeywordsArr.length; j++) {
-                if (j === (secondKeywordsArr.length - 1)) {
-                    strSecond += `content LIKE "%${secondKeywordsArr[j]}%" `;
-                    strSecond += ") ";
-                    titleSecond += `title LIKE "%${secondKeywordsArr[j]}%" `;
-                    titleSecond += ") ";
-                    contentQuery = strFirst + strSecond;
-                    titleQuery = titleFirst + titleSecond;
-                    continue;
-                }
-                strSecond += `content LIKE "%${secondKeywordsArr[j]}%" `;
-                strSecond += `${symbols.shift()} `;
-                titleSecond += `title LIKE "%${secondKeywordsArr[j]}%" `;
-                titleSecond += `${symbols2.shift()} `;
-            }
-        }
-        let channelQuery = "";
-        for (const i in channels) {
-            let channel = `channel = "${channels[i]}" OR `;
-            if (parseInt(i) === channels.length - 1) {
-                channel = `channel = "${channels[i]}"`;
-            }
-            channelQuery += channel;
-        }
-        let emotionQuery = "";
-        let emotion = "";
         if (emotions.length === 3) {
-            const sqlContentResult = await contentListModel.getSQLcontentNoEmotion(contentQuery, titleQuery, channelQuery, nowTime, deadline);
-            // console.log(res);
+            const sqlContentResult = await contentListModel.getSQLcontentNoEmotion(sqlResult, channels, nowTime, deadline);
+            res.send(sqlContentResult);
+            return;
+        } else {
+            const sqlContentResult = await contentListModel.getSQLcontent(sqlResult, channels, nowTime, deadline, emotions);
             res.send(sqlContentResult);
             return;
         }
-        for (const i in emotions) {
-            if (emotions[i] === "negative") {
-                if (parseInt(i) === emotions.length - 1) {
-                    emotion = "emotion < -0.25";
-                } else {
-                    emotion = "emotion < -0.25 OR ";
-                }
-                emotionQuery += emotion;
-            } else if (emotions[i] === "neutral") {
-                if (parseInt(i) === emotions.length - 1) {
-                    emotion = "emotion BETWEEN '-0.25' AND '0.25'";
-                } else {
-                    emotion = "emotion BETWEEN '-0.25' AND '0.25' OR ";
-                }
-                emotionQuery += emotion;
-            } else {
-                if (parseInt(i) === emotions.length - 1) {
-                    emotion = "emotion > 0.25";
-                } else {
-                    emotion = "emotion > 0.25 OR ";
-                }
-                emotionQuery += emotion;
-            }
-        }
-        const sqlContentResult = await contentListModel.getSQLcontent(contentQuery, titleQuery, channelQuery, nowTime, deadline, emotionQuery);
-        res.send(sqlContentResult);
-        return;
     } catch (err) {
         console.log("test2");
         console.log("error: " + err);

@@ -1,3 +1,4 @@
+// ajax to get topic
 function ajaxTopic (src, callback) {
     const newXhr = new XMLHttpRequest();
     newXhr.onreadystatechange = function () {
@@ -17,14 +18,12 @@ function ajaxTopic (src, callback) {
                     if (xhrSec.readyState === 4 && xhrSec.status === 200) {
                         const response = JSON.parse(xhrSec.responseText);
                         callback(response);
-                        // 登入後取得負評數量
+                        // update negative counts after sign-in
                         const getNeg = new XMLHttpRequest();
                         getNeg.onreadystatechange = function () {
                             if (getNeg.readyState === 4 && getNeg.status === 200) {
                                 const response = JSON.parse(getNeg.responseText);
-                                // console.log(response);
                                 const counts = response.length;
-                                // console.log(counts);
                                 localStorage.setItem("negativeCounts", counts);
                             }
                         };
@@ -50,12 +49,12 @@ function ajaxTopic (src, callback) {
     newXhr.send();
 }
 
+// ajax to send select data
 function ajax (src, data, callback) {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             callback(JSON.parse(xhr.responseText));
-            // console.log(JSON.parse(xhr.responseText));
         }
     };
     xhr.open("POST", src);
@@ -87,7 +86,7 @@ function getTopic (data) {
         parentElement.append(topicFlex);
     }
     const checkboxOne = document.querySelectorAll("#cbox1");
-    // 選項只能單選
+    // The topic options can only be single-selected
     for (let i = 0; i < checkboxOne.length; i++) {
         checkboxOne[i].addEventListener("change", function (event) {
             for (let j = 0; j < checkboxOne.length; j++) {
@@ -102,8 +101,8 @@ function getTopic (data) {
 }
 
 let count = 0; // counter of button
-// DOM
-function render (info) {
+// DOM to view content
+function getContent (info) {
     count = 0;
     const loading = document.getElementById("loading");
     loading.style = "display:none";
@@ -164,13 +163,6 @@ function render (info) {
             push.innerHTML = "<img class=\"icon_comment\" src=\"./styles/images/comment.png\">";
             push.innerHTML += ` ${info[i].push_number}`;
         }
-        // const likes = document.createElement("div");
-        // likes.className = "likes";
-        // if (info[i].likes_number === null) {
-        //     likes.innerHTML = "共0個讚";
-        // } else {
-        //     likes.innerHTML = `共${info[i].likes_number}個讚`;
-        // }
         const author = document.createElement("div");
         author.className = "author";
         author.innerHTML = `作者：${info[i].author}`;
@@ -189,14 +181,6 @@ function render (info) {
         } else {
             emotionInfo.innerHTML = "情緒：舊資料";
         }
-        // const specialWords = ["好燒", "燒到", "生火"];
-        // for (const j in specialWords) {
-        //     const specialWord = new RegExp(specialWords[j]);
-        //     if (specialWord.test(info[i].content) === true) {
-        //         console.log("okay");
-        //         emotionInfo.innerHTML = "情緒：正面";
-        //     }
-        // }
         information.append(author, emotionInfo, push);
         content.append(paragraph, information);
         contents.append(content);
@@ -205,19 +189,18 @@ function render (info) {
 
 ajaxTopic("/api/1.0/profile", getTopic);
 
-// const checkboxTwo = document.querySelectorAll("#cbox2");
 const checkboxThree = document.querySelectorAll("#cbox3");
 const checkboxFour = document.querySelectorAll("#cbox4");
 const startDate = document.getElementById("cbox2_start");
 const endDate = document.getElementById("cbox2_end");
 
-let timeSeleted = "0"; // 選擇時間區間回傳值
+let timeSeleted = "0"; // default to time selection to zero
 // FOR SELECT DAYS
 const selectDays = document.querySelectorAll(".days");
 for (let i = 0; i < selectDays.length; i++) {
     selectDays[i].addEventListener("click", (event) => {
         timeSeleted = event.target.id;
-        // 初始化
+        // initialization
         startDate.value = "";
         endDate.value = "";
         document.querySelector(".month-selected-title").innerHTML = "請選擇月份";
@@ -230,37 +213,28 @@ for (let i = 0; i < selectMonth.length; i++) {
     selectMonth[i].addEventListener("click", (event) => {
         timeSeleted = event.target.id;
 
-        // 初始化
+        // initialization
         startDate.value = "";
         endDate.value = "";
         document.querySelector(".day-selected-title").innerHTML = "請選擇時間";
     });
 }
 
-// checkboxTwo[1].addEventListener("click", function (event) {
-//     if (checkboxTwo[1].value === event.target.value) {
-//         checkboxTwo[0].selectedIndex = 0;
-//         startDate.value = "";
-//         endDate.value = "";
-//     }
-// });
-
-// 自選日期被點選後，前面的點選都回到預設值
+// initialization
 startDate.addEventListener("click", () => {
-    // 初始化
     timeSeleted = "0";
     document.querySelector(".day-selected-title").innerHTML = "請選擇時間";
     document.querySelector(".month-selected-title").innerHTML = "請選擇月份";
 });
 
+// initialization
 endDate.addEventListener("click", () => {
-    // 初始化
     timeSeleted = "0";
     document.querySelector(".day-selected-title").innerHTML = "請選擇時間";
     document.querySelector(".month-selected-title").innerHTML = "請選擇月份";
 });
 
-// 頻道點選全選，再點取消全選
+// channel can click to select all, and then click to cancel the select all
 for (let i = 0; i < checkboxThree.length; i++) {
     checkboxThree[i].addEventListener("change", function (event) {
         const isNotChecked = event.target.name === "cbox3_option1" && event.target.checked === true;
@@ -277,7 +251,7 @@ for (let i = 0; i < checkboxThree.length; i++) {
     });
 }
 
-// 情緒點選全選，再點取消全選
+// emotion can click to select all, and then click to cancel the select all
 for (let i = 0; i < checkboxFour.length; i++) {
     checkboxFour[i].addEventListener("change", function (event) {
         const isNotChecked = event.target.name === "cbox4_option1" && event.target.checked === true;
@@ -347,9 +321,9 @@ button.addEventListener("click", function (event) {
             count = 0;
             return;
         }
-        // 定義當日
+        // define today
         const date = new Date();
-        let dateInfo = ""; // 今天日期
+        let dateInfo = ""; // today
         const dateString = date.getDate().toString();
         if (dateString.length === 1) {
             const dateZero = ("0" + dateString);
@@ -358,19 +332,12 @@ button.addEventListener("click", function (event) {
             dateInfo = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
         }
         if (Date.parse(startDate.value).valueOf() > Date.parse(dateInfo).valueOf()) {
-            // alert("起始日期不可大於今天");
             Swal.fire("起始日期不可大於今天");
             count = 0;
             return;
         }
-        // if (Date.parse(endDate.value).valueOf() > Date.parse(dateInfo).valueOf()) {
-        //     // alert("起始日期不可大於今天");
-        //     Swal.fire("結束日期不可大於今天");
-        //     count = 0;
-        //     return;
-        // }
 
-        if (timeSeleted.length > 1) { // 月份字數必定大於1
+        if (timeSeleted.length > 1) { // month length must larger than one
             function getMonthFromString (mon) {
                 return new Date(Date.parse(mon + " 1, 2021")).getMonth() + 1;
             }
@@ -404,12 +371,10 @@ button.addEventListener("click", function (event) {
             }
         }
         if (selectEmotion === 0) {
-            // alert("請選擇情緒");
             Swal.fire("請選擇情緒");
             count = 0;
             return;
         }
-        // alert("查詢中，請稍等");
 
         let deadline = "";
 
@@ -437,7 +402,6 @@ button.addEventListener("click", function (event) {
             const nowDate = new Date();
             nowDate.setDate(date.getDate() - 15);
             const nowDateString = nowDate.getDate().toString();
-            console.log(nowDateString);
             if (nowDateString.length === 1) {
                 const deadlineZero = ("0" + nowDateString);
                 deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
@@ -447,9 +411,7 @@ button.addEventListener("click", function (event) {
         } else if (timeValue === "30") {
             const nowDate = new Date();
             nowDate.setDate(date.getDate() - 30);
-            // console.log(nowDate.setDate(date.getDate() - 30));
             const nowDateString = nowDate.getDate().toString();
-            console.log(nowDateString);
             if (nowDateString.length === 1) {
                 const deadlineZero = ("0" + nowDateString);
                 deadline = date.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + deadlineZero;
@@ -496,9 +458,7 @@ button.addEventListener("click", function (event) {
             const monthAfter = endDate.value.split("-")[1];
             const monthBefore = startDate.value.split("-")[1];
             const monthEnd = monthAfter.replace(/^[0]/g, "");
-            console.log(monthEnd);
             const monthStart = monthBefore.replace(/^[0]/g, "");
-            console.log(monthStart);
             dateInfo = endDate.value.split("-")[0] + "-" + monthEnd + "-" + endDate.value.split("-")[2];
             deadline = startDate.value.split("-")[0] + "-" + monthStart + "-" + startDate.value.split("-")[2];
         }
@@ -511,14 +471,13 @@ button.addEventListener("click", function (event) {
             channel: channel,
             emotion: emotion
         };
-        console.log(data);
         const loading = document.getElementById("loading");
         loading.style = "display:block";
-        ajax("/api/1.0/contentlist", data, render);
+        ajax("/api/1.0/contentlist", data, getContent);
     }
 });
 
-// 取得負評數量
+// get negative counts
 const negativeCounts = localStorage.getItem("negativeCounts");
 if (parseInt(negativeCounts) > 0) {
     const alertElement = document.createElement("div");
@@ -528,6 +487,7 @@ if (parseInt(negativeCounts) > 0) {
     parentElement.append(alertElement);
 }
 
+// sticky sidebar
 // When the user scrolls the page, execute myFunction
 window.onscroll = function () { myFunction(); };
 

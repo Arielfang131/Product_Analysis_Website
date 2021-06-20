@@ -5,7 +5,6 @@ xhr.onreadystatechange = function () {
         if (response.msg === "null") {
             window.location.href = "member.html";
         } else {
-            console.log(response);
             const userName = response.userName;
             const email = response.email;
             const admin = response.admin;
@@ -24,14 +23,13 @@ xhr.onreadystatechange = function () {
             emailElement.innerHTML = `E-mail：${email}`;
             adminElement.innerHTML = `是否為管理員：${admin}`;
             parentElement.append(welcome, name, emailElement, adminElement);
-            // 登入後取得負評數量
+            // update negative counts after sign-in
             const getNeg = new XMLHttpRequest();
             getNeg.onreadystatechange = function () {
                 if (getNeg.readyState === 4 && getNeg.status === 200) {
                     const response = JSON.parse(getNeg.responseText);
                     const counts = response.length;
                     localStorage.setItem("negativeCounts", counts);
-                    // window.location.href = "contentlist.html";
                 }
             };
             getNeg.open("GET", "api/1.0/negativeContent");
@@ -48,7 +46,7 @@ const accessToken = localStorage.getItem("access_token");
 xhr.setRequestHeader("Authorization", "bearer " + accessToken);
 xhr.send();
 
-// 登出按鈕
+// sign out button
 const button = document.getElementById("button");
 button.addEventListener("click", function () {
     Swal.fire({
@@ -71,7 +69,7 @@ button.addEventListener("click", function () {
     });
 });
 
-// 取得負評數量
+// update negative counts
 const negativeCounts = localStorage.getItem("negativeCounts");
 if (parseInt(negativeCounts) > 0) {
     const alertElement = document.createElement("div");
@@ -81,6 +79,7 @@ if (parseInt(negativeCounts) > 0) {
     parentElement.append(alertElement);
 }
 
+// sticky sidebar
 // When the user scrolls the page, execute myFunction
 window.onscroll = function () { myFunction(); };
 

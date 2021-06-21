@@ -3,7 +3,7 @@ const router = require("express").Router();
 const {
     getTopicInfo,
     getPNValue
-} = require("../controllers/PNValue_controller.js");
+} = require("../controllers/PN_value_controller.js");
 
 router.route("/PNValue").get(getTopicInfo);
 router.route("/PNValue").post(getPNValue);

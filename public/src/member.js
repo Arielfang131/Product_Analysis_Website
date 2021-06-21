@@ -38,7 +38,7 @@ function ajax (src, data) {
                                 const response = JSON.parse(getNeg.responseText);
                                 const counts = response.length;
                                 localStorage.setItem("negativeCounts", counts);
-                                window.location.href = "contentlist.html";
+                                window.location.href = "content_list.html";
                             }
                         };
                         getNeg.open("GET", "api/1.0/negativeContent");

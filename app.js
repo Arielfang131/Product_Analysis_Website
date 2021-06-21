@@ -16,13 +16,13 @@ app.use("/api/" + "1.0",
         require("./server/routes/member_route"),
         require("./server/routes/emotion_route"),
         require("./server/routes/negative_content_route"),
-        require("./server/routes/PNValue_route.js"),
+        require("./server/routes/PN_value_route.js"),
         require("./server/routes/wordcloud_route")
     ]
 );
 
 app.get(["/"], (req, res) => {
-    res.sendFile(path.join(__dirname, "/public/contentlist.html"));
+    res.sendFile(path.join(__dirname, "/public/content_list.html"));
 });
 
 app.listen(3000, () => {

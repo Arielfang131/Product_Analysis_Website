@@ -96,7 +96,15 @@ function ajaxKeywords (src, data, callback) {
                     } else if (newXhr.readyState === 4 && newXhr.status === 401) {
                         Swal.fire("請勿包含特殊字元");
                     } else if (newXhr.readyState === 4 && newXhr.status === 403) {
-                        Swal.fire("驗證過期，請重新登入");
+                        Swal.fire({
+                            icon: "warning",
+                            title: "驗證過期，請重新登入",
+                            confirmButtonText: "確認"
+                        }).then(() => {
+                            localStorage.removeItem("access_token");
+                            localStorage.removeItem("negativeCounts");
+                            window.location.href = "member.html";
+                        });
                     } else if (newXhr.readyState === 4 && newXhr.status === 401.1) {
                         Swal.fire("Unauthorized");
                     }

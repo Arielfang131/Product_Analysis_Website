@@ -1,4 +1,4 @@
-const { query } = require("./mysqlcon");
+const { query, core } = require("./mysqlcon");
 require("dotenv").config();
 const { EMOTION_NEGATIVE, EMOTION_NEUTRAL, EMOTION_POSITIVE } = process.env;
 
@@ -32,34 +32,63 @@ const getSQLSyntax = async function (sqlResult, channels) {
         const symbolsCopied = symbols.map((element) => {
             return element;
         });
-        const firstKeyword = sqlResult[0].keywords.split("+")[0];
+        // const firstKeyword = sqlResult[0].keywords.split("+")[0];
+        const firstKeyword = "%" + sqlResult[0].keywords.split("+")[0] + "%";
         let strSecond = "(";
         let titleSecond = "(";
         let contentQuery = "";
         let titleQuery = "";
-        let strFirst = `(content LIKE "%${firstKeyword}%") `;
-        strFirst += `${symbols.shift()} `;
-        let titleFirst = `(title LIKE "%${firstKeyword}%") `;
-        titleFirst += `${symbolsCopied.shift()} `;
+        // let strFirst = `(content LIKE "%${firstKeyword}%") `;
+        // let strFirst = "(content LIKE \"%?%\") ";
+        let strFirst = "(content LIKE ?)";
+        strFirst += ` ${symbols.shift()} `;
+        // let titleFirst = `(title LIKE "%${firstKeyword}%") `;
+        // let titleFirst = "(title LIKE \"%?%\") ";
+        let titleFirst = "(title LIKE ?)";
+        titleFirst += ` ${symbolsCopied.shift()} `;
         contentQuery = strFirst;
         titleQuery = titleFirst;
 
+        let secondKeywords = "";
         if (sqlResult[0].keywords.split("+")[1].length !== 0) {
-            const secondKeywordsArr = sqlResult[0].keywords.split("+")[1].split(",");
-            for (let j = 0; j < secondKeywordsArr.length; j++) {
-                if (j === (secondKeywordsArr.length - 1)) {
-                    strSecond += `content LIKE "%${secondKeywordsArr[j]}%" `;
-                    strSecond += ") ";
-                    titleSecond += `title LIKE "%${secondKeywordsArr[j]}%" `;
-                    titleSecond += ") ";
+            console.log("test");
+            // const secondKeywords = sqlResult[0].keywords.split("+")[1].split(",");
+            // for (let j = 0; j < secondKeywords.length; j++) {
+            //     if (j === (secondKeywords.length - 1)) {
+            //         strSecond += `content LIKE "%${secondKeywords[j]}%" `;
+            //         strSecond += ") ";
+            //         titleSecond += `title LIKE "%${secondKeywords[j]}%" `;
+            //         titleSecond += ") ";
+            //         contentQuery = strFirst + strSecond;
+            //         titleQuery = titleFirst + titleSecond;
+            //         continue;
+            //     }
+            //     strSecond += `content LIKE "%${secondKeywords[j]}%" `;
+            //     strSecond += `${symbols.shift()} `;
+            //     titleSecond += `title LIKE "%${secondKeywords[j]}%" `;
+            //     titleSecond += `${symbolsCopied.shift()} `;
+            // }
+            secondKeywords = sqlResult[0].keywords.split("+")[1].split(",");
+            for (let j = 0; j < secondKeywords.length; j++) {
+                secondKeywords[j] = "%" + secondKeywords[j] + "%";
+                console.log(secondKeywords[j]);
+                if (j === (secondKeywords.length - 1)) {
+                    // strSecond += "content LIKE \"%?%\" ";
+                    strSecond += "content LIKE ?";
+                    strSecond += ")";
+                    // titleSecond += "title LIKE \"%?%\" ";
+                    titleSecond += "title LIKE ?";
+                    titleSecond += ")";
                     contentQuery = strFirst + strSecond;
                     titleQuery = titleFirst + titleSecond;
                     continue;
                 }
-                strSecond += `content LIKE "%${secondKeywordsArr[j]}%" `;
-                strSecond += `${symbols.shift()} `;
-                titleSecond += `title LIKE "%${secondKeywordsArr[j]}%" `;
-                titleSecond += `${symbolsCopied.shift()} `;
+                // strSecond += "content LIKE \"%?%\" ";
+                strSecond += "content LIKE ?";
+                strSecond += ` ${symbols.shift()} `;
+                // titleSecond += "title LIKE \"%?%\" ";
+                titleSecond += "title LIKE ?";
+                titleSecond += ` ${symbolsCopied.shift()} `;
             }
         }
         let channelQuery = "";
@@ -73,8 +102,13 @@ const getSQLSyntax = async function (sqlResult, channels) {
         const data = {
             contentQuery: contentQuery,
             titleQuery: titleQuery,
-            channelQuery: channelQuery
+            channelQuery: channelQuery,
+            firstKeyword: firstKeyword,
+            secondKeywords: secondKeywords
         };
+        console.log(data);
+        // console.log(firstKeyword);
+        // console.log(secondKeywords);
         return data;
     } catch (err) {
         console.log("test27");
@@ -125,8 +159,27 @@ const getSQLcontent = async function (sqlResult, channels, nowTime, deadline, em
 const getSQLcontentNoEmotion = async function (sqlResult, channels, nowTime, deadline) {
     try {
         const queryInfo = await getSQLSyntax(sqlResult, channels);
+        const newQuery = [];
+        // put keywords for content query
+        newQuery.push(queryInfo.firstKeyword);
+        for (const i in queryInfo.secondKeywords) {
+            newQuery.push(queryInfo.secondKeywords[i]);
+        }
+        // put keywords for title query
+        newQuery.push(queryInfo.firstKeyword);
+        for (const i in queryInfo.secondKeywords) {
+            newQuery.push(queryInfo.secondKeywords[i]);
+        }
         const sql = `SELECT * FROM text_table_modified WHERE (${queryInfo.contentQuery} OR ${queryInfo.titleQuery}) AND (${queryInfo.channelQuery}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') order by time DESC;`;
-        const result = await query(sql);
+        // const sql = `SELECT * FROM text_table_modified WHERE ((content LIKE "%?%") AND (content LIKE "%?%" OR content LIKE "%?%") AND (title LIKE "%?%") AND (title LIKE "%?%" OR title LIKE "%?%")) AND (${queryInfo.channelQuery}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') order by time DESC;`;
+        // const newArr = [];
+        // for (const i in newQuery) {
+        //     newArr.push(newQuery[i].replace(/'/g, ""));
+        // }
+        const result = await query(sql, newQuery);
+        console.log(newQuery);
+        const sqlLook = core.format(sql, newQuery);
+        console.log(sqlLook);
         return result;
     } catch (err) {
         console.log("test9");

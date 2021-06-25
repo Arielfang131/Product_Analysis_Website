@@ -137,9 +137,11 @@ function getContentInfo (info) {
         const push = document.createElement("div");
         push.className = "push";
         if (info[i].push_number === null) {
-            push.innerHTML = "共0則推文";
+            push.innerHTML = "<img class=\"icon_comment\" src=\"./styles/images/comment.png\">";
+            push.innerHTML += " 0";
         } else {
-            push.innerHTML = `共${info[i].push_number}則推文`;
+            push.innerHTML = "<img class=\"icon_comment\" src=\"./styles/images/comment.png\">";
+            push.innerHTML += ` ${info[i].push_number}`;
         }
         const author = document.createElement("div");
         author.className = "author";

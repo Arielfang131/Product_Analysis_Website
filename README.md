@@ -66,7 +66,7 @@ reviews of the products.
 - Word Cloud: nodejieba
 - Design Pattern: MVC
 - Version Control: Git, GitHub
-- Agile: Trello (Scrum)
+- Agile: Trello
 
 ### Test
 
@@ -95,27 +95,27 @@ brand and multiple product keywords and connect them by different conditions.
 
 - Search related Ptt articles by using custom search keywords.
 
-<img src="https://yihuafang.s3.us-east-2.amazonaws.com/contentlist.gif">
+![Search for articles](https://yihuafang.s3.us-east-2.amazonaws.com/contentlist.gif)
 
 
 ### Monitoring negative reviews and alert
 
 - Alert users about negative reviews when they log in or add new keywords.
 
-<img src="https://yihuafang.s3.us-east-2.amazonaws.com/negative.gif">
+![negative](https://yihuafang.s3.us-east-2.amazonaws.com/negative.gif)
 
 
 ### Word cloud
 
 - Display the most popular words of specific brands, products, and keywords.
 
-<img src="https://yihuafang.s3.us-east-2.amazonaws.com/word+cloud.jpg">
+![Word cloud](https://yihuafang.s3.us-east-2.amazonaws.com/word+cloud.jpg)
 
 ### Ratio of positive and negative reviews
 
 - Identify emotions of articles and calculate ratio of positive and negative reviews.
 
-<img src="https://yihuafang.s3.us-east-2.amazonaws.com/PN_value.gif">
+![Ratio of positive and negative reviews](https://yihuafang.s3.us-east-2.amazonaws.com/PN_value.gif)
 
 
 

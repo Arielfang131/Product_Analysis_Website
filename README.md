@@ -1,6 +1,7 @@
 # [Product Analysis Website](https://yihua.website/) 
 
-A real-time online virtual classroom providing more powerful tools for tutoring including co-editing whiteboards (creating lines, shapes, images, texts, post-its), chat rooms, video calls, and dashboards.
+Collect and analyze Ptt discussions about beauty products to assist marketing staff to understand user
+reviews of the products.
 
 #### Website URL: [https://yihua.website/](https://yihua.website/)
 
@@ -22,7 +23,6 @@ A real-time online virtual classroom providing more powerful tools for tutoring 
 - [Technologies](#Technologies)
 - [Architecture](#Architecture)
 - [Database Schema](#Database-Schema)
-- [Features](#Features)
 - [Demonstration](#Demonstration)
 - [Contact](#Contact)
 
@@ -40,6 +40,7 @@ A real-time online virtual classroom providing more powerful tools for tutoring 
 - JavaScript
 - Bootstrap
 - AJAX
+- wordcloud2
 
 ### Cloud Service (AWS)
 
@@ -55,57 +56,71 @@ A real-time online virtual classroom providing more powerful tools for tutoring 
 - HTTP & HTTPS
 - Domain Name System
 
-### Test
-
-- Mocha
-
-### 3rd Party APIs
+### 3rd Party API
 
 - Google Natural Language API
 
 ### Others
 
-- Web Crawler: Cheerio 
+- Web Crawler: cheerio, crontab 
+- Word Cloud: nodejieba
 - Design Pattern: MVC
 - Version Control: Git, GitHub
 - Agile: Trello (Scrum)
 
+### Test
+
+- Mocha
 
 ## Architecture
 
-![Architecture](https://d3qwsmjvue1mmx.cloudfront.net/readme/architecture.png)
+![Architecture](https://yihuafang.s3.us-east-2.amazonaws.com/Architecture.JPG)
 
 ## Database Schema
 
-![Database Design](https://d3qwsmjvue1mmx.cloudfront.net/readme/ERD.png)
+![Database Design](https://yihuafang.s3.us-east-2.amazonaws.com/SQL+table_new.png)
 
 
-## Features
+## Demonstration 
 
-### Whiteboard
+### Custom search keywords:
 
-<img src="https://d3qwsmjvue1mmx.cloudfront.net/readme/whiteboard.gif">
+- Create various combinations of keywords by users. For example, users can set
+brand and multiple product keywords and connect them by different conditions.
 
-### Video call
+<img src="https://yihuafang.s3.us-east-2.amazonaws.com/keywords.jpg">
 
-<img src="https://d3qwsmjvue1mmx.cloudfront.net/readme/call.gif">
 
-## Demonstration
+### Search for articles
 
-### Home
+- Search related Ptt articles by using custom search keywords.
 
-<img src="https://d3qwsmjvue1mmx.cloudfront.net/readme/home.gif">
+<img src="https://yihuafang.s3.us-east-2.amazonaws.com/contentlist.gif">
 
-### Room
 
-<img src="https://d3qwsmjvue1mmx.cloudfront.net/readme/room.gif">
+### Monitoring negative reviews and alert
 
-### Dashboard
+- Alert users about negative reviews when they log in or add new keywords.
 
-<img src="https://d3qwsmjvue1mmx.cloudfront.net/readme/dashboard.gif">
+<img src="https://yihuafang.s3.us-east-2.amazonaws.com/negative.gif">
+
+
+### Word cloud
+
+- Display the most popular words of specific brands, products, and keywords.
+
+<img src="https://yihuafang.s3.us-east-2.amazonaws.com/word+cloud.jpg">
+
+### Ratio of positive and negative reviews
+
+- Identify emotions of articles and calculate ratio of positive and negative reviews.
+
+<img src="https://yihuafang.s3.us-east-2.amazonaws.com/PN_value.gif">
+
+
 
 ## Contact
 
-<a href="https://github.com/TimMKChang" target="_blank">Tim Chang</a>
+<a href="https://github.com/Arielfang131" target="_blank">Ariel Fang</a>
 
-Email: b00501007@gmail.com
+Email: yihua0131@gmail.com

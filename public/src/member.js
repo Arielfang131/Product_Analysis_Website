@@ -1,3 +1,4 @@
+let count = 0;
 function ajax (src, data) {
     const xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
@@ -5,22 +6,33 @@ function ajax (src, data) {
             const obj = JSON.parse(xhr.responseText);
             if (obj.msg === "此email已經有註冊") {
                 Swal.fire("email已經有註冊");
+                count = 0;
                 return;
             } else if (obj.msg === "註冊成功") {
                 Swal.fire("註冊成功");
+                count = 0;
             } else if (obj.msg === "查無此會員，請先註冊") {
                 Swal.fire("查無此會員，請先註冊");
+                count = 0;
                 return;
             } else if (obj.msg === "登入成功") {
                 Swal.fire("登入成功");
+                count = 0;
             } else if (obj.msg === "密碼錯誤") {
                 Swal.fire("密碼錯誤");
+                count = 0;
                 return;
             } else if (obj.msg === "email格式不符") {
                 Swal.fire("email格式不符");
+                count = 0;
                 return;
             } else if (obj.msg === "公司統編只能為數字") {
                 Swal.fire("公司統編只能為數字");
+                count = 0;
+                return;
+            } else if (obj.msg === "註冊失敗") {
+                Swal.fire("註冊失敗");
+                count = 0;
                 return;
             }
             window.localStorage.setItem("access_token", obj.token);
@@ -108,61 +120,72 @@ signInButton.addEventListener("click", function () {
 
 const registerButton = document.getElementById("register_button");
 registerButton.addEventListener("click", function () {
-    const registerCompanyName = document.getElementById("register_business_name");
-    const registerCompanyNo = document.getElementById("register_business_no");
-    const userName = document.getElementById("register_user_name");
-    const registerEmail = document.getElementById("register_email");
-    const registerPassword = document.getElementById("register_password");
-    const admin = document.getElementById("admin");
+    count += 1;
+    if (count === 1) {
+        const registerCompanyName = document.getElementById("register_business_name");
+        const registerCompanyNo = document.getElementById("register_business_no");
+        const userName = document.getElementById("register_user_name");
+        const registerEmail = document.getElementById("register_email");
+        const registerPassword = document.getElementById("register_password");
+        const admin = document.getElementById("admin");
 
-    if (registerCompanyName.value === "" || registerCompanyNo.value === "" || userName.value === "" || registerEmail.value === "" || registerPassword.vale === "" || admin.value === "") {
-        Swal.fire("每一項皆須填寫");
-        return;
-    }
+        if (registerCompanyName.value === "" || registerCompanyNo.value === "" || userName.value === "" || registerEmail.value === "" || registerPassword.vale === "" || admin.value === "") {
+            Swal.fire("每一項皆須填寫");
+            count = 0;
+            return;
+        }
 
-    // Verify email format
-    const emailRule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
-    // validate email is ok or not
-    if (registerEmail.value.search(emailRule) === -1) {
-        Swal.fire("email格式有誤");
-        return;
-    }
+        // Verify email format
+        const emailRule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
+        // validate email is ok or not
+        if (registerEmail.value.search(emailRule) === -1) {
+            Swal.fire("email格式有誤");
+            count = 0;
+            return;
+        }
 
-    if (/^\d+$/.test(registerCompanyNo.value) === false) {
-        Swal.fire("公司統編只能為數字");
-        return;
-    };
+        if (/^\d+$/.test(registerCompanyNo.value) === false) {
+            Swal.fire("公司統編只能為數字");
+            count = 0;
+            return;
+        };
 
-    if (registerCompanyName.value.length > 50) {
-        Swal.fire("公司名稱不可超過50字");
-        return;
-    }
-    if (registerCompanyNo.value.length > 50) {
-        Swal.fire("公司統編不可超過50字");
-        return;
-    }
-    if (userName.value.length > 50) {
-        Swal.fire("用戶暱稱不可超過50字");
-        return;
-    }
-    if (registerEmail.value.length > 100) {
-        Swal.fire("E-mail不可超過100字");
-        return;
-    }
-    if (registerPassword.value.length > 50) {
-        Swal.fire("密碼不可超過50字");
-        return;
-    }
+        if (registerCompanyName.value.length > 50) {
+            Swal.fire("公司名稱不可超過50字");
+            count = 0;
+            return;
+        }
+        if (registerCompanyNo.value.length > 50) {
+            Swal.fire("公司統編不可超過50字");
+            count = 0;
+            return;
+        }
+        if (userName.value.length > 50) {
+            Swal.fire("用戶暱稱不可超過50字");
+            count = 0;
+            return;
+        }
+        if (registerEmail.value.length > 100) {
+            Swal.fire("E-mail不可超過100字");
+            count = 0;
+            return;
+        }
+        if (registerPassword.value.length > 50) {
+            Swal.fire("密碼不可超過50字");
+            count = 0;
+            return;
+        }
 
-    const data = {
-        companyName: registerCompanyName.value,
-        companyNo: registerCompanyNo.value,
-        userName: userName.value,
-        email: registerEmail.value,
-        password: registerPassword.value,
-        admin: admin.value
-    };
-    ajax("/api/1.0/register", data);
+        const data = {
+            companyName: registerCompanyName.value,
+            companyNo: registerCompanyNo.value,
+            userName: userName.value,
+            email: registerEmail.value,
+            password: registerPassword.value,
+            admin: admin.value
+        };
+        ajax("/api/1.0/register", data);
+    }
 });
 
 // sticky sidebar

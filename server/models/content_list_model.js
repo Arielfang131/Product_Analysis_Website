@@ -47,18 +47,13 @@ const getSQLSyntax = async function (sqlResult, channels) {
         const symbolsCopied = symbols.map((element) => {
             return element;
         });
-        // const firstKeyword = sqlResult[0].keywords.split("+")[0];
         const firstKeyword = "%" + sqlResult[0].keywords.split("+")[0] + "%";
         let strSecond = "(";
         let titleSecond = "(";
         let contentQuery = "";
         let titleQuery = "";
-        // let strFirst = `(content LIKE "%${firstKeyword}%") `;
-        // let strFirst = "(content LIKE \"%?%\") ";
         let strFirst = "(content LIKE ?)";
         strFirst += ` ${symbols.shift()} `;
-        // let titleFirst = `(title LIKE "%${firstKeyword}%") `;
-        // let titleFirst = "(title LIKE \"%?%\") ";
         let titleFirst = "(title LIKE ?)";
         titleFirst += ` ${symbolsCopied.shift()} `;
         contentQuery = strFirst;
@@ -66,40 +61,20 @@ const getSQLSyntax = async function (sqlResult, channels) {
 
         let secondKeywords = "";
         if (sqlResult[0].keywords.split("+")[1].length !== 0) {
-            // const secondKeywords = sqlResult[0].keywords.split("+")[1].split(",");
-            // for (let j = 0; j < secondKeywords.length; j++) {
-            //     if (j === (secondKeywords.length - 1)) {
-            //         strSecond += `content LIKE "%${secondKeywords[j]}%" `;
-            //         strSecond += ") ";
-            //         titleSecond += `title LIKE "%${secondKeywords[j]}%" `;
-            //         titleSecond += ") ";
-            //         contentQuery = strFirst + strSecond;
-            //         titleQuery = titleFirst + titleSecond;
-            //         continue;
-            //     }
-            //     strSecond += `content LIKE "%${secondKeywords[j]}%" `;
-            //     strSecond += `${symbols.shift()} `;
-            //     titleSecond += `title LIKE "%${secondKeywords[j]}%" `;
-            //     titleSecond += `${symbolsCopied.shift()} `;
-            // }
             secondKeywords = sqlResult[0].keywords.split("+")[1].split(",");
             for (let j = 0; j < secondKeywords.length; j++) {
                 secondKeywords[j] = "%" + secondKeywords[j] + "%";
                 if (j === (secondKeywords.length - 1)) {
-                    // strSecond += "content LIKE \"%?%\" ";
                     strSecond += "content LIKE ?";
                     strSecond += ")";
-                    // titleSecond += "title LIKE \"%?%\" ";
                     titleSecond += "title LIKE ?";
                     titleSecond += ")";
                     contentQuery = strFirst + strSecond;
                     titleQuery = titleFirst + titleSecond;
                     continue;
                 }
-                // strSecond += "content LIKE \"%?%\" ";
                 strSecond += "content LIKE ?";
                 strSecond += ` ${symbols.shift()} `;
-                // titleSecond += "title LIKE \"%?%\" ";
                 titleSecond += "title LIKE ?";
                 titleSecond += ` ${symbolsCopied.shift()} `;
             }

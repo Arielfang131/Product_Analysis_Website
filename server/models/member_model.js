@@ -7,6 +7,7 @@ const selectEmail = async function (email) {
     } catch (err) {
         console.log("test12");
         console.log(err);
+        return {};
     }
 };
 
@@ -27,6 +28,7 @@ const registerMember = async function (companyName, companyNo, userName, email, 
     } catch (err) {
         console.log("test11");
         console.log(err);
+        return {};
     }
 };
 
@@ -38,6 +40,7 @@ const selectUserInfo = async function (email) {
     } catch (err) {
         console.log("test10");
         console.log(err);
+        return {};
     }
 };
 

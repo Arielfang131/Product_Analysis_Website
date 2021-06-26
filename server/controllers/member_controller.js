@@ -79,7 +79,13 @@ async function register (req, res) {
         if (checkEmail.length === 0) {
             const salt = await bcrypt.genSalt();
             const hashedPassword = await bcrypt.hash(password, salt);
-            await memberModel.registerMember(companyName, companyNo, userName, email, hashedPassword, admin);
+            const result = await memberModel.registerMember(companyName, companyNo, userName, email, hashedPassword, admin);
+            if (result === {}) {
+                obj = {
+                    msg: "註冊失敗"
+                };
+                return;
+            }
             const token = jwt.sign({ companyName: companyName, companyNo: companyNo, userName: userName, email: email, password: password, admin: admin }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 });
             req.header.authorization = "Bearer " + token;
             obj = {

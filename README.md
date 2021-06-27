@@ -62,7 +62,7 @@ reviews of the products.
 
 ### Others
 
-- Web Crawler: cheerio, crontab 
+- Automated Web Crawler: cheerio, crontab 
 - Word Cloud: nodejieba
 - Design Pattern: MVC
 - Version Control: Git, GitHub
@@ -74,12 +74,12 @@ reviews of the products.
 
 ## Architecture
 
-![Architecture](https://yihuafang.s3.us-east-2.amazonaws.com/Architecture.JPG)
+![Architecture](https://user-images.githubusercontent.com/75560708/123538166-0aa2a780-d766-11eb-8cac-911a67dd9729.JPG)
+
 
 ## Database Schema
 
-![Database Design](https://yihuafang.s3.us-east-2.amazonaws.com/SQL+table_new.png)
-
+![Database Design](https://user-images.githubusercontent.com/75560708/123538177-1db57780-d766-11eb-9c31-fa43aa70961e.png)
 
 ## Demonstration 
 
@@ -88,34 +88,36 @@ reviews of the products.
 - Create various combinations of keywords by users. For example, users can set
 brand and multiple product keywords and connect them by different conditions.
 
-<img src="https://yihuafang.s3.us-east-2.amazonaws.com/keywords.jpg">
-
+![Custom search keywords](https://user-images.githubusercontent.com/75560708/123538198-39208280-d766-11eb-8759-e35ed49b9570.jpg)
 
 ### Search for articles
 
-- Search related Ptt articles by using custom search keywords.
+- Search related Ptt articles by using custom search keywords and select from specific time, channels, and emotions.
 
-![Search for articles](https://yihuafang.s3.us-east-2.amazonaws.com/contentlist.gif)
+![Search for articles](https://user-images.githubusercontent.com/75560708/123539298-9b2fb680-d76b-11eb-9379-2b47f26a4b3d.gif)
 
 
 ### Monitoring negative reviews and alert
 
 - Alert users about negative reviews when they log in or add new keywords.
 
-![negative](https://yihuafang.s3.us-east-2.amazonaws.com/negative.gif)
+![negative](https://user-images.githubusercontent.com/75560708/123539186-00cf7300-d76b-11eb-8113-f90922f748a7.gif)
 
 
 ### Word cloud
 
 - Display the most popular words of specific brands, products, and keywords.
 
-![Word cloud](https://yihuafang.s3.us-east-2.amazonaws.com/word+cloud.jpg)
+![Word cloud](https://user-images.githubusercontent.com/75560708/123538253-9caab000-d766-11eb-8ad1-328ae8d42235.jpg)
+
 
 ### Ratio of positive and negative reviews
 
 - Identify emotions of articles and calculate ratio of positive and negative reviews.
 
-![Ratio of positive and negative reviews](https://yihuafang.s3.us-east-2.amazonaws.com/PN_value.gif)
+![PN_value](https://user-images.githubusercontent.com/75560708/123539211-20ff3200-d76b-11eb-8140-4d9a8f67474e.gif)
+
+
 
 
 

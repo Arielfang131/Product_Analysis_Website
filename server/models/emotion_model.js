@@ -1,4 +1,3 @@
-// const { query } = require("./mysqlcon");
 const { pool } = require("./mysqlcon");
 const specialWords = ["好燒", "燒到", "生火", "被燒"];
 

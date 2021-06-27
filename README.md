@@ -106,7 +106,7 @@ brand and multiple product keywords and connect them by different conditions.
 
 ### Word cloud
 
-- Display the most popular words of specific brands, products, and keywords.
+- Display the most popular words in specific brands, products, and keywords.
 
 ![Word cloud](https://user-images.githubusercontent.com/75560708/123538253-9caab000-d766-11eb-8ad1-328ae8d42235.jpg)
 

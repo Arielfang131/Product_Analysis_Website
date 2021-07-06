@@ -20,7 +20,7 @@ async function signin (req, res) {
             const signinResult = await bcrypt.compare(password, checkEmail[0].password);
             if (signinResult === true) {
                 const userInfo = await memberModel.selectUserInfo(email);
-                const token = jwt.sign({ companyName: userInfo[0].company_name, companyNo: userInfo[0].company_number, userName: userInfo[0].user_name, email: userInfo[0].email, password: userInfo[0].password, admin: userInfo[0].admin }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 });
+                const token = jwt.sign({ companyName: userInfo[0].company_name, companyNo: userInfo[0].company_number, userName: userInfo[0].user_name, email: userInfo[0].email, admin: userInfo[0].admin }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 });
                 req.header.authorization = "Bearer " + token;
                 obj = {
                     msg: "登入成功",

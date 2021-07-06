@@ -86,7 +86,7 @@ async function register (req, res) {
                 };
                 return;
             }
-            const token = jwt.sign({ companyName: companyName, companyNo: companyNo, userName: userName, email: email, password: password, admin: admin }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 });
+            const token = jwt.sign({ companyName: companyName, companyNo: companyNo, userName: userName, email: email, admin: admin }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 });
             req.header.authorization = "Bearer " + token;
             obj = {
                 msg: "註冊成功",

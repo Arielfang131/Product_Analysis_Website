@@ -22,6 +22,7 @@ reviews of the products.
 
 - [Technologies](#Technologies)
 - [Architecture](#Architecture)
+- [Data Pipeline](#Data Pipeline)
 - [Database Schema](#Database-Schema)
 - [Demonstration](#Demonstration)
 - [Contact](#Contact)
@@ -75,6 +76,10 @@ reviews of the products.
 ## Architecture
 
 ![Architecture](https://user-images.githubusercontent.com/75560708/123538166-0aa2a780-d766-11eb-8cac-911a67dd9729.JPG)
+
+## Data Pipeline
+
+![data pipeline](https://user-images.githubusercontent.com/75560708/124915754-7a494a00-e024-11eb-8d4e-6dcf152d0b37.JPG)
 
 
 ## Database Schema

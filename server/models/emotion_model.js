@@ -5,8 +5,6 @@ const sqlModifiedEmotion = async function () {
     const conn = await pool.getConnection();
     try {
         await conn.query("START TRANSACTION");
-        const updateSql = "UPDATE text_table_modified SET likes_number = likes_number + 0 WHERE likes_number = 0";
-        await conn.query(updateSql);
         const deleteSql = "DELETE FROM text_table_modified";
         await conn.query(deleteSql);
         const sql = "SELECT * FROM text_table";

@@ -21,8 +21,8 @@ const insertAllNegative = async function () {
         const data = [];
         for (let i = 0; i < result.length; i++) {
             const keywordsId = result[i].keywords_id;
-            const queryInfo = await contentListModel.getSQLSyntax([result[i]]);
-            const newQuery = await contentListModel.getNewKeywords(queryInfo.firstKeyword, queryInfo.secondKeywords);
+            const queryInfo = contentListModel.getSQLSyntax([result[i]]);
+            const newQuery = contentListModel.getNewKeywords(queryInfo.firstKeyword, queryInfo.secondKeywords);
             const sqlText = `SELECT id FROM text_table_modified WHERE (${queryInfo.contentQuery} OR ${queryInfo.titleQuery}) AND (time >'${dateInfo} 00:00') AND emotion ${EMOTION_NEGATIVE} order by time DESC;`;
             const sqlResult = await query(sqlText, newQuery);
             if (sqlResult.length === 0) {

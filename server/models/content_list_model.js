@@ -2,7 +2,7 @@ const { query } = require("./mysqlcon");
 require("dotenv").config();
 const { EMOTION_NEGATIVE, EMOTION_NEUTRAL, EMOTION_POSITIVE } = process.env;
 
-const getNewKeywords = async function (str, array) {
+const getNewKeywords = function (str, array) {
     const newKeywords = [];
     // put keywords for content query
     newKeywords.push(str);
@@ -41,7 +41,7 @@ const getKeywords = async function (topicId) {
     }
 };
 
-const getSQLSyntax = async function (sqlResult, channels) {
+const getSQLSyntax = function (sqlResult, channels) {
     try {
         const symbols = sqlResult[0].symbols.split(",");
         const symbolsCopied = symbols.map((element) => {
@@ -130,8 +130,8 @@ const getSQLcontent = async function (sqlResult, channels, nowTime, deadline, em
                 emotionQuery += emotion;
             }
         }
-        const queryInfo = await getSQLSyntax(sqlResult, channels);
-        const newQuery = await getNewKeywords(queryInfo.firstKeyword, queryInfo.secondKeywords);
+        const queryInfo = getSQLSyntax(sqlResult, channels);
+        const newQuery = getNewKeywords(queryInfo.firstKeyword, queryInfo.secondKeywords);
         const sql = `SELECT * FROM text_table_modified WHERE (${queryInfo.contentQuery} OR ${queryInfo.titleQuery}) AND (${queryInfo.channelQuery}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') AND (${emotionQuery}) order by time DESC;`;
         const result = await query(sql, newQuery);
         return result;
@@ -144,8 +144,8 @@ const getSQLcontent = async function (sqlResult, channels, nowTime, deadline, em
 
 const getSQLcontentNoEmotion = async function (sqlResult, channels, nowTime, deadline) {
     try {
-        const queryInfo = await getSQLSyntax(sqlResult, channels);
-        const newQuery = await getNewKeywords(queryInfo.firstKeyword, queryInfo.secondKeywords);
+        const queryInfo = getSQLSyntax(sqlResult, channels);
+        const newQuery = getNewKeywords(queryInfo.firstKeyword, queryInfo.secondKeywords);
         const sql = `SELECT * FROM text_table_modified WHERE (${queryInfo.contentQuery} OR ${queryInfo.titleQuery}) AND (${queryInfo.channelQuery}) AND (time >'${deadline} 00:00' AND time <= '${nowTime} 23:59') order by time DESC;`;
         const result = await query(sql, newQuery);
         return result;

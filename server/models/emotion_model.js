@@ -1,5 +1,5 @@
 const { pool } = require("./mysqlcon");
-const specialWords = ["好燒", "燒到", "生火", "被燒"];
+const { SPECIAL_WORDS } = process.env;
 
 const sqlModifiedEmotion = async function () {
     const conn = await pool.getConnection();
@@ -12,6 +12,7 @@ const sqlModifiedEmotion = async function () {
         const sql = "SELECT * FROM text_table";
         const result = await conn.query(sql);
         const newResult = [];
+        const specialWords = SPECIAL_WORDS.split(",");
         for (const i in result[0]) {
             for (const j in specialWords) {
                 const specialWord = new RegExp(specialWords[j]);
